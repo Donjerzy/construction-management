@@ -1,18 +1,15 @@
 package com.construction.management.cm.User
 
-import com.construction.management.cm.Response.UserRepository
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 @Service
 class UserService {
 
+    @Autowired
     private lateinit var repository: UserRepository
     fun userExists(email: String): Boolean {
         val userCount = repository.findUserCountByEmail(email=email)
-        return if (userCount>0) {
-            true
-        } else {
-            false
-        }
+        return userCount > 0
     }
 }
