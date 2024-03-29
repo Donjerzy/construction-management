@@ -1,5 +1,6 @@
 package com.construction.management.cm.User
 
+import com.construction.management.cm.Response.DefaultBoolean
 import com.construction.management.cm.Response.UserExists
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -22,12 +23,26 @@ class UserController {
     @GetMapping("exists")
     fun validateNewUser(@RequestParam(name = "email") email: String): ResponseEntity<Any> {
         val userExists = service.userExists(email=email)
-        return ResponseEntity.status(200).body(UserExists(
+        return ResponseEntity.status(200).body(DefaultBoolean(
             httpStatus = 200,
             message = "User exist check completed successfully",
-            userExists = userExists
-        ))
+            bool = userExists
+        )
+        )
     }
+
+    @GetMapping("sign-up/send-verification")
+    fun signUpSendVerification(@RequestParam(name = "email") email: String): ResponseEntity<Any> {
+        val isEmailSent = service.signUpSendVerification(email=email)
+        return ResponseEntity.status(200).body(
+            DefaultBoolean(
+                httpStatus = 200,
+                message = "4 Digit Verification Code Sent to $email",
+                bool = isEmailSent
+            )
+        )
+    }
+
 
     fun signUp() {
        TODO()
