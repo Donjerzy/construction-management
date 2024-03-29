@@ -57,4 +57,12 @@ class UserService {
             }
         }
     }
+
+    fun validateUserCode(email: String, code: Int): Int {
+        when (emailVerificationRepository.validateEmailCode(email=email.lowercase(), code=code)) {
+            0 -> throw CustomException("invalid-verification-code", null)
+            else -> return code
+        }
+
+    }
 }

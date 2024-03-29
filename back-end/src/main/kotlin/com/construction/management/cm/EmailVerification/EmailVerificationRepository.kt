@@ -15,4 +15,7 @@ interface EmailVerificationRepository: JpaRepository<EmailVerification, Long> {
     @Query("delete from cm_email_verification where lower(email)=:email", nativeQuery = true)
     fun deleteUserCode(email: String)
 
+    @Query("select count(*) from cm_email_verification where lower(email)=:email and code=:code", nativeQuery = true)
+    fun validateEmailCode(email: String, code:Int): Int
+
 }

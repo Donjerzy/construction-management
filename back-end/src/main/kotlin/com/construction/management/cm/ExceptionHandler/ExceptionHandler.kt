@@ -25,6 +25,13 @@ class ExceptionHandler {
                 )
             )
 
+            "invalid-verification-code" -> ResponseEntity.status(400).body(
+                ExceptionResponse(
+                    httpStatus = 400,
+                    message = "Invalid Verification Code"
+                    )
+            )
+
             else -> ResponseEntity.status(500).body(ExceptionResponse(
                 httpStatus = 500,
                 message = "Internal Server Error"

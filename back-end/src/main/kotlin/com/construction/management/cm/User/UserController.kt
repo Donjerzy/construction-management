@@ -1,6 +1,7 @@
 package com.construction.management.cm.User
 
 import com.construction.management.cm.Response.DefaultBoolean
+import com.construction.management.cm.Response.DefaultInt
 import com.construction.management.cm.Response.UserExists
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -39,6 +40,19 @@ class UserController {
                 httpStatus = 200,
                 message = "4 Digit Verification Code Sent to $email",
                 bool = isEmailSent
+            )
+        )
+    }
+
+    @GetMapping("validate-code")
+    fun validateUserCode(@RequestParam(name = "email") email:String,
+                         @RequestParam(name = "code") code:Int): ResponseEntity<Any> {
+        val validCode = service.validateUserCode(email=email, code=code)
+        return ResponseEntity.status(200).body(
+            DefaultInt(
+                httpStatus = 200,
+                message = "Valid Code Entered",
+                value = validCode
             )
         )
     }
