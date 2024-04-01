@@ -1,4 +1,4 @@
-package com.construction.management.cm.EmailVerification
+package com.construction.management.cm.emailverification
 
 import jakarta.persistence.Column
 import jakarta.persistence.Entity

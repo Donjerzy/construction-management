@@ -1,4 +1,4 @@
-package com.construction.management.cm.EmailSender
+package com.construction.management.cm.emailsender
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value

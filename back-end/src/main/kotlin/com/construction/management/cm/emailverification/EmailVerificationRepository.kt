@@ -1,4 +1,4 @@
-package com.construction.management.cm.EmailVerification
+package com.construction.management.cm.emailverification
 
 import jakarta.transaction.Transactional
 import org.springframework.data.jpa.repository.JpaRepository

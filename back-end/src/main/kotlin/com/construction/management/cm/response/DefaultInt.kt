@@ -1,4 +1,4 @@
-package com.construction.management.cm.Response
+package com.construction.management.cm.response
 
 data class DefaultInt(
     val httpStatus: Int,
