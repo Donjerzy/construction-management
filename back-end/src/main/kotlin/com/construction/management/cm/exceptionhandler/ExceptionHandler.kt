@@ -18,6 +18,13 @@ class ExceptionHandler {
                 )
             )
 
+            "forgot-password-non-existent-user" -> ResponseEntity.status(400).body(
+                ExceptionResponse(
+                    httpStatus = 400,
+                    message = "User Does Not Exist"
+                )
+            )
+
             "cannot-send-email" -> ResponseEntity.status(500).body(
                 ExceptionResponse(
                     httpStatus = 500,
