@@ -16,7 +16,7 @@
             <input type="email" name="email" id="email">
             <label for="pass">Password</label>
             <input type="password" name="pass" id="pass">
-            <p id="forgot">Forgot Password?</p>
+            <a id="forgot" href="/forgot-password">Forgot Password?</a>
             <button type="submit" id="login-btn">Log in</button>
         </form>
     </div>
@@ -31,6 +31,7 @@
     }
     a {
         text-decoration: none;
+        display: block;
     }
     #header {
         display: flex;

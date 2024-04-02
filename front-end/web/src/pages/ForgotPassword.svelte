@@ -2,7 +2,7 @@
     import { notifications } from '../lib/notification.js'
     import Toast from '../components/toast.svelte'
     export let appName;
-    // stages = mail, enter-verification-code, enter-registration-details
+    // stages = mail, enter-verification-code, change-password
     let stage = 'mail';
     let emailError = false;
     let loading = false;
@@ -21,7 +21,7 @@
     }
 
     async function sendVerificationEmail(email) {
-        const res = await fetch(`http://localhost:8080/api/v1/auth/sign-up/send-verification?email=${email}`);
+        const res = await fetch(`http://localhost:8080/api/v1/auth/forgot-password?email=${email}`);
         const json = await res.json();
         loading = false;
         if (json.httpStatus === 200) {
@@ -33,19 +33,18 @@
     }
 
 
-    async function signUp(firstName, surname, password) {
+    async function changePassword(password) {
         let errorFetch = false;
-        const res = await fetch(`http://localhost:8080/api/v1/auth/signup`, {
+        const res = await fetch(`http://localhost:8080/api/v1/auth/new-password`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                verificationCode: verificationCode,
                 email: userEmail,
-                firstName: firstName,
-                surname: surname,
-                password: password
+                password: password,
+                code: verificationCode,
+                
             })
         }).then(res=>{
             if(!res.ok) {
@@ -57,16 +56,15 @@
             }
         }).catch(e => {
             loading = false;
-            notifications.danger('Could not register user', 2000);
+            notifications.danger('Could not change Password', 2000);
             errorFetch = true;
             return
         });
         if(errorFetch) {
-            console.log('Where I shou.d be');
-            notifications.danger('Could not register user', 2000)
+            notifications.danger('Could not change Password', 2000)
             return;
         } else {
-            notifications.success('User created successfully', 2000);
+            notifications.success('Password Changed Successfully', 2000);
             setTimeout(()=> {
                 return window.location.replace('/')
             },1500)
@@ -77,7 +75,7 @@
 
     async function resendVerificationCode() {
         loading = true;
-        const res = await fetch(`http://localhost:8080/api/v1/auth/sign-up/send-verification?email=${userEmail}`);
+        const res = await fetch(`http://localhost:8080/api/v1/auth/forgot-password?email=${userEmail}`);
         const json = await res.json();
         loading = false;
         if (json.httpStatus === 200) {
@@ -91,7 +89,7 @@
         const json = await res.json();
         loading = false;
         if (json.httpStatus === 200) {
-            stage = 'enter-registration-details';
+            stage = 'change-password';
             verificationCode = json.value
         } else {
             setVerificationCodeError();
@@ -123,14 +121,6 @@
         emailError = true;
     }
 
-    function setFirstNameError() {
-        firstNameError = true;
-    }
-
-    function clearFirstNameError() {
-        firstNameError = false;
-    }
-
     function setPasswordError(text) {
         passwordError = true;
         passwordErrorMessage = text;
@@ -149,15 +139,6 @@
         passwordErrorMessage = '';
     }
 
-    function setLastNameError() {
-        lastNameError = true;
-    }
-
-    function clearLastNameError() {
-        lastNameError = false;
-    }
-
-
     function setVerificationCodeError() {
         verificationCodeError = true;
     }
@@ -175,8 +156,6 @@
     }
 
     function clearSignUpErrors() {
-        clearFirstNameError();
-        clearLastNameError();
         clearPasswordError();
         clearMatchingError();
     }
@@ -187,14 +166,6 @@
         let hasNoUpper = true;
         let hasNoLower = true;
         let hasNoDigit = true;
-        if(e.target.elements.fn.value.length < 3) {
-            setFirstNameError();
-            return
-        }
-        if(e.target.elements.ln.value.length < 3) {
-            setLastNameError();
-            return
-        }
         if(e.target.elements.pass.value.length < 6) {
             setPasswordError('Password should have atleast 6 characters');
             return;
@@ -228,9 +199,7 @@
             return;
         }
         loading = true;
-        signUp(e.target.elements.fn.value.toLowerCase(),
-               e.target.elements.ln.value.toLowerCase(),
-               e.target.elements.pass.value);
+        changePassword(e.target.elements.pass.value);
     }
 
 </script>
@@ -249,7 +218,7 @@
     </div>
     <div class="form">
         <div id="title">
-            <h2>Sign Up</h2>
+            <h2>Forgot Password</h2>
         </div>
         <form on:submit={handleEmailSubmit}>
             <label for="email">Email</label>
@@ -276,7 +245,7 @@
     </div>
     <div class="form">
         <div id="title">
-            <h2>Sign Up</h2>
+            <h2>Forgot Password</h2>
         </div>
         <form on:submit={handleCodeSubmit} on:change={clearVerificationCodeError}>
             <div id="verif-code-label-div">
@@ -308,7 +277,7 @@
         </form>
     </div>
 </div>
-{:else if stage === 'enter-registration-details'}
+{:else if stage === 'change-password'}
 <div class="main">
     <Toast />
     <div id="header">
@@ -317,25 +286,15 @@
     </div>
     <div class="form">
         <div id="title">
-            <h2>Sign Up</h2>
+            <h2>Forgot Password</h2>
         </div>
         <form on:submit={handleDetailsSubmit}>
-            <label for="fn">First Name</label>
-            <input type="text" name="fn" id="fn" on:change={clearFirstNameError}>
-            {#if firstNameError}
-            <p class="error">Invalid First Name</p>
-            {/if}
-            <label for="ln">Surname</label>
-            <input type="text" name="ln" id="ln" on:change={clearLastNameError}>
-            {#if lastNameError}
-            <p class="error">Invalid Last Name</p>
-            {/if}
-            <label for="pass">Password</label>
+            <label for="pass">New Password</label>
             <input type="password" name="pass" id="pass" on:change={clearPasswordError}>
             {#if passwordError}
             <p class="error">{passwordErrorMessage}</p>
             {/if}
-            <label for="cpass">Confirm Password</label>
+            <label for="cpass">Confirm New Password</label>
             <input type="password" name="cpass" id="cpass" on:change={clearMatchingError}>
             {#if matchingError}
             <p class="error">The passwords do not match</p>
