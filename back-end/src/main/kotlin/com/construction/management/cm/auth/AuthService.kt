@@ -1,5 +1,7 @@
 package com.construction.management.cm.auth
 
+import com.construction.management.cm.config.JwtProperties
+import com.construction.management.cm.dto.AuthenticationRequest
 import com.construction.management.cm.dto.NewPassword
 import com.construction.management.cm.dto.SignUp
 import com.construction.management.cm.emailsender.EmailSender
@@ -10,7 +12,9 @@ import com.construction.management.cm.user.User
 import com.construction.management.cm.user.UserRepository
 import com.construction.management.cm.user.UserRole
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.security.authentication.AuthenticationManager
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import java.util.*
 import kotlin.random.Random
@@ -27,13 +31,26 @@ class AuthService {
     @Autowired
     private lateinit var emailVerificationRepository: EmailVerificationRepository
 
+    @Autowired
+    private lateinit var authenticationManager: AuthenticationManager
+
+    @Autowired
+    private lateinit var userDetailsService: CustomUserDetailsService
+
+    @Autowired
+    private lateinit var tokenService: TokenService
+
+    @Autowired
+    private lateinit var jwtProperties: JwtProperties
+
+
     fun userExists(email: String): Boolean {
         val userCount = userRepository.findUserCountByEmail(email=email.lowercase())
         return userCount > 0
     }
 
-    private val encoder = BCryptPasswordEncoder(16)
-
+    @Autowired
+    private lateinit var encoder: PasswordEncoder
 
     fun generateFourDigitCode(): Int {
         val random = Random(System.currentTimeMillis())
@@ -133,6 +150,20 @@ class AuthService {
                 return true
             }
         }
+    }
+
+    fun authenticateUser(authRequest: AuthenticationRequest): String {
+        authenticationManager.authenticate(
+            UsernamePasswordAuthenticationToken(
+                authRequest.email,
+                authRequest.password
+            )
+        )
+        val user = userDetailsService.loadUserByUsername(authRequest.email)
+        return tokenService.generate(
+            userDetails = user,
+            expirationDate = Date(System.currentTimeMillis() + jwtProperties.accessTokenExpiration)
+        )
     }
 
 

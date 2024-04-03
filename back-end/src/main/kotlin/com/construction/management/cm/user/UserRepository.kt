@@ -16,10 +16,11 @@ interface UserRepository : JpaRepository<User, Long> {
     @Query("select count(*) from cm_user where user_identifier=:uid", nativeQuery = true)
     fun findUserCountByUniqueIdentifier(uid:UUID): Int
 
-
     @Transactional
     @Modifying
     @Query("update cm_user set password =:password where lower(email)=:email", nativeQuery = true)
     fun changePassword(email: String, password:String)
+    @Query
+    fun findByEmail(email: String): User?
 
 }

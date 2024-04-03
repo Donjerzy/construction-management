@@ -14,5 +14,12 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
-@RequestMapping("api/v1/user/")
-class UserController
+@RequestMapping("api/v1/user")
+class UserController {
+    @GetMapping("/")
+    fun test(): ResponseEntity<Any> {
+        return ResponseEntity.status(200).body("TEST")
+    }
+
+
+}

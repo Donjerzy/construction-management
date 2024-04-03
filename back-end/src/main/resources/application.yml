@@ -20,6 +20,11 @@ spring:
            auth: true
            starttls:
              enable: true
+jwt:
+  key: ${JWT_KEY}
+  access-token-expiration: 86400000
+  refresh-token-expiration: 0
+
 
 
 

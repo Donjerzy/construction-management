@@ -1,10 +1,12 @@
 package com.construction.management.cm.auth
 
+import com.construction.management.cm.dto.AuthenticationRequest
 import com.construction.management.cm.dto.NewPassword
 import com.construction.management.cm.dto.SignUp
 import com.construction.management.cm.response.DefaultBoolean
 import com.construction.management.cm.response.DefaultInt
 import com.construction.management.cm.response.DefaultNa
+import com.construction.management.cm.response.DefaultString
 import com.construction.management.cm.user.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -18,8 +20,16 @@ class AuthController {
     @Autowired
     private lateinit var service: AuthService
 
-    fun logIn() {
-        TODO()
+    @PostMapping("login")
+    fun logIn(@RequestBody authRequest: AuthenticationRequest): ResponseEntity<Any> {
+        val accessToken = service.authenticateUser(authRequest)
+        return ResponseEntity.status(200).body(
+            DefaultString(
+                httpStatus = 200,
+                message = "User Authenticated Successfully",
+                value = accessToken
+            )
+        )
     }
 
     @GetMapping("sign-up/send-verification")

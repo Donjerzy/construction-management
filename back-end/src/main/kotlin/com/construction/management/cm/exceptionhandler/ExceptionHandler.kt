@@ -18,6 +18,13 @@ class ExceptionHandler {
                 )
             )
 
+            "auth-user-na" -> ResponseEntity.status(401).body(
+                ExceptionResponse(
+                    httpStatus = 401,
+                    message = "Unauthorized"
+                )
+            )
+
             "forgot-password-non-existent-user" -> ResponseEntity.status(400).body(
                 ExceptionResponse(
                     httpStatus = 400,
