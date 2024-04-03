@@ -1,2 +1,25 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+<script>
+    import Home from "../pages/Home.svelte"
+    import Dashboard from "../pages/Dashboard.svelte"
+    import {loggedIn} from '../stores.js' 
+    import { get } from "svelte/store";
+    
+    let appName = 'Mjengo Bora';
+    let userStatus = 'false';
+    let value = get(loggedIn);
+ 
+</script>
+
+<svelte:head>
+    <title>Home</title>
+</svelte:head>
+
+
+{#if value === 'false'}
+<Home appName={appName} />
+{:else}
+<Dashboard />
+{/if}
+
+
+
