@@ -15,7 +15,7 @@ class Client {
     @Column(name = "name", length=50, nullable = false, unique = true)
     val name: String = "-"
 
-    @Column(name = "name", length=20, nullable = false)
+    @Column(name = "type", length=20, nullable = false)
     val type: String = "-"
 
     @Column(name = "committed_amount")
@@ -28,9 +28,5 @@ class Client {
     @ManyToOne
     @JoinColumn(name = "project")
     var project = Project()
-
-
-
-
 
 }

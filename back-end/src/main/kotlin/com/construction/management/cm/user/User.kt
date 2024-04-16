@@ -38,6 +38,6 @@ class User {
 
     // Table references
     @OneToMany(mappedBy = "projectManager", targetEntity = Project::class, cascade = [CascadeType.ALL])
-    var projects = emptySet<Project>()
+    var projects = mutableSetOf<Project>()
 
 }
