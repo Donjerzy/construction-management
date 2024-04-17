@@ -4,7 +4,9 @@ import com.construction.management.cm.client.Client
 import com.construction.management.cm.task.Task
 import com.construction.management.cm.user.User
 import jakarta.persistence.*
+import java.time.LocalDate
 import java.util.*
+import kotlin.math.absoluteValue
 
 @Entity(name = "project")
 class Project {
@@ -27,19 +29,19 @@ class Project {
     var totalBudgetAmountSpent:Double = 0.0
 
     @Column(name = "status", nullable = false, length = 20)
-    var status: String = "-"
+    var status: String = ProjectStatusEnum.ONGOING.name
 
     @Column(name = "creation_date", nullable = false)
     var creationDate: Date = Date()
 
     @Column(name = "completion_date", nullable = true)
-    var completionDate: Date = Date()
+    var completionDate: Date? = null
 
     // Table References
     @OneToMany(mappedBy = "project", targetEntity = Client::class, cascade = [CascadeType.ALL])
     var clients = mutableSetOf<Client>()
 
-    @ManyToOne
+    @ManyToOne(cascade = [CascadeType.ALL])
     @JoinColumn(name = "project_manager")
     var projectManager = User()
 
