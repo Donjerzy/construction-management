@@ -18,6 +18,13 @@ class ExceptionHandler {
                 )
             )
 
+            "project-exists" -> ResponseEntity.status(400).body(
+                ExceptionResponse(
+                    httpStatus = 400,
+                    message = "Project Already Exists"
+                )
+            )
+
             "auth-user-na" -> ResponseEntity.status(401).body(
                 ExceptionResponse(
                     httpStatus = 401,

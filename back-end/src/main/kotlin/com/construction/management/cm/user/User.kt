@@ -1,10 +1,14 @@
 package com.construction.management.cm.user
 
+import com.construction.management.cm.client.Client
+import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
+import jakarta.persistence.OneToMany
+import com.construction.management.cm.project.Project
 import java.util.UUID
 
 @Entity(name = "cm_user")
@@ -31,4 +35,9 @@ class User {
 
     @Column(name = "user_role", nullable = false)
     var userRole:String = "-"
+
+    // Table references
+    @OneToMany(mappedBy = "projectManager", targetEntity = Project::class, cascade = [CascadeType.ALL])
+    var projects = mutableSetOf<Project>()
+
 }

@@ -12,4 +12,22 @@ import java.util.*
 import kotlin.random.Random
 
 @Service
-class UserService
+class UserService {
+
+    @Autowired
+    lateinit var repository: UserRepository
+
+    fun getUserId(email:String): Long? {
+      return repository.getUserId(email.lowercase())
+    }
+
+    fun getUser(email: String): User? {
+        return repository.findByEmail(email.lowercase())
+    }
+
+
+
+
+
+
+}
