@@ -200,6 +200,8 @@
         height: 20px;
         width: 184px;
         padding: 4px;
+        border-color: #ccc;
+        margin-top: 4px;
     }
     #login-btn {
         padding: 12px;

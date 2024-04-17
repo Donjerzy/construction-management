@@ -384,6 +384,8 @@
         height: 20px;
         width: 184px;
         padding: 4px;
+        border-color: #ccc;
+        margin-top: 4px;
     }
     #verif-code-label-div{
         display: flex;

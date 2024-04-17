@@ -1,2 +1,1 @@
-
 <h1>Hello from the Dashboard</h1>
