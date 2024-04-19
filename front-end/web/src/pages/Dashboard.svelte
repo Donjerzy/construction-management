@@ -3,7 +3,7 @@
     import { get } from "svelte/store";
     import AdminComponent from '../components/admin-component.svelte';
     let userFirstName = get(firstName);
-    let appName = 'Mjengo Bora Construction'
+    let appName = 'Mjengo Bora Construction';
 </script>
 
 
