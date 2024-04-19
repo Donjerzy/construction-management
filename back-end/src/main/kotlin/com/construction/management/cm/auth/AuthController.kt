@@ -1,12 +1,10 @@
 package com.construction.management.cm.auth
 
 import com.construction.management.cm.dto.AuthenticationRequest
+import com.construction.management.cm.dto.LoggedIn
 import com.construction.management.cm.dto.NewPassword
 import com.construction.management.cm.dto.SignUp
-import com.construction.management.cm.response.DefaultBoolean
-import com.construction.management.cm.response.DefaultInt
-import com.construction.management.cm.response.DefaultNa
-import com.construction.management.cm.response.DefaultString
+import com.construction.management.cm.response.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
@@ -21,12 +19,12 @@ class AuthController {
 
     @PostMapping("login")
     fun logIn(@RequestBody authRequest: AuthenticationRequest): ResponseEntity<Any> {
-        val accessToken = service.authenticateUser(authRequest)
+        val accessToken: LoggedIn  = service.authenticateUser(authRequest)
         return ResponseEntity.status(200).body(
-            DefaultString(
+            LoginResponse(
                 httpStatus = 200,
                 message = "User Authenticated Successfully",
-                value = accessToken
+                user = accessToken
             )
         )
     }

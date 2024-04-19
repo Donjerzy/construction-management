@@ -21,6 +21,11 @@ class UserService {
       return repository.getUserId(email.lowercase())
     }
 
+    fun getUserFirstName(email: String): String {
+        return repository.getUserFirstName(email.lowercase()).lowercase()
+            .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
+    }
+
     fun getUser(email: String): User? {
         return repository.findByEmail(email.lowercase())
     }

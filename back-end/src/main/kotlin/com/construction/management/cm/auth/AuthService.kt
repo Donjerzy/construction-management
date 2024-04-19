@@ -2,6 +2,7 @@ package com.construction.management.cm.auth
 
 import com.construction.management.cm.config.JwtProperties
 import com.construction.management.cm.dto.AuthenticationRequest
+import com.construction.management.cm.dto.LoggedIn
 import com.construction.management.cm.dto.NewPassword
 import com.construction.management.cm.dto.SignUp
 import com.construction.management.cm.emailsender.EmailSender
@@ -11,6 +12,7 @@ import com.construction.management.cm.exceptionhandler.CustomException
 import com.construction.management.cm.user.User
 import com.construction.management.cm.user.UserRepository
 import com.construction.management.cm.user.UserRole
+import com.construction.management.cm.user.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -42,6 +44,9 @@ class AuthService {
 
     @Autowired
     private lateinit var jwtProperties: JwtProperties
+
+    @Autowired
+    private lateinit var userService: UserService
 
 
     fun userExists(email: String): Boolean {
@@ -152,7 +157,7 @@ class AuthService {
         }
     }
 
-    fun authenticateUser(authRequest: AuthenticationRequest): String {
+    fun authenticateUser(authRequest: AuthenticationRequest): LoggedIn {
         authenticationManager.authenticate(
             UsernamePasswordAuthenticationToken(
                 authRequest.email,
@@ -160,11 +165,14 @@ class AuthService {
             )
         )
         val user = userDetailsService.loadUserByUsername(authRequest.email)
-        return tokenService.generate(
+        val token = tokenService.generate(
             userDetails = user,
             expirationDate = Date(System.currentTimeMillis() + jwtProperties.accessTokenExpiration)
         )
+        return LoggedIn(
+            token = token,
+            firstName = userService.getUserFirstName(user.username)
+        )
     }
-
 
 }
