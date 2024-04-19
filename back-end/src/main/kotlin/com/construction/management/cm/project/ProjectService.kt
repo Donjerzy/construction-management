@@ -21,6 +21,11 @@ class ProjectService {
         return repository.projectExists(user = userId, project = name.lowercase()) > 0
     }
 
+
+    fun projectUuidExists(uuid: UUID): Boolean {
+        return repository.projectUuidExists(uuid) > 0
+    }
+
     fun addProject(name: String, userEmail:String): String {
         val newProject = Project()
         val user = userService.getUser(userEmail)
@@ -29,6 +34,15 @@ class ProjectService {
         if (projectExists(name = newProject.name, userId = user!!.id)) {
             throw CustomException("project-exists", null)
         }
+        var projectId = UUID.randomUUID()
+        while(true) {
+            if(!projectUuidExists(projectId)) {
+                break
+            } else {
+                projectId = UUID.randomUUID()
+            }
+        }
+        newProject.projectId = projectId
         repository.save(newProject)
         return "Project created successfully"
     }
