@@ -16,6 +16,9 @@ class Project {
     @Column(name = "id")
     val id: Long = 0
 
+    @Column(name= "project_id", nullable = false, unique = true)
+    var projectId: UUID = UUID.randomUUID()
+
     @Column(name="name", nullable = false, unique = true, length = 50)
     var name:String = "-"
 
