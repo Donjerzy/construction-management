@@ -26,5 +26,8 @@ interface UserRepository : JpaRepository<User, Long> {
     @Query("select id from cm_user where lower(email)=:email", nativeQuery = true)
     fun getUserId(email: String): Long?
 
+    @Query("select first_name from cm_user where lower(email) = :email", nativeQuery = true)
+    fun getUserFirstName(email: String): String
+
 
 }
