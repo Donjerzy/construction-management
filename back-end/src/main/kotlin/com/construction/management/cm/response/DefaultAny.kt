@@ -1,6 +1,7 @@
 package com.construction.management.cm.response
 
-data class DefaultNa(
+data class DefaultAny(
     val httpStatus: Int,
-    val message: String
+    val message: String,
+    val value: Int
 )
