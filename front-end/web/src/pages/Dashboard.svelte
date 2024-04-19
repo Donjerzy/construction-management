@@ -12,4 +12,8 @@
 </svelte:head>
 
 
-<AdminComponent appName={appName} userFirstName={userFirstName}></AdminComponent>
+<AdminComponent appName={appName} userFirstName={userFirstName} contentTitle="Dashboard">
+</AdminComponent>
+
+
+<style></style>
