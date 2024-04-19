@@ -12,3 +12,10 @@ export const accessToken = writable( browser &&
 );
 
 accessToken.subscribe((val) => browser && localStorage.setItem("access", val));
+
+
+export const firstName = writable( browser &&
+    (localStorage.getItem("first-name")|| "n/a")
+);
+
+firstName.subscribe((val) => browser && localStorage.setItem("first-name", val));
