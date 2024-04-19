@@ -1,6 +1,6 @@
 <script>
     import { notifications } from "../lib/notification";
-    import {loggedIn, accessToken} from "../stores.js";
+    import {loggedIn, accessToken, firstName} from "../stores.js";
 
     export let appName;
 
@@ -15,9 +15,10 @@
     }
 
 
-    function updateLogIn(token) {
+    function updateLogIn(token, name) {
         loggedIn.set(true);
         accessToken.set(token);
+        firstName.set(name);
     }
 
     function setEmailError() {
@@ -74,7 +75,7 @@
             }
         }).then(transformed=> {
             if(!error) {
-                updateLogIn(transformed.value);
+                updateLogIn(transformed.user.token, transformed.user.firstName);
                 window.location.replace('/');
             } 
         }).catch(error=> {
