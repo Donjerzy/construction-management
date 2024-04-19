@@ -13,5 +13,8 @@ interface ProjectRepository: JpaRepository<Project, Long> {
     @Query("select count(*) from project where project_id = :uuid", nativeQuery = true)
     fun projectUuidExists(uuid: UUID): Int
 
+    @Query("select * from project where project_manager = :user", nativeQuery = true)
+    fun getProjects(user: Long): MutableSet<Project>
+
 
 }

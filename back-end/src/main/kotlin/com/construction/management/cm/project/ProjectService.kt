@@ -1,5 +1,7 @@
 package com.construction.management.cm.project
 
+import com.construction.management.cm.Runner.Runner
+import com.construction.management.cm.dto.Projects
 import com.construction.management.cm.exceptionhandler.CustomException
 import com.construction.management.cm.user.UserRepository
 import com.construction.management.cm.user.UserService
@@ -15,6 +17,9 @@ class ProjectService {
 
     @Autowired
     lateinit var userService: UserService
+
+    @Autowired
+    lateinit var runner: Runner
 
 
     fun projectExists(name: String, userId: Long) : Boolean {
@@ -45,6 +50,25 @@ class ProjectService {
         newProject.projectId = projectId
         repository.save(newProject)
         return "Project created successfully"
+    }
+
+    fun getProjects(userEmail: String): MutableSet<Projects> {
+        val userId = userService.getUserId(email = userEmail)
+        return mapProjectToProjects(repository.getProjects(userId!!))
+    }
+
+    fun mapProjectToProjects(projects: MutableSet<Project>): MutableSet<Projects> {
+        val mappedProjects = mutableSetOf<Projects>()
+        for (project in projects) {
+            mappedProjects.add(
+                Projects(
+                    id = project.id,
+                    name = project.name,
+                    status = project.status
+                )
+            )
+        }
+        return mappedProjects
     }
 
 }

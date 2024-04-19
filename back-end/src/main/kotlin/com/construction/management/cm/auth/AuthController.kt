@@ -7,7 +7,6 @@ import com.construction.management.cm.response.DefaultBoolean
 import com.construction.management.cm.response.DefaultInt
 import com.construction.management.cm.response.DefaultNa
 import com.construction.management.cm.response.DefaultString
-import com.construction.management.cm.user.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
