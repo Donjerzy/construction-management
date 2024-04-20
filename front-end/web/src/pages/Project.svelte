@@ -1,71 +1,72 @@
 <script>
     import AdminComponent  from "../components/admin-component.svelte"
-    import {firstName} from '../stores.js' 
+    import {firstName, accessToken, loggedIn} from '../stores.js' 
     import { get } from "svelte/store";
+    import {onMount} from 'svelte';
     let userFirstName = get(firstName);
     let appName = 'Mjengo Bora Construction';
     let contentTitle = "Projects";
     let userSearchValue = '';
     let start = 0;
     let end = 6;
-    let demoProjects = [
-        {
-            name: "Nairobi West",
-            status: "ONGOING"
-        },
-        {
-            name: "komarock",
-            status: "DONE"
-        },
-        {
-            name: "Langata Suites",
-            status: "ONGOING"
-        },
-        {
-            name: "Nairobi West",
-            status: "ONGOING"
-        },
-        {
-            name: "Kilimanjaro heights",
-            status: "ONGOING"
-        },
-        {
-            name: "Lavington",
-            status: "ONGOING"
-        },
-        {
-            name: "Mombasa",
-            status: "ONGOING"
-        },
-    ]
-    let validProjects = demoProjects.slice(start, end);
+    let projects = [];
+    let validProjects = projects.slice(start, end);
+
+    onMount(()=> {
+        let errorFetch = false;
+        fetch('http://localhost:8080/api/v1/project/all', {
+            headers: {
+                'Authorization': `Bearer ${get(accessToken)}`
+            }
+        })
+        .then(response => {
+            if(!response.ok) {
+                errorFetch = true;
+               firstName.set("");
+               accessToken.set("");
+               loggedIn.set("false");
+               window.location.replace('/'); 
+            } else {
+                return response.json();
+            }
+        }).then((result)=> {
+            if(!errorFetch) {
+                projects = result.setContainer;
+                validProjects = projects.slice(start, end);
+            }
+        })
+    });
+
+
     function adjustPagination(action) {
         switch(action) {
             case "next":
                 start += 6;
                 end = start + 6;
-                validProjects = demoProjects.slice(start, end);
+                validProjects = projects.slice(start, end);
                 break;
             case "previous":
                 start -=6;
                 end = start + 6;
-                validProjects = demoProjects.slice(start, end);
+                validProjects = projects.slice(start, end);
                 break;
         }
     }
 
 
+
+
     function projectSearch() {
         if(userSearchValue === "") {
-            validProjects = demoProjects.slice(start, end);
+            validProjects = projects.slice(start, end);
             return
         }
         let cleanedUserValue = userSearchValue.replace(/[^a-zA-Z]/g, '').toLowerCase();
         let matchingArr = [];
-        for(let i = 0; i < demoProjects.length; i++) {
-            const projectName = demoProjects[i].name.replace(/[^a-zA-Z]/g, '').toLowerCase();
+        for(let i = 0; i < projects.length; i++) {
+            const projectName = projects[i].name.replace(/[^a-zA-Z]/g, '').toLowerCase();
             if(projectName.includes(cleanedUserValue) || cleanedUserValue.includes(projectName)) {
-                matchingArr.push(demoProjects[i]);
+                matchingArr.push(projects[i]);
             }
         }
         validProjects = matchingArr;
