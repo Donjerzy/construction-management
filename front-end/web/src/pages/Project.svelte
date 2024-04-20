@@ -5,6 +5,7 @@
     let userFirstName = get(firstName);
     let appName = 'Mjengo Bora Construction';
     let contentTitle = "Projects";
+    let userSearchValue = '';
     let start = 0;
     let end = 6;
     let demoProjects = [
@@ -25,7 +26,7 @@
             status: "ONGOING"
         },
         {
-            name: "Nairobi West",
+            name: "Kilimanjaro heights",
             status: "ONGOING"
         },
         {
@@ -52,6 +53,28 @@
                 break;
         }
     }
+
+
+    function projectSearch() {
+        if(userSearchValue === "") {
+            validProjects = demoProjects.slice(start, end);
+            return
+        }
+        let cleanedUserValue = userSearchValue.replace(/[^a-zA-Z]/g, '').toLowerCase();
+        let matchingArr = [];
+        for(let i = 0; i < demoProjects.length; i++) {
+            const projectName = demoProjects[i].name.replace(/[^a-zA-Z]/g, '').toLowerCase();
+            if(projectName.includes(cleanedUserValue) || cleanedUserValue.includes(projectName)) {
+                matchingArr.push(demoProjects[i]);
+            }
+        }
+        validProjects = matchingArr;
+        return
+    }
+
+
+
+
 </script>
 
 
@@ -66,7 +89,7 @@
         <div class="search-area">
             <div class="search-box">
                 <svg class="magnify" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z" /></svg>
-                <input type="text">
+                <input bind:value={userSearchValue} type="text" on:change={projectSearch}>
             </div>
         </div>
         <div class="container">
