@@ -97,14 +97,15 @@
         </div>
         <div class="container">
             {#each validProjects as project }
-                <div class="project-container">
-                    <div class="strip"></div>
-                    <div class="project-items">
-                        <p class="card-text">{project.name}</p>
-                        <p class="card-text">{project.status}</p>
+                    <div class="project-container">
+                        <a class="a-project-card" href={`/project/${project.id}`}>
+                        <div class="strip"></div>
+                        <div class="project-items">
+                            <p class="card-text">{project.name}</p>
+                            <p class="card-text">{project.status}</p>
+                        </div>
+                        </a>
                     </div>
-        
-                </div>
             {/each}
         </div>
         <div class="pagination">
@@ -174,14 +175,24 @@
         row-gap: 40px;
         grid-template-rows: 200px 200px;
     }
-    .project-container {
+    .project-container,
+    .a-project-card {
         background-color: white;
         border-radius: 4px;
         border-left-width: 12px;   
         display: flex;
         gap: 16px;
+        width: 100%;
+        text-decoration: none;
     }
-    .project-container:hover {
+    .a-project-card {
+        text-decoration: none;
+        font-size: 1.1rem;
+        color: black;
+    }
+
+    .project-container:hover,
+    .a-project-card:hover {
         background-color: #eeeee4;
         cursor: pointer;
     }
