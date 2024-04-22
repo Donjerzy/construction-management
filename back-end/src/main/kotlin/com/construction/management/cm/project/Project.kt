@@ -1,6 +1,7 @@
 package com.construction.management.cm.project
 
 import com.construction.management.cm.client.Client
+import com.construction.management.cm.employee.Employee
 import com.construction.management.cm.task.Task
 import com.construction.management.cm.user.User
 import jakarta.persistence.*
@@ -50,5 +51,9 @@ class Project {
 
     @OneToMany(mappedBy = "project", targetEntity = Task::class, cascade = [CascadeType.ALL])
     var tasks = mutableListOf<Task>()
+
+
+    @OneToMany(mappedBy = "project", targetEntity = Employee::class, cascade = [CascadeType.ALL])
+    var employees = mutableSetOf<Employee>()
 
 }
