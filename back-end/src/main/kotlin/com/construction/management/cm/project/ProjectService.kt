@@ -1,16 +1,21 @@
 package com.construction.management.cm.project
 
 import com.construction.management.cm.Runner.Runner
+import com.construction.management.cm.client.ClientService
+import com.construction.management.cm.dto.Overview
 import com.construction.management.cm.dto.Projects
+import com.construction.management.cm.employee.EmployeeService
 import com.construction.management.cm.exceptionhandler.CustomException
-import com.construction.management.cm.user.UserRepository
+import com.construction.management.cm.task.TaskService
 import com.construction.management.cm.user.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
-class ProjectService {
+class ProjectService(private val clientService: ClientService ,
+                     private val employeeService: EmployeeService,
+                     private val taskService: TaskService) {
 
     @Autowired
     lateinit var repository: ProjectRepository
@@ -69,6 +74,27 @@ class ProjectService {
             )
         }
         return mappedProjects
+    }
+
+    fun isProjectManager(project:Long, projectManager:Long):Boolean {
+        return repository.isProjectManager(
+            projectManager = projectManager,
+            project = project
+        ) > 0
+    }
+
+    fun getOverview(email: String?, project: Long): Overview {
+        if (!isProjectManager(project = project, projectManager = userService.getUserId(email!!)!!)) {
+            throw CustomException("not-project-owner", null)
+        }
+        return Overview(
+            numberOfClients = clientService.getNumberOfClientsInProject(project),
+            numberOfEmployees = employeeService.getNumberOfEmployeesInProject(project),
+            numberOfTasksDone = taskService.getProjectTaskStatus(project).done,
+            numberOfTasksOngoing = taskService.getProjectTaskStatus(project).ongoing,
+            budgetAvailable = repository.getProjectBudgetAvailable(project),
+            budgetSpent = repository.getProjectBudgetSpent(project)
+        )
     }
 
 }
