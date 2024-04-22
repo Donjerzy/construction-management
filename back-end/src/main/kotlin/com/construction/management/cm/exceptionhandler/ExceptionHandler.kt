@@ -18,6 +18,13 @@ class ExceptionHandler {
                 )
             )
 
+            "not-project-owner" -> ResponseEntity.status(400).body(
+                ExceptionResponse(
+                    httpStatus = 400,
+                    message = "Requester is not the project owner"
+                )
+            )
+
             "project-exists" -> ResponseEntity.status(400).body(
                 ExceptionResponse(
                     httpStatus = 400,
