@@ -1,6 +1,15 @@
 <script>
     import {page} from '$app/stores';
-    const projectId = $page.params.productId;
+    const projectId = $page.params.projectId;
+    import IndividualProject from '../../../pages/IndividualProject.svelte';
+    let overview;
+
   </script>
   
-  <h1>Product {projectId} details</h1>
+  <IndividualProject projectId ={projectId} projectOverview={overview} />
+
+
+
+
+
+
