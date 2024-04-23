@@ -88,6 +88,7 @@ class ProjectService(private val clientService: ClientService ,
             throw CustomException("not-project-owner", null)
         }
         return Overview(
+            projectName = repository.findById(project).get().name,
             numberOfClients = clientService.getNumberOfClientsInProject(project),
             numberOfEmployees = employeeService.getNumberOfEmployeesInProject(project),
             numberOfTasksDone = taskService.getProjectTaskStatus(project).done,
