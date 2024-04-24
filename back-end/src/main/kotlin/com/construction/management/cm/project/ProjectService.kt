@@ -1,8 +1,10 @@
 package com.construction.management.cm.project
 
 import com.construction.management.cm.Runner.Runner
+import com.construction.management.cm.client.Client
 import com.construction.management.cm.client.ClientService
 import com.construction.management.cm.dto.Overview
+import com.construction.management.cm.dto.ProjectClient
 import com.construction.management.cm.dto.Projects
 import com.construction.management.cm.employee.EmployeeService
 import com.construction.management.cm.exceptionhandler.CustomException
@@ -103,5 +105,26 @@ class ProjectService(private val clientService: ClientService ,
     fun getProject(projectId: Long): Project? {
         return repository.findById(projectId).get()
     }
+
+    fun getClients(email: String?, project: Long): MutableSet<ProjectClient> {
+        return mapClientToProjectClient(repository.findById(project).get().clients)
+    }
+
+    fun mapClientToProjectClient(clients: MutableSet<Client>): MutableSet<ProjectClient> {
+        val result = mutableSetOf<ProjectClient>()
+        for (client in clients) {
+            result.add(
+                ProjectClient(
+                id = client.id,
+                committedAmount = String.format("%.0f", client.committedAmount),
+                investedAmount = String.format("%.0f", client.investedAmount),
+                name = client.name,
+                type = client.type
+            ))
+        }
+        return result
+    }
+
+
 
 }

@@ -5,6 +5,7 @@ import com.construction.management.cm.dto.AddProject
 import com.construction.management.cm.dto.Overview
 import com.construction.management.cm.dto.Projects
 import com.construction.management.cm.response.DefaultNa
+import com.construction.management.cm.response.GetClientsResponse
 import com.construction.management.cm.response.GetProjectsResponse
 import com.construction.management.cm.response.OverviewResponse
 import org.springframework.beans.factory.annotation.Autowired
@@ -63,6 +64,20 @@ class ProjectController {
                 httpStatus = 200,
                 message = "Overview retrieved successfully",
                 overview = overview
+            )
+        )
+    }
+
+    @GetMapping("/get-clients")
+    fun getProjectClients(@RequestHeader("Authorization") header:String,
+                          @RequestParam(name = "project") project:Long): ResponseEntity<Any> {
+        val userEmail = tokenService.extractEmail(header.substringAfter("Bearer "))
+        val clients = service.getClients(email = userEmail, project = project)
+        return ResponseEntity.status(200).body(
+            GetClientsResponse(
+                httpStatus = 200,
+                message = "Project Clients retrieved successfully",
+                clients = clients
             )
         )
     }
