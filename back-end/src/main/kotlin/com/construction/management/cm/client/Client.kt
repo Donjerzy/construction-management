@@ -13,16 +13,16 @@ class Client {
     val id: Long = 0
 
     @Column(name = "name", length=50, nullable = false, unique = true)
-    val name: String = "-"
+    var name: String = "-"
 
     @Column(name = "type", length=20, nullable = false)
-    val type: String = "-"
+    var type: String = "-"
 
     @Column(name = "committed_amount")
-    val committedAmount: Double = 0.0
+    var committedAmount: Double = 0.0
 
     @Column(name = "invested_amount")
-    val investedAmount: Double = 0.0
+    var investedAmount: Double = 0.0
 
     // Table References
     @ManyToOne

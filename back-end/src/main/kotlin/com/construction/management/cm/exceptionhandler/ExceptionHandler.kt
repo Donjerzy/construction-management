@@ -18,6 +18,27 @@ class ExceptionHandler {
                 )
             )
 
+            "project-doesn't-exists" -> ResponseEntity.status(400).body(
+                ExceptionResponse(
+                    httpStatus = 400,
+                    message = "Project Doesn't Exist"
+                )
+            )
+
+            "invalid-client-type" -> ResponseEntity.status(400).body(
+                ExceptionResponse(
+                    httpStatus = 400,
+                    message = "Invalid Client Type"
+                )
+            )
+
+            "client-exists" -> ResponseEntity.status(400).body(
+                ExceptionResponse(
+                    httpStatus = 400,
+                    message = "Client Already Exists"
+                )
+            )
+
             "not-project-owner" -> ResponseEntity.status(400).body(
                 ExceptionResponse(
                     httpStatus = 400,

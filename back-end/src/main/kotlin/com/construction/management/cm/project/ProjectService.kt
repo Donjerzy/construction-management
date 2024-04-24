@@ -6,6 +6,7 @@ import com.construction.management.cm.dto.Overview
 import com.construction.management.cm.dto.Projects
 import com.construction.management.cm.employee.EmployeeService
 import com.construction.management.cm.exceptionhandler.CustomException
+import com.construction.management.cm.formatters.StringFormatter
 import com.construction.management.cm.task.TaskService
 import com.construction.management.cm.user.UserService
 import org.springframework.beans.factory.annotation.Autowired
@@ -15,7 +16,8 @@ import java.util.*
 @Service
 class ProjectService(private val clientService: ClientService ,
                      private val employeeService: EmployeeService,
-                     private val taskService: TaskService) {
+                     private val taskService: TaskService,
+                     val stringFormatter: StringFormatter) {
 
     @Autowired
     lateinit var repository: ProjectRepository
@@ -28,7 +30,7 @@ class ProjectService(private val clientService: ClientService ,
 
 
     fun projectExists(name: String, userId: Long) : Boolean {
-        return repository.projectExists(user = userId, project = name.lowercase()) > 0
+        return repository.projectExists(user = userId, project = stringFormatter.formatNames(name).lowercase()) > 0
     }
 
 
@@ -96,6 +98,10 @@ class ProjectService(private val clientService: ClientService ,
             budgetAvailable = repository.getProjectBudgetAvailable(project),
             budgetSpent = repository.getProjectBudgetSpent(project)
         )
+    }
+
+    fun getProject(projectId: Long): Project? {
+        return repository.findById(projectId).get()
     }
 
 }

@@ -12,6 +12,9 @@ interface ProjectRepository: JpaRepository<Project, Long> {
     @Query("select count(*) from project where lower(name) = :project and project_manager = :user", nativeQuery = true)
     fun projectExists(project:String, user:Long): Int
 
+    @Query("select count(*) from project where id = :project and project_manager = :user", nativeQuery = true)
+    fun projectExistsId(project:Long, user:Long): Int
+
     @Query("select count(*) from project where project_id = :uuid", nativeQuery = true)
     fun projectUuidExists(uuid: UUID): Int
 
