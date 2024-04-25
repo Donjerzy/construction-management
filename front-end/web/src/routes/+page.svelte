@@ -3,6 +3,7 @@
     import Dashboard from "../pages/Dashboard.svelte"
     import {loggedIn} from '../stores.js' 
     import { get } from "svelte/store";
+    import {Alert} from 'flowbite-svelte';
     
     let appName = 'Mjengo Bora';
     let userStatus = 'false';
@@ -20,6 +21,8 @@
 {:else}
 <Dashboard />
 {/if}
+
+
 
 
 
