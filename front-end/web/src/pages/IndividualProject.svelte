@@ -1,6 +1,7 @@
 <script>
     import AdminComponent from "../components/admin-component.svelte";
     import {firstName, accessToken, loggedIn} from '../stores.js'; 
+    import { Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, Checkbox, TableSearch } from 'flowbite-svelte';    
     import { get } from "svelte/store";
     import {onMount} from 'svelte';
     export let projectId;
@@ -51,7 +52,9 @@
 </script>
 
 
-
+<svelte:head>
+    <title>Project | {projectOverview.projectName}</title>
+</svelte:head>
 
 <AdminComponent appName={appName} userFirstName={get(firstName)} contentTitle={projectOverview.projectName}>
     {#if active === 'overview'}
@@ -74,36 +77,38 @@
             <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
             <p on:click={()=> navigate("actions")}>Actions</p>
         </div>
+
         <div class="overview-table">
-            <table>
-                <thead>
-                    <tr class="table-head">
-                        <th>Clients</th>
-                        <th>Employees</th>
-                        <th colspan="2">Tasks</th>
-                        <th colspan="2">Budget</th>
+            <Table shadow>
+                <TableHead defaultRow={false} theadClass="border-black">
+                    <tr class="border-black bg-primary-50">
+                        <TableHeadCell class="border-black border-collapse border text-white">Clients</TableHeadCell>
+                        <TableHeadCell class="border-black border-collapse border text-white">Employees</TableHeadCell>
+                        <TableHeadCell class="border-black border-collapse border text-white text-center " colspan="2">Tasks</TableHeadCell>
+                        <TableHeadCell class="border-black border-collapse border text-white text-center" colspan="2">Budget</TableHeadCell>
                     </tr>
-                </thead>
-                <tbody>
-                    <tr class="table-attributes">
-                        <td>No</td>
-                        <td>No</td>
-                        <td>Done</td>
-                        <td>Open</td>
-                        <td>Available</td>
-                        <td>Spent</td>
+                    <tr class="bg-primary-100">
+                        <TableHeadCell class="border-black border-collapse border">No</TableHeadCell>
+                        <TableHeadCell class="border-black border-collapse border">No</TableHeadCell>
+                        <TableHeadCell class="border-black border-collapse border">Done</TableHeadCell>
+                        <TableHeadCell class="border-black border-collapse border">Open</TableHeadCell>
+                        <TableHeadCell class="border-black border-collapse border">Available</TableHeadCell>
+                        <TableHeadCell class="border-black border-collapse border">Spent</TableHeadCell>
                     </tr>
-                    <tr>
-                        <td>{projectOverview.numberOfClients}</td>
-                        <td>{projectOverview.numberOfEmployees}</td>
-                        <td>{projectOverview.numberOfTasksDone}</td>
-                        <td>{projectOverview.numberOfTasksOngoing}</td>
-                        <td>{projectOverview.budgetAvailable}</td>
-                        <td>{projectOverview.budgetSpent}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+                </TableHead>
+                <TableBody tableBodyClass="divide-y">
+                    <TableBodyRow>
+                        <TableBodyCell class="border-black border-collapse border">{projectOverview.numberOfClients}</TableBodyCell>
+                        <TableBodyCell class="border-black border-collapse border">{projectOverview.numberOfEmployees}</TableBodyCell>
+                        <TableBodyCell class="border-black border-collapse border">{projectOverview.numberOfTasksDone}</TableBodyCell>
+                        <TableBodyCell class="border-black border-collapse border">{projectOverview.numberOfTasksOngoing}</TableBodyCell>
+                        <TableBodyCell class="border-black border-collapse border">{projectOverview.budgetAvailable}</TableBodyCell>
+                        <TableBodyCell class="border-black border-collapse border">{projectOverview.budgetSpent}</TableBodyCell>
+                    </TableBodyRow>
+                </TableBody>
+            </Table>
+        </div> 
+        
     </div>
     {/if}
 </AdminComponent>
@@ -135,7 +140,7 @@
     .overview-table {
         margin-top: 40px;
     }
-    table {
+    /* Table{
        border-collapse: collapse;
        width: 100%;
     }
@@ -148,5 +153,5 @@
     .table-head,
     .table-attributes {
         height: 80px;
-    }
+    } */
 </style>
