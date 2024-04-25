@@ -92,7 +92,7 @@
                 <input bind:value={userSearchValue} type="text" on:change={projectSearch}>
             </div>
             <div>
-                <a href="/project-add"><button class="add-project-btn">Add Project</button></a>    
+                <a href="/project/add"><button class="add-project-btn">Add Project</button></a>    
             </div>
         </div>
         <div class="container">
