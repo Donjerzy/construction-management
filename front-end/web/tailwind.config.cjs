@@ -12,8 +12,8 @@ const config = {
       colors: {
         // flowbite-svelte
         primary: {
-          50: '#FFF5F2',
-          100: '#FFF1EE',
+          50: '#5c595c',
+          100: '#bebcbe',
           200: '#FFE4DE',
           300: '#FFD5CC',
           400: '#FFBCAD',

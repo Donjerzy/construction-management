@@ -234,6 +234,8 @@
         display: flex;
         flex-direction: column;
         justify-content: space-between;
+        padding-top: 12px;
+        padding-bottom: 12px;
     }
     .card-text {
         font-size: 1.1rem;
