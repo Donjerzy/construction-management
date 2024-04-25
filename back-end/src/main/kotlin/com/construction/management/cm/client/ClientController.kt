@@ -29,5 +29,4 @@ class ClientController(private val tokenService: TokenService,
         )
     }
 
-
 }

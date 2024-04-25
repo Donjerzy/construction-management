@@ -51,9 +51,13 @@ class ClientService (private val repository: ClientRepository,
             "organisation" -> "ORGANISATION"
             else -> throw CustomException("invalid-client-type",null)
         }
+        val project = projectRepository.findById(client.project).get()
+        project.committedBudgetAmount += client.committedAmount
+        project.totalBudgetAmountReceived += client.investedAmount
+        projectRepository.save(project)
         newClient.committedAmount = client.committedAmount
         newClient.investedAmount = client.investedAmount
-        newClient.project = projectRepository.findById(client.project).get()
+        newClient.project = project
         repository.save(newClient)
         return "Client Added Successfully"
     }
