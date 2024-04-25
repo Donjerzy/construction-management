@@ -1,5 +1,5 @@
 <script>
-    import AddProject from "../../pages/AddProject.svelte";
+    import AddProject from "../../../pages/AddProject.svelte";
 </script>
 
 <svelte:head>

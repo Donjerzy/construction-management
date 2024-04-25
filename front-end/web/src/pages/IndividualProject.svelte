@@ -23,7 +23,6 @@
     
     $: filteredItems = clients.filter((client) => client.name.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1);
 
-
     
 
 
@@ -168,17 +167,18 @@
                 <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("actions")}>Actions</p>
             </div>
             <div class="flex mt-5 justify-end">
-                <Button fontSize="base" height="12" label="Add Client" padding="7" width="32" />
+               <a href={`/project/${projectId}/add-client`}><Button fontSize="base" height="12" label="Add Client" padding="7" width="32" /> </a>
             </div>
-            <div class="mt-4">
+            <div class="mt-4 pb-8 max-h-screen">
                 <TableSearch placeholder="Search by client name" hoverable={true} bind:inputValue={searchTerm}>
-                   <Table shadow>
+                   <Table divClass="max-h-80 overflow-auto" shadow>
                         <TableHead defaultRow={false} theadClass="border-black">
                             <tr class="bg-primary-100">
                                 <TableHeadCell class="text-white">Name</TableHeadCell>
                                 <TableHeadCell class="text-white">Type</TableHeadCell>
                                 <TableHeadCell class="text-white">Committed Amount</TableHeadCell>
                                 <TableHeadCell class="text-white">Invested Amount</TableHeadCell>
+                                <TableHeadCell class="text-white">Action</TableHeadCell>
                             </tr>
                         </TableHead>
                         <TableBody>
@@ -188,6 +188,7 @@
                                     <TableBodyCell>{client.type}</TableBodyCell>
                                     <TableBodyCell>{client.committedAmount}</TableBodyCell>
                                     <TableBodyCell>{client.investedAmount}</TableBodyCell>
+                                    <TableBodyCell><a class="underline hover:cursor-pointer hover:text-primary-200" href="/">Edit</a></TableBodyCell>
                                 </TableBodyRow>
                             {/each}
                         </TableBody>
