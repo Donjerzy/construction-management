@@ -1,11 +1,13 @@
 <script>
     import AdminComponent from "../components/admin-component.svelte";
+    import Button from '../components/button.svelte';
     import {firstName, accessToken, loggedIn} from '../stores.js'; 
     import { Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, Checkbox, TableSearch } from 'flowbite-svelte';    
     import { get } from "svelte/store";
     import {onMount} from 'svelte';
     export let projectId;
 
+    let clients = [];
     let active = 'overview';
     let appName = 'Mjengo Bora Construction'; //  overview | 
     let projectOverview = {
@@ -17,6 +19,12 @@
         budgetAvailable: 0.0,
         budgetSpent: 0.0
     }
+    let searchTerm = '';
+    
+    $: filteredItems = clients.filter((client) => client.name.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1);
+
+
+    
 
 
     onMount(()=> {
@@ -41,6 +49,31 @@
                 projectOverview = result.overview;
             }
         })
+
+        fetch(`http://localhost:8080/api/v1/project/get-clients?project=${projectId}`, {
+            headers: {
+                'Authorization': `Bearer ${get(accessToken)}`
+            }
+        })
+        .then(response => {
+            if(!response.ok) {
+                errorFetch = true;
+               firstName.set("");
+               accessToken.set("");
+               loggedIn.set("false");
+               window.location.replace('/'); 
+            } else {
+                return response.json();
+            }
+        }).then((result)=> {
+            if(!errorFetch) {
+                clients = result.clients;
+            }
+        })
+
+        
+
+
     });
 
 
@@ -59,23 +92,25 @@
 <AdminComponent appName={appName} userFirstName={get(firstName)} contentTitle={projectOverview.projectName}>
     {#if active === 'overview'}
     <div class="container">
-        <div class="project-nav">
-            <p id="active-link">Overview</p>
+        <div class="flex justify-between h-8 align-middle text-base">
             <!-- svelte-ignore a11y-click-events-have-key-events -->
             <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-            <p on:click={()=> navigate("clients")}>Clients</p>
+            <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" id="active-link" on:click={()=> navigate("overview")}>Overview</p>
             <!-- svelte-ignore a11y-click-events-have-key-events -->
             <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-            <p on:click={()=> navigate("employees")}>Employees</p>
+            <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("clients")}>Clients</p>
             <!-- svelte-ignore a11y-click-events-have-key-events -->
             <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-            <p on:click={()=> navigate("tasks")}>Tasks</p>
+            <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("employees")}>Employees</p>
             <!-- svelte-ignore a11y-click-events-have-key-events -->
             <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-            <p on:click={()=> navigate("expenses")}>Expenses</p>
+            <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("tasks")}>Tasks</p>
             <!-- svelte-ignore a11y-click-events-have-key-events -->
             <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-            <p on:click={()=> navigate("actions")}>Actions</p>
+            <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("expenses")}>Expenses</p>
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
+            <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+            <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("actions")}>Actions</p>
         </div>
 
         <div class="overview-table">
@@ -110,6 +145,56 @@
         </div> 
         
     </div>
+    {:else if active === "clients"}
+        <div class="container">
+            <div class="flex justify-between h-8 align-middle text-base">
+                <!-- svelte-ignore a11y-click-events-have-key-events -->
+                <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+                <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200"  on:click={()=> navigate("overview")}>Overview</p>
+                <!-- svelte-ignore a11y-click-events-have-key-events -->
+                <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+                <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" id="active-link" on:click={()=> navigate("clients")}>Clients</p>
+                <!-- svelte-ignore a11y-click-events-have-key-events -->
+                <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+                <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("employees")}>Employees</p>
+                <!-- svelte-ignore a11y-click-events-have-key-events -->
+                <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+                <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("tasks")}>Tasks</p>
+                <!-- svelte-ignore a11y-click-events-have-key-events -->
+                <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+                <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("expenses")}>Expenses</p>
+                <!-- svelte-ignore a11y-click-events-have-key-events -->
+                <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+                <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("actions")}>Actions</p>
+            </div>
+            <div class="flex mt-5 justify-end">
+                <Button fontSize="base" height="12" label="Add Client" padding="7" width="32" />
+            </div>
+            <div class="mt-4">
+                <TableSearch placeholder="Search by client name" hoverable={true} bind:inputValue={searchTerm}>
+                   <Table shadow>
+                        <TableHead defaultRow={false} theadClass="border-black">
+                            <tr class="bg-primary-100">
+                                <TableHeadCell class="text-white">Name</TableHeadCell>
+                                <TableHeadCell class="text-white">Type</TableHeadCell>
+                                <TableHeadCell class="text-white">Committed Amount</TableHeadCell>
+                                <TableHeadCell class="text-white">Invested Amount</TableHeadCell>
+                            </tr>
+                        </TableHead>
+                        <TableBody>
+                            {#each filteredItems as client}
+                                <TableBodyRow>
+                                    <TableBodyCell>{client.name}</TableBodyCell>
+                                    <TableBodyCell>{client.type}</TableBodyCell>
+                                    <TableBodyCell>{client.committedAmount}</TableBodyCell>
+                                    <TableBodyCell>{client.investedAmount}</TableBodyCell>
+                                </TableBodyRow>
+                            {/each}
+                        </TableBody>
+                   </Table> 
+                </TableSearch>
+            </div>
+        </div>
     {/if}
 </AdminComponent>
 
@@ -117,21 +202,6 @@
 <style>
     .container {
         margin-top: 40px;
-    }
-    .project-nav {
-        display: flex;
-        justify-content: space-between;
-        height: 20px;
-        padding-right: 20px;
-        align-items: center;
-    }
-    .project-nav p {
-        text-decoration: underline;
-        font-size: 1rem;
-    }
-    .project-nav p:hover {
-        cursor: pointer;
-        color: var(--tertiary-clr);
     }
     #active-link {
         color: var(--tertiary-clr);

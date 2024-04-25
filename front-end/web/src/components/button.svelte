@@ -6,13 +6,13 @@
     export let padding;
 </script>
 
-<button on:click class="button" style="--height: {height}px; --width:{width}px; --f-size:{fontSize}; --padd:{padding}px">
+<button on:click  class="h-{height} bg-primary-50  w-{width} text-{fontSize} p-{padding} rounded-lg text-white hover:bg-primary-200 cursor-pointer">
     {label}
 </button>
 
 
 <style>
-    button {
+    /* button {
         background-color: var(--primary-clr);
         border: none;
         color: white;
@@ -25,5 +25,5 @@
     button:hover {
         cursor: pointer;
         background-color: var(--tertiary-clr);
-    }
+    } */
 </style>
