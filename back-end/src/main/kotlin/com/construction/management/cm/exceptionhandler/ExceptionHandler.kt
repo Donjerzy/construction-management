@@ -18,6 +18,41 @@ class ExceptionHandler {
                 )
             )
 
+            "client-doesn't-exist" -> ResponseEntity.status(400).body(
+                ExceptionResponse(
+                    httpStatus = 400,
+                    message = "Client Doesn't Exist"
+                )
+            )
+
+            "client-with-provided-name-exists" -> ResponseEntity.status(400).body(
+                ExceptionResponse(
+                    httpStatus = 400,
+                    message = "Client With Provided Name Exists"
+                )
+            )
+
+            "committed-amount-lz" -> ResponseEntity.status(400).body(
+                ExceptionResponse(
+                    httpStatus = 400,
+                    message = "Committed Amount Cannot be Less than Zero"
+                )
+            )
+
+            "invested-amount-lz" -> ResponseEntity.status(400).body(
+                ExceptionResponse(
+                    httpStatus = 400,
+                    message = "Invested Amount Cannot be Less than Zero"
+                )
+            )
+
+            "committed-invested-error" -> ResponseEntity.status(400).body(
+                ExceptionResponse(
+                    httpStatus = 400,
+                    message = "Invested amount cannot be greater than what has been committed"
+                )
+            )
+
             "project-doesn't-exists" -> ResponseEntity.status(400).body(
                 ExceptionResponse(
                     httpStatus = 400,

@@ -3,9 +3,7 @@ package com.construction.management.cm.project
 import com.construction.management.cm.Runner.Runner
 import com.construction.management.cm.client.Client
 import com.construction.management.cm.client.ClientService
-import com.construction.management.cm.dto.Overview
-import com.construction.management.cm.dto.ProjectClient
-import com.construction.management.cm.dto.Projects
+import com.construction.management.cm.dto.*
 import com.construction.management.cm.employee.EmployeeService
 import com.construction.management.cm.exceptionhandler.CustomException
 import com.construction.management.cm.formatters.StringFormatter
@@ -125,6 +123,83 @@ class ProjectService(private val clientService: ClientService ,
         return result
     }
 
+    private fun modifyCommittedAmount(projectId: Long, amount:Double) {
+        repository.modifyCommittedAmount(projectId = projectId, amount = amount)
+    }
+
+    private fun modifyInvestedAmount(projectId: Long, amount: Double) {
+        repository.modifyInvestedAmount(projectId = projectId, amount = amount)
+    }
+
+    fun editClient(userEmail: String, client: EditClient): String {
+        when(editClientValidations(client = client, userEmail= userEmail)) {
+            "client-doesn't-exist" -> throw CustomException("client-doesn't-exist", null)
+            "client-with-provided-name-exists" -> throw CustomException("client-with-provided-name-exists", null)
+            "committed-amount-lz" -> throw CustomException("committed-amount-lz", null)
+            "invested-amount-lz" -> throw CustomException("invested-amount-lz", null)
+            "committed-invested-error" -> throw CustomException("committed-invested-error", null)
+            "invalid-client-type" -> throw CustomException("invalid-client-type", null)
+            else -> {
+                val dataStoreClient = clientService.getClient(projectId = client.project, id = client.clientId)!!
+                var project = repository.findById(client.project).get()
+                when {
+                    client.committedAmount < dataStoreClient.committedAmount -> {
+                        project.committedBudgetAmount -= dataStoreClient.committedAmount - client.committedAmount
+                        modifyCommittedAmount(projectId = client.project, amount = project.committedBudgetAmount)
+                    }
+                    client.committedAmount > dataStoreClient.committedAmount -> {
+                        project.committedBudgetAmount += client.committedAmount - dataStoreClient.committedAmount
+                        modifyCommittedAmount(projectId = client.project, amount = project.committedBudgetAmount)
+                    }
+                    client.investedAmount < dataStoreClient.investedAmount -> {
+                        project.totalBudgetAmountReceived -= dataStoreClient.investedAmount - client.investedAmount
+                        modifyInvestedAmount(projectId = client.project, amount = project.totalBudgetAmountReceived)
+                    }
+                    client.investedAmount > dataStoreClient.investedAmount -> {
+                        project.totalBudgetAmountReceived += client.investedAmount - dataStoreClient.investedAmount
+                        modifyInvestedAmount(projectId = client.project, amount = project.totalBudgetAmountReceived)
+                    }
+                }
+                project = repository.findById(client.project).get()
+                dataStoreClient.name = stringFormatter.formatNames(client.name).uppercase()
+                dataStoreClient.type = when(client.type.lowercase()) {
+                    "individual" -> "INDIVIDUAL"
+                    "group" -> "GROUP"
+                    "organisation" -> "ORGANISATION"
+                    else -> throw CustomException("invalid-client-type",null)
+                }
+                dataStoreClient.committedAmount = client.committedAmount
+                dataStoreClient.investedAmount = client.investedAmount
+                dataStoreClient.project = project
+                clientService.saveClient(dataStoreClient)
+            }
+        }
+        return "Client Edited Successfully"
+    }
+
+    fun editClientValidations(client: EditClient, userEmail: String):String {
+        val validClientTypes = listOf("individual", "group",  "organisation" )
+        if(!clientService.clientExistsId(projectId = client.project,
+                                         id = client.clientId)) {
+            return "client-doesn't-exist"
+        }
+        if (clientService.clientExistsDifferentId(clientId = client.clientId , projectId = client.project, name = client.name)) {
+            return "client-with-provided-name-exists"
+        }
+        if (client.type !in validClientTypes) {
+            return "invalid-client-type"
+        }
+        if (client.committedAmount < 0) {
+            return "committed-amount-lz"
+        }
+        if (client.investedAmount < 0) {
+            return "invested-amount-lz"
+        }
+        if (client.committedAmount < client.investedAmount) {
+            return "committed-invested-error"
+        }
+        return "validation-ok"
+    }
 
 
 }

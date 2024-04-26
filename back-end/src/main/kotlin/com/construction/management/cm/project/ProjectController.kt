@@ -1,14 +1,13 @@
 package com.construction.management.cm.project
 
 import com.construction.management.cm.auth.TokenService
-import com.construction.management.cm.dto.AddProject
-import com.construction.management.cm.dto.Overview
-import com.construction.management.cm.dto.Projects
+import com.construction.management.cm.dto.*
 import com.construction.management.cm.response.DefaultNa
 import com.construction.management.cm.response.GetClientsResponse
 import com.construction.management.cm.response.GetProjectsResponse
 import com.construction.management.cm.response.OverviewResponse
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.RequestEntity
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
@@ -78,6 +77,19 @@ class ProjectController {
                 httpStatus = 200,
                 message = "Project Clients retrieved successfully",
                 clients = clients
+            )
+        )
+    }
+
+    @PostMapping("/edit-client")
+    fun editClient(@RequestHeader("Authorization") header:String,
+                    @RequestBody client:EditClient): ResponseEntity<Any> {
+        val userEmail = tokenService.extractEmail(header.substringAfter("Bearer "))
+        val message = service.editClient(userEmail = userEmail!!, client = client)
+        return ResponseEntity.status(200).body(
+            DefaultNa(
+                httpStatus = 200,
+                message = message
             )
         )
     }

@@ -31,6 +31,32 @@ class ClientService (private val repository: ClientRepository,
             name = stringFormatter.formatNames(name).lowercase()) > 0
     }
 
+    fun clientExistsId(projectId: Long, id:Long):Boolean {
+        return repository.clientExistsId(
+            projectId = projectId,
+            id = id) > 0
+    }
+
+
+    fun clientExistsDifferentId(projectId: Long, name:String, clientId: Long):Boolean {
+        return repository.clientExistsDifferentId(
+            projectId = projectId,
+            name = stringFormatter.formatNames(name).lowercase(),
+            clientId = clientId) > 0
+    }
+
+    fun getClient(projectId: Long, id:Long): Client? {
+        return repository.getClient(
+            projectId = projectId,
+            id = id
+        )
+    }
+
+    fun saveClient(client: Client):Client {
+        return repository.save(client)
+    }
+
+
     fun addClient(client: AddClient, userEmail: String): String {
         // Check if client is already in the project
         if (clientExists(projectId = client.project, name = client.name)) {
@@ -51,6 +77,15 @@ class ClientService (private val repository: ClientRepository,
             "organisation" -> "ORGANISATION"
             else -> throw CustomException("invalid-client-type",null)
         }
+        if (client.committedAmount < 0) {
+            throw CustomException("committed-amount-lz", null)
+        }
+        if (client.investedAmount < 0) {
+            throw CustomException("invested-amount-lz", null)
+        }
+        if (client.committedAmount < client.investedAmount) {
+            throw CustomException("committed-invested-error", null)
+        }
         val project = projectRepository.findById(client.project).get()
         project.committedBudgetAmount += client.committedAmount
         project.totalBudgetAmountReceived += client.investedAmount
@@ -61,4 +96,5 @@ class ClientService (private val repository: ClientRepository,
         repository.save(newClient)
         return "Client Added Successfully"
     }
+
 }
