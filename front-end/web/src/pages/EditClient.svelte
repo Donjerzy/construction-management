@@ -1,20 +1,22 @@
 <script>
     import AdminComponent from "../components/admin-component.svelte";
-    import {firstName, accessToken, loggedIn} from '../stores.js' 
+    import {firstName, accessToken, loggedIn, projectClient} from '../stores.js' 
     import { get } from "svelte/store";
     import Button from "../components/button.svelte";
     import Loader from "../components/loading-component.svelte";
     import { notifications } from "../lib/notification";
     import Toast from '../components/toast.svelte';
     import {page} from '$app/stores';
+    let originalClient = get(projectClient);
+    // let newClient = get(projectClient);
     const projectId = $page.params.projectId;
     let appName = "Mjengo Bora Construction";
-    let title = "Add Client";
+    let title = "Edit Client";
     let loading = false;
-    let name = "";
-    let typeOfClient;
-    let investedAmount = 0;
-    let commitedAmount = 0;
+    let name = originalClient.name;
+    let typeOfClient = originalClient.type;
+    let investedAmount = originalClient.investedAmount;
+    let committedAmount = originalClient.committedAmount;
 
     
 
@@ -22,11 +24,12 @@
         return /^[a-zA-Z\s]*$/.test(inputString);
     }
 
-    async function AddClient(client) {
+    async function EditClient(client) {
         loading = true;
         let error = false;
         let existsError = false;
-        await fetch('http://localhost:8080/api/v1/client/add', {
+        let errorMessage = "";
+        await fetch('http://localhost:8080/api/v1/project/edit-client', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -37,7 +40,7 @@
             loading = false;
             if(response.status === 400) {
                 existsError = true;
-                return
+                return response.json()
             }
             if(!response.ok) {
                 error = true;
@@ -45,18 +48,20 @@
             } else {
                 error = false;
                 existsError = false;
-                notifications.success("Client added successfully", 1000);
-                name = "";
-                investedAmount = 0;
-                commitedAmount = 0;
+                notifications.success("Client edited successfully", 1000);
+                window.location.replace(`/project/${projectId}`);
                 return;
             }
-        }).catch(error=> {
+        }).then((res)=> {
+            if(existsError) {
+                errorMessage = res.message
+            }
+        }) 
+        .catch(error=> {
             loading = false;
-            notifications.danger("Could make request to server", 1000)
         })
         if(existsError) {
-            notifications.danger("Client Already Exists", 1000); 
+            notifications.danger(errorMessage, 1000); 
         }
         if(error) {
             firstName.set("");
@@ -64,7 +69,6 @@
             loggedIn.set("false");
             window.location.replace('/'); 
         }
-        
     }
 
 
@@ -78,15 +82,15 @@
             notifications.danger("Client name has invalid characters", 1000);
             return;
         }
-        if(typeOfClient === undefined) {
+        if(typeOfClient === undefined || typeOfClient.length === 0) {
             notifications.danger("Client type is a required field", 1000);
             return;
         }
-        if(isNaN(parseFloat(commitedAmount))) {
+        if(isNaN(parseFloat(committedAmount))) {
             notifications.danger("Committed amount must be a number", 1000);
             return;
         }
-        if(commitedAmount < 0) {
+        if(committedAmount < 0) {
             notifications.danger("Committed must be greater than zero", 1000);
             return;
         }
@@ -98,16 +102,24 @@
             notifications.danger("Committed must be greater than zero", 1000);
             return;
         }
-        if(investedAmount > commitedAmount) {
+        if(investedAmount > committedAmount) {
             notifications.danger("Invested amount must be less than what was committed", 1000);
             return;
         }
-        AddClient({
+        if (originalClient.name === name 
+            && originalClient.committedAmount === committedAmount 
+            && originalClient.investedAmount === investedAmount
+            && originalClient.type === typeOfClient) {
+            notifications.danger("Update the client before saving", 1000);
+            return;    
+        }
+        EditClient({
+            clientId: originalClient.id,
             name: name,
             type: typeOfClient,
             project: projectId,
             investedAmount: investedAmount,
-            committedAmount: commitedAmount
+            committedAmount: committedAmount
         });
     }
 
@@ -137,7 +149,7 @@
             </div>
             <div class="flex flex-col gap-2 mt-2">
                 <label for="commited_amount">Committed Amount</label>
-                <input name="commited_amount" class="rounded border-primary-800" type="number" id="commited_amount" bind:value={commitedAmount}>
+                <input name="commited_amount" class="rounded border-primary-800" type="number" id="commited_amount" bind:value={committedAmount}>
             </div>
             <div class="flex flex-col gap-2 mt-2">
                 <label for="invested_amount">Invested Amount</label>
@@ -148,10 +160,9 @@
                     <Loader />
                 {:else}
                     <Button 
-                    height=12 width=36 label="Add Client" fontSize="sm" padding="8px"
+                    height=12 width=36 label="Save" fontSize="sm" padding="8px"
                     on:click={validateInput} />
-                {/if}
-                
+                {/if}    
             </div>
         </form>
     </div>

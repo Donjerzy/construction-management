@@ -246,6 +246,7 @@
         height: 48px;
         display: inline-block;
         position: relative;
+        margin-top: 8px;
     }
     .loader::after,
     .loader::before {
