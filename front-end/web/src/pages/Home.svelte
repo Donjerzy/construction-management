@@ -128,9 +128,9 @@
         <form on:submit={validateLogInDetails}>
             <label style="font-family: 'Times New Roman', Times, serif; font-size: 1rem;" for="module">Module</label>
             <!--  class="block appearance-none border w-32 border-primary-100"-->
-            <select name="module" style="border: 1px #ccc solid; display:block; width: 240px; margin-top: 8px;" id="module">
-                <option value="admin">Admin</option>
-                <option value="employee">Employee</option>
+            <select name="module" style=" cursor: pointer; border: 1px #ccc solid; display:block; width: 240px; margin-top: 8px;" id="module">
+                <option style="height: 80px;" value="admin">Admin</option>
+                <option style="height: 80px;" value="employee">Employee</option>
             </select>
 
             <label style="display:block; font-family: 'Times New Roman', Times, serif; font-size: 1rem; margin-top: 8px;" for="email">Email</label>
