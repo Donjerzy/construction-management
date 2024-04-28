@@ -1,7 +1,5 @@
 <script>
-    import AddClient from "../../../../pages/AddClient.svelte";
-
-    
+    import AddClient from "../../../../pages/AddClient.svelte";  
 </script>
 
 <svelte:head>

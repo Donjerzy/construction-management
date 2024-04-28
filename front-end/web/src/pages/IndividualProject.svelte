@@ -1,7 +1,7 @@
 <script>
     import AdminComponent from "../components/admin-component.svelte";
     import Button from '../components/button.svelte';
-    import {firstName, accessToken, loggedIn} from '../stores.js'; 
+    import {firstName, accessToken, loggedIn, projectClient} from '../stores.js'; 
     import { Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, Checkbox, TableSearch } from 'flowbite-svelte';    
     import { get } from "svelte/store";
     import {onMount} from 'svelte';
@@ -80,6 +80,10 @@
         active = to;
     }
 
+    function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
 
 </script>
 
@@ -136,8 +140,8 @@
                         <TableBodyCell class="border-black border-collapse border">{projectOverview.numberOfEmployees}</TableBodyCell>
                         <TableBodyCell class="border-black border-collapse border">{projectOverview.numberOfTasksDone}</TableBodyCell>
                         <TableBodyCell class="border-black border-collapse border">{projectOverview.numberOfTasksOngoing}</TableBodyCell>
-                        <TableBodyCell class="border-black border-collapse border">{projectOverview.budgetAvailable}</TableBodyCell>
-                        <TableBodyCell class="border-black border-collapse border">{projectOverview.budgetSpent}</TableBodyCell>
+                        <TableBodyCell class="border-black border-collapse border">{numberWithCommas(projectOverview.budgetAvailable)}</TableBodyCell>
+                        <TableBodyCell class="border-black border-collapse border">{numberWithCommas(projectOverview.budgetSpent)}</TableBodyCell>
                     </TableBodyRow>
                 </TableBody>
             </Table>
@@ -186,9 +190,17 @@
                                 <TableBodyRow>
                                     <TableBodyCell>{client.name}</TableBodyCell>
                                     <TableBodyCell>{client.type}</TableBodyCell>
-                                    <TableBodyCell>{client.committedAmount}</TableBodyCell>
-                                    <TableBodyCell>{client.investedAmount}</TableBodyCell>
-                                    <TableBodyCell><a class="underline hover:cursor-pointer hover:text-primary-200" href="/">Edit</a></TableBodyCell>
+                                    <TableBodyCell>{numberWithCommas(client.committedAmount)}</TableBodyCell>
+                                    <TableBodyCell>{numberWithCommas(client.investedAmount)}</TableBodyCell>
+                                    <TableBodyCell><a on:click={()=> {
+                                        projectClient.set({
+                                            id: client.id,
+                                            name: client.name,
+                                            type: client.type,
+                                            committedAmount: client.committedAmount,
+                                            investedAmount: client.investedAmount
+                                        })
+                                    } } class="underline hover:cursor-pointer hover:text-primary-200" href={`/project/${projectId}/edit-client`}>Edit</a></TableBodyCell>
                                 </TableBodyRow>
                             {/each}
                         </TableBody>

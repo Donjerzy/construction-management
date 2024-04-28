@@ -6,7 +6,7 @@
 
   </script>
   
-  <IndividualProject projectId ={projectId} projectOverview={overview} />
+  <IndividualProject projectId ={projectId} />
 
 
 

@@ -19,3 +19,14 @@ export const firstName = writable( browser &&
 );
 
 firstName.subscribe((val) => browser && localStorage.setItem("first-name", val));
+
+
+export const projectClient = writable(
+    {
+        id: 0,
+        name: "demo",
+        type: "demo",
+        committedAmount: 0.0,
+        investedAmount: 0.0
+    }
+);
