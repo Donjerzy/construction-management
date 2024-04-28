@@ -19,7 +19,11 @@
             <div class="sidebar-content-row">
                 <svg class="sidebar-content-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21.71 20.29L20.29 21.71A1 1 0 0 1 18.88 21.71L7 9.85A3.81 3.81 0 0 1 6 10A4 4 0 0 1 2.22 4.7L4.76 7.24L5.29 6.71L6.71 5.29L7.24 4.76L4.7 2.22A4 4 0 0 1 10 6A3.81 3.81 0 0 1 9.85 7L21.71 18.88A1 1 0 0 1 21.71 20.29M2.29 18.88A1 1 0 0 0 2.29 20.29L3.71 21.71A1 1 0 0 0 5.12 21.71L10.59 16.25L7.76 13.42M20 2L16 4V6L13.83 8.17L15.83 10.17L18 8H20L22 4Z" /></svg>
                 <a href="/project" class="sidebar-content-text">Projects</a>
-            </div>  
+            </div>
+            <div class="sidebar-content-row">
+                <svg class="sidebar-content-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M22.61,19L13.53,9.91C14.46,7.57 14,4.81 12.09,2.91C9.79,0.61 6.21,0.4 3.66,2.26L7.5,6.11L6.08,7.5L2.25,3.69C0.39,6.23 0.6,9.82 2.9,12.11C4.76,13.97 7.47,14.46 9.79,13.59L18.9,22.7C19.29,23.09 19.92,23.09 20.31,22.7L22.61,20.4C23,20 23,19.39 22.61,19M19.61,20.59L10.15,11.13C9.54,11.58 8.86,11.85 8.15,11.95C6.79,12.15 5.36,11.74 4.32,10.7C3.37,9.76 2.93,8.5 3,7.26L6.09,10.35L10.33,6.11L7.24,3C8.5,2.95 9.73,3.39 10.68,4.33C11.76,5.41 12.17,6.9 11.92,8.29C11.8,9 11.5,9.66 11.04,10.25L20.5,19.7L19.61,20.59Z" /></svg>
+                <a href="/setup" class="sidebar-content-text">Setups</a>
+            </div>    
         </div>   
     </div>
     <div class="top-nav">
@@ -73,7 +77,7 @@
         display: flex;
         padding-left: 20px;
         flex-direction: column;
-        gap: 80px;
+        gap: 40px;
     }
     .side-bar  h1 {
         font-size: 1.4rem;
@@ -103,13 +107,13 @@
         align-items: center;
     }
     .sidebar-content-icon {
-        height: 28px;
-        width: 28px;
+        height: 24px;
+        width: 24px;
         fill: white;
     }
     .sidebar-content-text {
         color: white;
-        font-size: 1.2rem;
+        font-size: 1rem;
         text-decoration: none;
     }
     .sidebar-content-text:hover {
