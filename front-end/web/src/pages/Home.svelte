@@ -1,7 +1,7 @@
 <script>
+    import Toast from "../components/toast.svelte";
     import { notifications } from "../lib/notification";
     import {loggedIn, accessToken, firstName} from "../stores.js";
-
     export let appName;
 
     let emailError = false;
@@ -53,9 +53,9 @@
         clearAuthenticationError();
     }
 
-    async function authenticate(email, password) {
+    async function authenticateAdmin(email, password) {
         let error = false;
-        const res = await fetch('http://localhost:8080/api/v1/auth/login', {
+        await fetch('http://localhost:8080/api/v1/auth/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -85,9 +85,18 @@
     }
 
 
+    async function authenticateEmployee () {
+        notifications.info("TODO", 1000)
+        loading = false;
+        return
+    }
+
+
+
     function validateLogInDetails(e) {
         clearErrors();
         e.preventDefault();
+        let chosenModule = e.target.elements.module.value;
         if (!validateEmail(e.target.elements.email.value)) {
              setEmailError();
              return
@@ -97,14 +106,17 @@
              return
         }
         loading = true;
-        authenticate(e.target.elements.email.value.toLowerCase(), e.target.elements.pass.value);
+        if (chosenModule === 'admin') {
+            authenticateAdmin(e.target.elements.email.value.toLowerCase(), e.target.elements.pass.value);
+        } else {
+            authenticateEmployee();
+        }        
     }
-
-
-
 </script>
 
+
 <div class="main">
+    <Toast />
     <div id="header">
         <h1 class="app-name">{appName} Construction App</h1>
         <a href="/sign-up" id="sign-up">Sign Up</a>
@@ -114,22 +126,29 @@
             <h2>Login</h2>
         </div>
         <form on:submit={validateLogInDetails}>
-            <label for="email">Email</label>
-            <input type="email" name="email" id="email" on:change={clearEmailError}  >
+            <label style="font-family: 'Times New Roman', Times, serif; font-size: 1rem;" for="module">Module</label>
+            <!--  class="block appearance-none border w-32 border-primary-100"-->
+            <select name="module" style="border: 1px #ccc solid; display:block; width: 240px; margin-top: 8px;" id="module">
+                <option value="admin">Admin</option>
+                <option value="employee">Employee</option>
+            </select>
+
+            <label style="display:block; font-family: 'Times New Roman', Times, serif; font-size: 1rem; margin-top: 8px;" for="email">Email</label>
+            <input style="border: 1px #ccc solid; display:block; width: 240px; margin-top: 8px;" type="email" name="email" id="email" on:change={clearEmailError}  >
             {#if emailError}
-            <p class="error">Invalid Email Address</p>
+            <p class="text-primary-700 text-base mb-3 font-serif mt-1">Invalid Email Address</p>
             {/if}
-            <label for="pass">Password</label>
-            <input type="password" name="pass" id="pass" on:change={clearPasswordError}>
+            <label style="display:block; font-family: 'Times New Roman', Times, serif; font-size: 1rem; margin-top: 8px;" for="pass">Password</label>
+            <input style="border: 1px #ccc solid; display:block; width: 240px; margin-top: 8px;" type="password" name="pass" id="pass" on:change={clearPasswordError}>
             {#if passwordError}
-            <p class="error">Password field cannot be empty</p>
+            <p class="text-primary-700 text-base mb-3 font-serif mt-1">Password field cannot be empty</p>
             {/if}
             {#if authenticationError}
                 <div style="text-align: center;">
                     <p class="error">Invalid Credentials</p>
                 </div>
             {/if}
-            <a id="forgot" href="/forgot-password">Forgot Password?</a>
+            <a style="margin-top: 12px; font-family: 'Times New Roman', Times, serif; text-decoration: underline; margin-bottom: 8px;" id="forgot" href="/forgot-password">Forgot Password?</a>
             {#if loading}
                 <div id="loader-div">
                     <span class="loader"></span>
@@ -194,16 +213,7 @@
         margin-bottom: 20px;
         font-size: 1.4rem;
     }
-    input {
-        display: block;
-        border: 1px solid;
-        margin-bottom: 20px;
-        height: 20px;
-        width: 184px;
-        padding: 4px;
-        border-color: #ccc;
-        margin-top: 4px;
-    }
+    
     #login-btn {
         padding: 12px;
         border-radius: 4px;
@@ -211,35 +221,21 @@
         width: 200px;
         border-radius: 20px;
         color:#ffffff;
+        margin-top: 8px;
     }
     #login-btn:hover {
         cursor: pointer;
         background-color: #38aa3b;
     }
-    #forgot {
-        margin-bottom: 12px;
-        font-family: 'Times New Roman', Times, serif;
-        color: #434143;
-        font-size: 1rem;
-    }
-    #forgot:hover {
-        cursor: pointer;
-        color: #38aa3b;
-        text-decoration: underline;
-    }
     h2 {
         font-family: Georgia, 'Times New Roman', Times, serif;
     }
-    label {
-        font-family: 'Times New Roman', Times, serif;
-        font-size: 1rem;
+
+    #forgot:hover {
+        cursor: pointer;
+        color: #38aa3b;
     }
-    .error {
-        color: red;
-        font-size: 1rem;
-        font-family: 'Times New Roman', Times, serif;
-        margin-bottom: 12px;
-    }
+
 
     #loader-div {
         display: flex;

@@ -1,9 +1,8 @@
 <script>
-    import Home from "../pages/Home.svelte"
+    import Home from "../pages/Home.svelte";
     import Dashboard from "../pages/Dashboard.svelte"
     import {loggedIn} from '../stores.js' 
     import { get } from "svelte/store";
-    import {Alert} from 'flowbite-svelte';
     
     let appName = 'Mjengo Bora';
     let userStatus = 'false';
