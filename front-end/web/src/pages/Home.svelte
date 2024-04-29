@@ -154,7 +154,9 @@
                     <span class="loader"></span>
                 </div>
             {:else}
-                <button type="submit" id="login-btn">Log in</button>
+                <div style="display: flex; justify-content: center;">
+                    <button type="submit" id="login-btn">Log in</button>
+                </div>
             {/if}
         </form>
     </div>
