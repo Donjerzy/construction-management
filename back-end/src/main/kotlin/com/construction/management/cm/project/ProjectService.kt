@@ -4,11 +4,14 @@ import com.construction.management.cm.Runner.Runner
 import com.construction.management.cm.client.Client
 import com.construction.management.cm.client.ClientService
 import com.construction.management.cm.dto.*
+import com.construction.management.cm.employee.Employee
 import com.construction.management.cm.employee.EmployeeService
+import com.construction.management.cm.employeetype.EmployeeTypeRepository
 import com.construction.management.cm.exceptionhandler.CustomException
 import com.construction.management.cm.formatters.StringFormatter
 import com.construction.management.cm.task.TaskService
 import com.construction.management.cm.user.UserService
+import com.construction.management.cm.wagetype.WageTypeRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.*
@@ -17,7 +20,9 @@ import java.util.*
 class ProjectService(private val clientService: ClientService ,
                      private val employeeService: EmployeeService,
                      private val taskService: TaskService,
-                     val stringFormatter: StringFormatter) {
+                     val stringFormatter: StringFormatter,
+                     private val employeeTypeRepository: EmployeeTypeRepository,
+                     private val wageTypeRepository: WageTypeRepository) {
 
     @Autowired
     lateinit var repository: ProjectRepository
@@ -200,6 +205,53 @@ class ProjectService(private val clientService: ClientService ,
         }
         return "validation-ok"
     }
+
+    fun getEmployees(email: String, project: Long): MutableSet<Employees> {
+        /**
+         * Validations
+         * Is requester project owner?
+         */
+        val validationResult = getEmployeesValidation(projectManager = userService.getUserId(email)!!,
+                                                      project = project)
+        when (validationResult) {
+            "not-project-owner" -> throw CustomException("not-project-owner", null)
+        }
+        val employees = employeeService.getProjectEmployees(project = project)
+        return mapEmployeesToGetEmployeesResponseFormat(employees = employees)
+    }
+
+    private fun mapEmployeesToGetEmployeesResponseFormat(employees: MutableList<Employee>): MutableSet<Employees> {
+        val result = mutableSetOf<Employees>()
+        for (employee in employees) {
+            result.add(
+                Employees(
+                    id = employee.id,
+                    name = "${employee.firstName.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }} ${employee.lastName.replaceFirstChar {
+                        if (it.isLowerCase()) it.titlecase(
+                            Locale.getDefault()
+                        ) else it.toString()
+                    }}",
+                    employeeType = employee.employeeType.name,
+                    wage = stringFormatter.doubleToString(employee.wage),
+                    wageType = employee.wageType.name
+                )
+            )
+        }
+        return result
+    }
+
+
+    fun getEmployeesValidation(projectManager: Long, project: Long): String {
+        if(!isProjectManager(projectManager = projectManager, project = project)) {
+            return "not-project-owner"
+        }
+        return "ok"
+    }
+
+
+
+
+
 
 
 }
