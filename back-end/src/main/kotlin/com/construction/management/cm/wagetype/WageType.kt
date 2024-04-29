@@ -20,7 +20,7 @@ class WageType {
     @Column(name = "id")
     val id: Long = 0
 
-    @Column(name = "name", nullable = false, unique = true)
+    @Column(name = "name", nullable = false)
     var name: String = "_"
 
     @Column(name = "period_in_days", nullable = false, unique = true)

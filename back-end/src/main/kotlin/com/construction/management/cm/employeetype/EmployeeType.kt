@@ -12,7 +12,7 @@ class EmployeeType {
     @Column(name = "id")
     val id: Long = 0
 
-    @Column(name = "name", unique = true, nullable = false)
+    @Column(name = "name", nullable = false)
     var name: String = "-"
 
 
