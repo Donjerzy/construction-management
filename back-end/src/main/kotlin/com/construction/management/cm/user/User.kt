@@ -1,6 +1,7 @@
 package com.construction.management.cm.user
 
 import com.construction.management.cm.client.Client
+import com.construction.management.cm.employeetype.EmployeeType
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -9,6 +10,7 @@ import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.OneToMany
 import com.construction.management.cm.project.Project
+import com.construction.management.cm.wagetype.WageType
 import java.util.UUID
 
 @Entity(name = "cm_user")
@@ -39,5 +41,12 @@ class User {
     // Table references
     @OneToMany(mappedBy = "projectManager", targetEntity = Project::class, cascade = [CascadeType.ALL])
     var projects = mutableSetOf<Project>()
+
+    @OneToMany(mappedBy = "projectManager", targetEntity = WageType::class, cascade = [CascadeType.ALL])
+    var wageTypes = mutableSetOf<WageType>()
+
+    @OneToMany(mappedBy = "projectManager", targetEntity = EmployeeType::class, cascade = [CascadeType.ALL])
+    var employeeTypes = mutableSetOf<EmployeeType>()
+
 
 }

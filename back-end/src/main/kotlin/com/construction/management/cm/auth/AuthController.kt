@@ -56,11 +56,11 @@ class AuthController {
 
     @PostMapping("signup")
     fun signUp(@RequestBody signUpForm: SignUp): ResponseEntity<Any> {
-        val createUser: Boolean = service.createUser(signUpForm)
+        val message: String = service.createUser(signUpForm)
         return ResponseEntity.status(200).body(
             DefaultNa(
                 httpStatus = 200,
-                message = "User Created Successfully"
+                message = message
             )
         )
     }

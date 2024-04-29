@@ -15,4 +15,8 @@ interface WageTypeRepository : JpaRepository<WageType, Long>  {
     fun exists(id: Long): Int
 
 
+    @Query("select * from wage_type where project_manager = :user", nativeQuery = true)
+    fun getUserWageTypes(user: Long): MutableList<WageType>
+
+
 }

@@ -8,11 +8,15 @@ import com.construction.management.cm.dto.SignUp
 import com.construction.management.cm.emailsender.EmailSender
 import com.construction.management.cm.emailverification.EmailVerification
 import com.construction.management.cm.emailverification.EmailVerificationRepository
+import com.construction.management.cm.employeetype.EmployeeType
+import com.construction.management.cm.employeetype.EmployeeTypeRepository
 import com.construction.management.cm.exceptionhandler.CustomException
 import com.construction.management.cm.user.User
 import com.construction.management.cm.user.UserRepository
 import com.construction.management.cm.user.UserRole
 import com.construction.management.cm.user.UserService
+import com.construction.management.cm.wagetype.WageType
+import com.construction.management.cm.wagetype.WageTypeRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -22,7 +26,8 @@ import java.util.*
 import kotlin.random.Random
 
 @Service
-class AuthService {
+class AuthService(private val wageTypeRepository: WageTypeRepository,
+                  private val employeeTypeRepository: EmployeeTypeRepository)  {
 
     @Autowired
     private lateinit var userRepository: UserRepository
@@ -103,7 +108,7 @@ class AuthService {
     }
 
 
-    fun createUser(signUpForm: SignUp): Boolean {
+    fun createUser(signUpForm: SignUp): String {
         when(emailVerificationRepository.validateEmailCode(email=signUpForm.email.lowercase(), code=signUpForm.verificationCode)) {
             0 -> throw CustomException("code-not-verified", null)
             else -> {
@@ -124,14 +129,70 @@ class AuthService {
                     }
                 }
                 try {
-                    userRepository.save(user)
+                    val createdUser = userRepository.save(user)
+                    createUserInitialDbDataSetUp(createdUser)
                 } catch (e: Exception) {
                     throw CustomException("persist-sign-up-error", null)
                 }
-                return true
+                return "User Created Successfully"
             }
         }
     }
+
+    fun createUserInitialDbDataSetUp(user:User) {
+        val wageTypeOne = WageType()
+        val wageTypeTwo = WageType()
+        val wageTypeThree = WageType()
+        val outOfBoxWageTypes = mutableListOf<WageType>()
+
+        wageTypeOne.name = "Daily"
+        wageTypeOne.period = 1
+        wageTypeOne.projectManager = user
+        wageTypeTwo.name = "Weekly"
+        wageTypeTwo.period = 7
+        wageTypeTwo.projectManager = user
+        wageTypeThree.name = "Monthly"
+        wageTypeThree.period = 30
+        wageTypeThree.projectManager = user
+
+        outOfBoxWageTypes.add(wageTypeOne)
+        outOfBoxWageTypes.add(wageTypeTwo)
+        outOfBoxWageTypes.add(wageTypeThree)
+
+        wageTypeRepository.saveAll(outOfBoxWageTypes)
+
+        val outOfTheBoxEmployeeRoles = mutableListOf(
+            "Architect",
+            "Engineer",
+            "Project Manager",
+            "Construction Manager",
+            "Site Supervisor",
+            "Foreman",
+            "Labourer",
+            "Carpenter",
+            "Electrician",
+            "Plumber",
+            "Mason",
+            "Painter",
+            "Welder",
+            "Heavy Equipment Operator",
+            "Surveyor",
+            "Safety Officer",
+            "Quality Control Inspector",
+            "Estimator",
+            "Procurement Specialist",
+            "Administrative Staff"
+        )
+        val employeeTypesToBeAdded = mutableListOf<EmployeeType>()
+        for (role in outOfTheBoxEmployeeRoles) {
+            val empType = EmployeeType()
+            empType.name = role
+            empType.projectManager = user
+            employeeTypesToBeAdded.add(empType)
+        }
+        employeeTypeRepository.saveAll(employeeTypesToBeAdded)
+    }
+
 
     fun forgotPasswordSendVerification(email: String): Boolean {
         when(userExists(email)) {

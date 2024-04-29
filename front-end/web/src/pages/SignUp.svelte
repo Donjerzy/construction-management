@@ -4,6 +4,8 @@
     export let appName;
     // stages = mail, enter-verification-code, enter-registration-details
     let stage = 'mail';
+    // let stage = 'enter-registration-details';
+    // let stage = 'enter-verification-code';
     let emailError = false;
     let loading = false;
     let verificationCode = undefined;
@@ -67,9 +69,7 @@
             return;
         } else {
             notifications.success('User created successfully', 2000);
-            setTimeout(()=> {
-                return window.location.replace('/')
-            },1500)
+            window.location.replace('/')
             return;
         }     
     }
@@ -188,15 +188,15 @@
         let hasNoLower = true;
         let hasNoDigit = true;
         if(e.target.elements.fn.value.length < 3) {
-            setFirstNameError();
+            notifications.danger('First Name cannot have less than 3 characters', 1000);
             return
         }
         if(e.target.elements.ln.value.length < 3) {
-            setLastNameError();
+            notifications.danger('Last Name cannot have less than 3 characters', 1000);
             return
         }
         if(e.target.elements.pass.value.length < 6) {
-            setPasswordError('Password should have atleast 6 characters');
+            notifications.danger('Password should have atleast 6 characters', 1000);
             return;
         }
         for (let i=0; i < e.target.elements.pass.value.length; i++) {
@@ -212,19 +212,19 @@
             }
         }
         if (hasNoUpper) {
-            setPasswordError('Password should have atleast 1 uppercase character'); 
+            notifications.danger('Password should have atleast 1 uppercase character', 1000);
             return;
         }
         if (hasNoLower) {
-            setPasswordError('Password should have atleast 1 lowercase character'); 
+            notifications.danger('Password should have atleast 1 lowercase character', 1000);
             return;
         }
         if (hasNoDigit) {
-            setPasswordError('Password should have atleast 1 digit'); 
+            notifications.danger('Password should have atleast 1 digit', 1000);
             return;
         }
         if (e.target.elements.pass.value !== e.target.elements.cpass.value) {
-            setMatchingError();
+            notifications.danger('Passwords entered do not match', 1000);
             return;
         }
         loading = true;
@@ -252,13 +252,15 @@
             <h2>Sign Up</h2>
         </div>
         <form on:submit={handleEmailSubmit}>
-            <label for="email">Email</label>
-            <input type="email" name="email" id="email" on:change={clearEmailError}>
+            <label style="font-family: 'Times New Roman', Times, serif; font-size: 1rem;" for="email">Email</label>
+            <input style="border: 1px #ccc solid; display:block; width: 240px; margin-top: 8px;" type="email" name="email" id="email" on:change={clearEmailError}>
             {#if emailError}
             <p class="error">Invalid Email Address</p>
             {/if}
             {#if !loading}
-            <button type="submit" id="login-btn">Next</button>
+                <div style="display: flex; justify-content: center;">
+                    <button type="submit" id="login-btn">Next</button>
+                </div>
             {:else}
             <div id="loader-div">
                 <span class="loader"></span>
@@ -280,13 +282,13 @@
         </div>
         <form on:submit={handleCodeSubmit} on:change={clearVerificationCodeError}>
             <div id="verif-code-label-div">
-                <label for="verif-code">Verification Code</label>
+                <label style="font-family: 'Times New Roman', Times, serif;" for="verif-code">Verification Code</label>
             </div>
             <div id="verification-code-div">
-                <input name="num1" type="text" maxlength="1" class="verif-input" />
-                <input name="num2" type="text" maxlength="1" class="verif-input" />
-                <input name="num3" type="text" maxlength="1" class="verif-input"/>
-                <input name="num4" type="text"maxlength="1" class="verif-input"/>
+                <input style="border: 1px #ccc solid; height: 32px; width:32px; display:block; margin-top: 8px;" name="num1" type="text" maxlength="1" class="verif-input" />
+                <input style="border: 1px #ccc solid; height: 32px; width:32px; display:block; margin-top: 8px;" name="num2" type="text" maxlength="1" class="verif-input" />
+                <input style="border: 1px #ccc solid; height: 32px; width:32px; display:block; margin-top: 8px;" name="num3" type="text" maxlength="1" class="verif-input"/>
+                <input style="border: 1px #ccc solid; height: 32px; width:32px; display:block; margin-top: 8px;" name="num4" type="text"maxlength="1" class="verif-input"/>
             </div>
             {#if verificationCodeError}
             <div class="center-text-div">
@@ -296,7 +298,7 @@
                 <div class="center-text-div">
                     <!-- svelte-ignore a11y-click-events-have-key-events -->
                     <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                    <p on:click={resendVerificationCode} id="forgot">Re-send Verification Code</p>
+                    <p style="margin-top: 4px; font-family: 'Times New Roman', Times, serif; text-decoration: underline; margin-bottom: 8px;" on:click={resendVerificationCode} id="forgot">Re-send Verification Code</p>
                 </div>
             {#if !loading}
                 <button type="submit" id="login-btn">Next</button>
@@ -320,28 +322,30 @@
             <h2>Sign Up</h2>
         </div>
         <form on:submit={handleDetailsSubmit}>
-            <label for="fn">First Name</label>
-            <input type="text" name="fn" id="fn" on:change={clearFirstNameError}>
+            <label style="display:block; font-family: 'Times New Roman', Times, serif; font-size: 1rem; margin-top: 8px;" for="fn">First Name</label>
+            <input style="border: 1px #ccc solid; display:block; width: 240px; margin-top: 8px;" type="text" name="fn" id="fn" on:change={clearFirstNameError}>
             {#if firstNameError}
             <p class="error">Invalid First Name</p>
             {/if}
-            <label for="ln">Surname</label>
-            <input type="text" name="ln" id="ln" on:change={clearLastNameError}>
+            <label style="display:block; font-family: 'Times New Roman', Times, serif; font-size: 1rem; margin-top: 8px;" for="ln">Surname</label>
+            <input style="border: 1px #ccc solid; display:block; width: 240px; margin-top: 8px;" type="text" name="ln" id="ln" on:change={clearLastNameError}>
             {#if lastNameError}
             <p class="error">Invalid Last Name</p>
             {/if}
-            <label for="pass">Password</label>
-            <input type="password" name="pass" id="pass" on:change={clearPasswordError}>
+            <label style="display:block; font-family: 'Times New Roman', Times, serif; font-size: 1rem; margin-top: 8px;" for="pass">Password</label>
+            <input style="border: 1px #ccc solid; display:block; width: 240px; margin-top: 8px;" type="password" name="pass" id="pass" on:change={clearPasswordError}>
             {#if passwordError}
             <p class="error">{passwordErrorMessage}</p>
             {/if}
-            <label for="cpass">Confirm Password</label>
-            <input type="password" name="cpass" id="cpass" on:change={clearMatchingError}>
+            <label style="display:block; font-family: 'Times New Roman', Times, serif; font-size: 1rem; margin-top: 8px;" for="cpass">Confirm Password</label>
+            <input style="border: 1px #ccc solid; display:block; width: 240px; margin-top: 8px;" type="password" name="cpass" id="cpass" on:change={clearMatchingError}>
             {#if matchingError}
             <p class="error">The passwords do not match</p>
             {/if}
             {#if !loading}
-            <button type="submit" id="login-btn">Sign Up</button>
+            <div style="display: flex; justify-content: center;">
+                <button type="submit" id="login-btn">Sign Up</button>
+            </div>
             {:else}
             <div id="loader-div">
                 <span class="loader"></span>
@@ -418,23 +422,14 @@
         margin-bottom: 20px;
         font-size: 1.4rem;
     }
-    input {
-        display: block;
-        border: 1px solid;
-        margin-bottom: 20px;
-        height: 20px;
-        width: 184px;
-        padding: 4px;
-        border-color: #ccc;
-        margin-top: 4px;
-    }
     #verif-code-label-div{
         display: flex;
         justify-content: center;
     }
     #verification-code-div{
+        margin-top: 8px;
         display: flex;
-        gap: 4px;
+        gap: 8px;
         justify-content: center;
     }
     #forgot {
@@ -463,6 +458,7 @@
         width: 200px;
         border-radius: 20px;
         color:#ffffff;
+        margin-top: 16px;
     }
     #login-btn:hover {
         cursor: pointer;
@@ -478,6 +474,7 @@
     #loader-div {
         display: flex;
         justify-content: center;
+        margin-top: 16px;
     }  
     .loader {
         width: 48px;
