@@ -40,7 +40,7 @@
     }
 
     function setAuthenticationError() {
-        authenticationError = true;
+        notifications.danger("Invalid Credientials", 1000);
     }
 
     function clearAuthenticationError() {
@@ -113,6 +113,11 @@
         }        
     }
 </script>
+
+
+<svelte:head>
+    <title>Log In</title>
+</svelte:head>
 
 
 <div class="main">
