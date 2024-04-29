@@ -8,6 +8,7 @@
     export let projectId;
 
     let clients = [];
+    let employees = [];
     let active = 'overview';
     let appName = 'Mjengo Bora Construction'; //  overview | 
     let projectOverview = {
@@ -23,7 +24,7 @@
     
     $: filteredItems = clients.filter((client) => client.name.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1);
 
-    
+    $: filteredEmployees = employees.filter((employee) => employee.name.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1);
 
 
     onMount(()=> {
@@ -49,6 +50,7 @@
             }
         })
 
+
         fetch(`http://localhost:8080/api/v1/project/get-clients?project=${projectId}`, {
             headers: {
                 'Authorization': `Bearer ${get(accessToken)}`
@@ -70,9 +72,29 @@
             }
         })
 
-        
 
+        fetch(`http://localhost:8080/api/v1/project/get-employees?project=${projectId}`, {
+            headers: {
+                'Authorization': `Bearer ${get(accessToken)}`
+            }
+        })
+        .then(response => {
+            if(!response.ok) {
+                errorFetch = true;
+               firstName.set("");
+               accessToken.set("");
+               loggedIn.set("false");
+               window.location.replace('/'); 
+            } else {
+                return response.json();
+            }
+        }).then((result)=> {
+            if(!errorFetch) {
+                employees = result.employees;
+            }
+        })
 
+    
     });
 
 
@@ -246,21 +268,13 @@
                                 </tr>
                             </TableHead>
                             <TableBody>
-                                {#each filteredItems as client}
+                                {#each filteredEmployees as employee}
                                     <TableBodyRow>
-                                        <TableBodyCell>{client.name}</TableBodyCell>
-                                        <TableBodyCell>{client.type}</TableBodyCell>
-                                        <TableBodyCell>{numberWithCommas(client.committedAmount)}</TableBodyCell>
-                                        <TableBodyCell>{numberWithCommas(client.investedAmount)}</TableBodyCell>
-                                        <TableBodyCell><a on:click={()=> {
-                                            projectClient.set({
-                                                id: client.id,
-                                                name: client.name,
-                                                type: client.type,
-                                                committedAmount: client.committedAmount,
-                                                investedAmount: client.investedAmount
-                                            })
-                                        } } class="underline hover:cursor-pointer hover:text-primary-200" href={`/project/${projectId}/edit-client`}>Edit</a></TableBodyCell>
+                                        <TableBodyCell>{employee.name}</TableBodyCell>
+                                        <TableBodyCell>{employee.employeeType}</TableBodyCell>
+                                        <TableBodyCell>{employee.wageType}</TableBodyCell>
+                                        <TableBodyCell>{numberWithCommas(employee.wage)}</TableBodyCell>
+                                        <TableBodyCell><a class="underline hover:cursor-pointer hover:text-primary-200" href={`/`}>Edit</a></TableBodyCell>
                                     </TableBodyRow>
                                 {/each}
                             </TableBody>
