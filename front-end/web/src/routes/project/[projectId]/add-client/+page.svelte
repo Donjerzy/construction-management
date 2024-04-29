@@ -3,7 +3,7 @@
 </script>
 
 <svelte:head>
-    <title>Add Project</title>
+    <title>Add Client</title>
 </svelte:head>
 
 <AddClient />
