@@ -171,7 +171,7 @@
                 <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("actions")}>Actions</p>
             </div>
             <div class="flex mt-5 justify-end">
-               <a href={`/project/${projectId}/add-client`}><Button fontSize="base" height="12" label="Add Client" padding="7" width="32" /> </a>
+               <a href={`/project/${projectId}/add-client`}><Button fontSize="base" height="10" label="Add Client" padding="7" width="32" /> </a>
             </div>
             <div class="mt-4 pb-8 max-h-screen">
                 <TableSearch placeholder="Search by client name" hoverable={true} bind:inputValue={searchTerm}>
@@ -208,7 +208,67 @@
                 </TableSearch>
             </div>
         </div>
-    {/if}
+        {:else if active === "employees"}
+            <div class="container">
+                <div class="flex justify-between h-8 align-middle text-base">
+                    <!-- svelte-ignore a11y-click-events-have-key-events -->
+                    <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200"  on:click={()=> navigate("overview")}>Overview</p>
+                    <!-- svelte-ignore a11y-click-events-have-key-events -->
+                    <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("clients")}>Clients</p>
+                    <!-- svelte-ignore a11y-click-events-have-key-events -->
+                    <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" id="active-link" on:click={()=> navigate("employees")}>Employees</p>
+                    <!-- svelte-ignore a11y-click-events-have-key-events -->
+                    <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("tasks")}>Tasks</p>
+                    <!-- svelte-ignore a11y-click-events-have-key-events -->
+                    <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("expenses")}>Expenses</p>
+                    <!-- svelte-ignore a11y-click-events-have-key-events -->
+                    <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("actions")}>Actions</p>
+                </div>
+                <div class="flex mt-5 justify-end">
+                <a href={`/project/${projectId}/add-employee`}><Button fontSize="base" height="10" label="Add Employee" padding="7" width="32" /> </a>
+                </div>
+                <div class="mt-4 pb-8 max-h-screen">
+                    <TableSearch placeholder="Search by employee name" hoverable={true} bind:inputValue={searchTerm}>
+                    <Table divClass="max-h-80 overflow-auto" shadow>
+                            <TableHead defaultRow={false} theadClass="border-black">
+                                <tr class="bg-primary-100">
+                                    <TableHeadCell class="text-white">Name</TableHeadCell>
+                                    <TableHeadCell class="text-white">Employee Type</TableHeadCell>
+                                    <TableHeadCell class="text-white">Wage Type</TableHeadCell>
+                                    <TableHeadCell class="text-white">Wage</TableHeadCell>
+                                    <TableHeadCell class="text-white">Action</TableHeadCell>
+                                </tr>
+                            </TableHead>
+                            <TableBody>
+                                {#each filteredItems as client}
+                                    <TableBodyRow>
+                                        <TableBodyCell>{client.name}</TableBodyCell>
+                                        <TableBodyCell>{client.type}</TableBodyCell>
+                                        <TableBodyCell>{numberWithCommas(client.committedAmount)}</TableBodyCell>
+                                        <TableBodyCell>{numberWithCommas(client.investedAmount)}</TableBodyCell>
+                                        <TableBodyCell><a on:click={()=> {
+                                            projectClient.set({
+                                                id: client.id,
+                                                name: client.name,
+                                                type: client.type,
+                                                committedAmount: client.committedAmount,
+                                                investedAmount: client.investedAmount
+                                            })
+                                        } } class="underline hover:cursor-pointer hover:text-primary-200" href={`/project/${projectId}/edit-client`}>Edit</a></TableBodyCell>
+                                    </TableBodyRow>
+                                {/each}
+                            </TableBody>
+                    </Table> 
+                    </TableSearch>
+                </div>
+            </div>
+        {/if}
 </AdminComponent>
 
 
