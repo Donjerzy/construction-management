@@ -108,4 +108,9 @@ class EmployeeService(private val repository: EmployeeRepository,
     }
 
 
+    fun getProjectEmployees(project: Long): MutableList<Employee> {
+        return repository.getProjectEmployees(project = project)
+    }
+
+
 }

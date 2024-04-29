@@ -12,4 +12,6 @@ interface EmployeeRepository: JpaRepository<Employee, Long> {
 
     @Query("select count(*) from employee where lower(email) = :employeeEmail and project = :project", nativeQuery = true)
     fun employeeInProject(project: Long, employeeEmail: String): Int
+    @Query("select * from employee where project = :project", nativeQuery = true)
+    fun getProjectEmployees(project: Long): MutableList<Employee>
 }

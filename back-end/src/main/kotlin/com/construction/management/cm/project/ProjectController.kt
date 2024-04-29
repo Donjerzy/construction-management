@@ -2,10 +2,7 @@ package com.construction.management.cm.project
 
 import com.construction.management.cm.auth.TokenService
 import com.construction.management.cm.dto.*
-import com.construction.management.cm.response.DefaultNa
-import com.construction.management.cm.response.GetClientsResponse
-import com.construction.management.cm.response.GetProjectsResponse
-import com.construction.management.cm.response.OverviewResponse
+import com.construction.management.cm.response.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.RequestEntity
 import org.springframework.http.ResponseEntity
@@ -90,6 +87,21 @@ class ProjectController {
             DefaultNa(
                 httpStatus = 200,
                 message = message
+            )
+        )
+    }
+
+
+    @GetMapping("/get-employees")
+    fun getProjectEmployees(@RequestHeader("Authorization") header:String,
+                          @RequestParam(name = "project") project:Long): ResponseEntity<Any> {
+        val userEmail = tokenService.extractEmail(header.substringAfter("Bearer "))
+        val employees = service.getEmployees(email = userEmail!!, project = project)
+        return ResponseEntity.status(200).body(
+            GetEmployeesResponse(
+                httpStatus = 200,
+                message = "Project Employees retrieved successfully",
+                employees = employees
             )
         )
     }

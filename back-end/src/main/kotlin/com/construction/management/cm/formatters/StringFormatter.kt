@@ -27,5 +27,11 @@ class StringFormatter {
     }
 
 
+    fun doubleToString(value: Double): String {
+        return String.format("%.0f", value)
+    }
+
+
+
 
 }
