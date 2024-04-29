@@ -9,6 +9,12 @@ import org.springframework.stereotype.Component
 @Component
 class Runner: CommandLineRunner {
 
+
+    fun printOwner(str: String) {
+        println(str)
+    }
+
+
     override fun run(vararg args: String?) {
         println(System.currentTimeMillis())
     }

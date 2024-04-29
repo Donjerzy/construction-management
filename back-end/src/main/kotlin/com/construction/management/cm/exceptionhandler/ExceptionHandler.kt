@@ -81,6 +81,76 @@ class ExceptionHandler {
                 )
             )
 
+            "first-name-empty" ->  ResponseEntity.status(400).body(
+                ExceptionResponse(
+                    httpStatus = 400,
+                    message = "First name cannot be empty"
+                )
+            )
+
+            "last-name-empty" ->  ResponseEntity.status(400).body(
+                ExceptionResponse(
+                    httpStatus = 400,
+                    message = "Last name cannot be empty"
+                )
+            )
+
+            "employee-already-in-project" -> ResponseEntity.status(400).body(
+                ExceptionResponse(
+                    httpStatus = 400,
+                    message = "Employee is already in the project"
+                )
+            )
+
+            "invalid-employee-type" -> ResponseEntity.status(400).body(
+                ExceptionResponse(
+                    httpStatus = 400,
+                    message = "Employee type does not exist"
+                )
+            )
+
+            "invalid-wage-type" -> ResponseEntity.status(400).body(
+                ExceptionResponse(
+                    httpStatus = 400,
+                    message = "Wage type does not exist"
+                )
+            )
+
+            "invalid-date" -> ResponseEntity.status(400).body(
+                ExceptionResponse(
+                    httpStatus = 400,
+                    message = "Invalid date format kindly adhere to yyyy-mm-dd"
+                )
+            )
+
+            "wage-lz" -> ResponseEntity.status(400).body(
+                ExceptionResponse(
+                    httpStatus = 400,
+                    message = "Wage cannot be less than zero"
+                )
+            )
+
+            "invalid-password" -> ResponseEntity.status(400).body(
+                ExceptionResponse(
+                    httpStatus = 400,
+                    message = "Invalid Password, password must be at least 6 characters in length with at least 1 uppercase letter, 1 lowercase letter and 1 digit."
+                )
+            )
+
+            "email-empty" ->  ResponseEntity.status(400).body(
+                ExceptionResponse(
+                    httpStatus = 400,
+                    message = "Email cannot be empty"
+                )
+            )
+
+            "invalid-email" ->  ResponseEntity.status(400).body(
+                ExceptionResponse(
+                    httpStatus = 400,
+                    message = "Email provided is invalid"
+                )
+            )
+
             "project-exists" -> ResponseEntity.status(400).body(
                 ExceptionResponse(
                     httpStatus = 400,

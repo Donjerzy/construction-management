@@ -1,12 +1,31 @@
 package com.construction.management.cm.formatters
 
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
+import java.text.SimpleDateFormat
+import java.util.Date
 
 @Service
 class StringFormatter {
+
+
+    @Autowired
+    private lateinit var encoder: PasswordEncoder
+
     fun formatNames(name: String) : String {
         return name.split("\\W+".toRegex()).joinToString(" ") { it.replaceFirstChar(Char::uppercaseChar) }
     }
+
+    fun toDate(text: String): Date {
+        val formatter = SimpleDateFormat("yyyy-MM-dd")
+        return formatter.parse(text)
+    }
+
+    fun toPassword(text: String) : String {
+        return encoder.encode(text)
+    }
+
 
 
 }

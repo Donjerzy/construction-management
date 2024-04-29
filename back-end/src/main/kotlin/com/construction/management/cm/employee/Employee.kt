@@ -34,7 +34,7 @@ class Employee {
     @Column(name = "email", nullable = false, length = 50)
     var email: String = "-"
 
-    @Column(name = "password", nullable = false, length = 50)
+    @Column(name = "password", nullable = false, length = 250)
     var password: String = "-"
 
     @Column(name = "wage")

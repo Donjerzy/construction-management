@@ -20,7 +20,7 @@ class EmployeeController(private val service: EmployeeService,
     fun addEmployee(@RequestHeader("Authorization") header:String,
                     @RequestBody employee: AddEmployee): ResponseEntity<Any> {
         val userEmail = tokenService.extractEmail(header.substringAfter("Bearer "))
-        val message: String = service.addEmployee(employee = employee, userEmail = userEmail)
+        val message: String = service.addEmployee(employee = employee, userEmail = userEmail!!)
         return ResponseEntity.status(200).body(
             DefaultNa(
                 httpStatus = 200,

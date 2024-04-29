@@ -9,5 +9,8 @@ interface EmployeeTypeRepository: JpaRepository<EmployeeType, Long> {
     @Query("select count(*) from employee_type", nativeQuery = true)
     fun isEmpty(): Int
 
+    @Query("select count(*) from employee_type where id = :id", nativeQuery = true)
+    fun exists(id: Long): Int
+
 
 }
