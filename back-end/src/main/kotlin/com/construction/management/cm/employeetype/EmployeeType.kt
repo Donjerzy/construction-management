@@ -22,7 +22,7 @@ class EmployeeType {
 
     @ManyToOne
     @JoinColumn(name = "project_manager")
-    val projectManager = User()
+    var projectManager = User()
 
 
 }

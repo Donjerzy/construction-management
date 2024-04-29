@@ -45,7 +45,7 @@ class User {
     @OneToMany(mappedBy = "projectManager", targetEntity = WageType::class, cascade = [CascadeType.ALL])
     var wageTypes = mutableSetOf<WageType>()
 
-    @OneToMany(mappedBy = "projectManager", targetEntity = EmployeeType::class, cascade = [CascadeType.ALLg])
+    @OneToMany(mappedBy = "projectManager", targetEntity = EmployeeType::class, cascade = [CascadeType.ALL])
     var employeeTypes = mutableSetOf<EmployeeType>()
 
 

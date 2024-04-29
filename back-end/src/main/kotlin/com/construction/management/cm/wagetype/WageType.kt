@@ -33,5 +33,5 @@ class WageType {
 
     @ManyToOne
     @JoinColumn(name = "project_manager")
-    val projectManager = User()
+    var projectManager = User()
 }

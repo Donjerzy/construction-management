@@ -12,13 +12,13 @@ import org.springframework.web.bind.annotation.RequestMapping
 class WageTypeController {
 
 
-    @GetMapping("/all")
-    fun get(@RequestHeader("Authorization") header:String,): ResponseEntity<Any> {
-
-
-
-
-    }
+//    @GetMapping("/all")
+//    fun get(@RequestHeader("Authorization") header:String,): ResponseEntity<Any> {
+//
+//
+//
+//
+//    }
 
 
 }
