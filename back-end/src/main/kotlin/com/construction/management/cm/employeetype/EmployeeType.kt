@@ -12,7 +12,7 @@ class EmployeeType {
     val id: Long = 0
 
     @Column(name = "name", unique = true, nullable = false)
-    val name: String = "-"
+    var name: String = "-"
 
     @OneToMany(mappedBy = "employeeType", targetEntity = Employee::class, cascade = [CascadeType.ALL])
     val employees = mutableSetOf<Employee>()
