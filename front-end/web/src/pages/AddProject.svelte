@@ -88,14 +88,14 @@
         <form>
             <div class="form-row">
                 <label for="project_name">Project Name</label>
-                <input type="text" id="project_name" bind:value={projectName}>
+                <input class="rounded border-primary-800" type="text" id="project_name" bind:value={projectName}>
             </div>
             <div class="form-row">
                 {#if loading}
                     <Loader />
                 {:else}
                     <Button 
-                    height=40 width=120 label="Add Project" fontSize="0.9rem" padding="8px"
+                    height=12 width=36 label="Add Project" fontSize="sm" padding="8px"
                     on:click={validateInput} />
                 {/if}
                 
@@ -118,12 +118,5 @@
         justify-content: center;
         gap: 12px;
         margin-bottom: 20px;
-    }
-    input {
-        border: 1px solid #ccc;
-        height: 28px;
-        border-radius: 4px;
-        padding: 4px;
-        padding-left: 12px;
     }
 </style>
