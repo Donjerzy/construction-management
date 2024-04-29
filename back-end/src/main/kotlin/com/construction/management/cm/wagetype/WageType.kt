@@ -18,10 +18,10 @@ class WageType {
     val id: Long = 0
 
     @Column(name = "name", nullable = false, unique = true)
-    val name: String = "_"
+    var name: String = "_"
 
     @Column(name = "period_in_days", nullable = false, unique = true)
-    val period: Int = 0
+    var period: Int = 0
 
     @OneToMany(mappedBy = "wageType", targetEntity = Employee::class, cascade = [CascadeType.ALL])
     val employees = mutableSetOf<Employee>()
