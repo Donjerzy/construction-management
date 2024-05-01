@@ -7,16 +7,33 @@
     import { notifications } from "../lib/notification";
     import Toast from '../components/toast.svelte';
     import {page} from '$app/stores';
+    import {commaSeparator} from "../lib/comma_separator.js";
+
     const projectId = $page.params.projectId;
     let appName = "Mjengo Bora Construction";
     let title = "Add Client";
     let loading = false;
     let name = "";
     let typeOfClient;
-    let investedAmount = 0;
-    let commitedAmount = 0;
+    let investedAmountDisplay = '0';
+    let commitedAmountDisplay = '0';
 
-    
+    let investedAmount = '0';
+    let commitedAmount = '0';
+
+    function formatWithCommas(value) {
+        return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+   
+    function updateCommittedAmount(event) {
+        commitedAmount = event.target.value.replace(/,/g, '');
+        commitedAmountDisplay = formatWithCommas(commitedAmount);
+    }
+
+    function updateInvestedAmount(event) {
+        investedAmount = event.target.value.replace(/,/g, '');
+        investedAmountDisplay = formatWithCommas(investedAmount);
+    }
 
     function hasOnlyLetters(inputString) {
         return /^[a-zA-Z\s]*$/.test(inputString);
@@ -47,8 +64,8 @@
                 existsError = false;
                 notifications.success("Client added successfully", 1000);
                 name = "";
-                investedAmount = 0;
-                commitedAmount = 0;
+                investedAmountDisplay = '0';
+                commitedAmountDisplay = '0';
                 return;
             }
         }).catch(error=> {
@@ -86,7 +103,7 @@
             notifications.danger("Committed amount must be a number", 1000);
             return;
         }
-        if(commitedAmount < 0) {
+        if(parseFloat(commitedAmount) < 0) {
             notifications.danger("Committed must be greater than zero", 1000);
             return;
         }
@@ -94,11 +111,11 @@
             notifications.danger("Invested amount must be a number", 1000);
             return;
         }
-        if(investedAmount < 0) {
+        if(parseFloat(investedAmount) < 0) {
             notifications.danger("Committed must be greater than zero", 1000);
             return;
         }
-        if(investedAmount > commitedAmount) {
+        if(parseFloat(investedAmount) > parseFloat(commitedAmount)) {
             notifications.danger("Invested amount must be less than what was committed", 1000);
             return;
         }
@@ -106,8 +123,8 @@
             name: name,
             type: typeOfClient,
             project: projectId,
-            investedAmount: investedAmount,
-            committedAmount: commitedAmount
+            investedAmount: parseFloat(investedAmount),
+            committedAmount: parseFloat(commitedAmount)
         });
     }
 
@@ -137,11 +154,11 @@
             </div>
             <div class="flex flex-col gap-2 mt-2">
                 <label for="commited_amount">Committed Amount</label>
-                <input name="commited_amount" class="rounded border-primary-800" type="number" id="commited_amount" bind:value={commitedAmount}>
+                <input name="commited_amount" class="rounded border-primary-800" type="text" id="commited_amount" bind:value={commitedAmountDisplay} on:input={updateCommittedAmount} >
             </div>
             <div class="flex flex-col gap-2 mt-2">
                 <label for="invested_amount">Invested Amount</label>
-                <input name="invested_amount" class="rounded border-primary-800" type="number" id="invested_amount" bind:value={investedAmount}>
+                <input name="invested_amount" class="rounded border-primary-800" type="text" id="invested_amount" bind:value={investedAmountDisplay} on:input={updateInvestedAmount}>
             </div>
             <div class="mt-4">
                 {#if loading}

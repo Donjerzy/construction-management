@@ -18,14 +18,22 @@
     let userPassword = "";
     let userWage;
     let userJoinDate;
-    let typeOfClient;
-    let investedAmount = 0;
-    let commitedAmount = 0;
+    let userWageDisplay = '0';
     let currentPage = "one"  // one || two
     let employeeTypes = [];
     let chosenEmployeeType = 0;
     let wageTypes = [];
     let chosenWageType = 0;
+
+
+    function formatWithCommas(value) {
+        return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+
+    function updateUserWage(event) {
+        userWage = event.target.value.replace(/,/g, '');
+        userWageDisplay = formatWithCommas(userWage);
+    }
 
 
     onMount(()=> {
@@ -108,7 +116,7 @@
                 userLastName = "";
                 userEmail = "";
                 userPassword = "";
-                userWage = "";
+                userWageDisplay = "0";
                 currentPage = "one"  // one || two
                 return;
             }
@@ -218,7 +226,7 @@
             lastName: userLastName,
             email: userEmail,
             password: userPassword,
-            wage: userWage,
+            wage: parseFloat(userWage),
             joinDate: userJoinDate,
             employeeType: chosenEmployeeType,
             wageType: chosenWageType,
@@ -257,7 +265,7 @@
                 </div>
                 <div class="flex flex-col gap-2 mt-2">
                     <label for="wage">Wage</label>
-                    <input name="wage" class="rounded border-primary-800" type="number" id="wage" bind:value={userWage}>
+                    <input name="wage" class="rounded border-primary-800" type="text" id="wage" bind:value={userWageDisplay} on:input={updateUserWage}  >
                 </div>
                 <div class="flex flex-col gap-2 mt-3">
                     <Button height=12 width=36 label="Next" fontSize="sm" padding="8px" on:click={() => { currentPage = "two"}}   />
