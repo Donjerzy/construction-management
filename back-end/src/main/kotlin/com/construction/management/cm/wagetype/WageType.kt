@@ -23,7 +23,7 @@ class WageType {
     @Column(name = "name", nullable = false)
     var name: String = "_"
 
-    @Column(name = "period_in_days", nullable = false, unique = true)
+    @Column(name = "period_in_days", nullable = false)
     var period: Int = 0
 
     //Table references
