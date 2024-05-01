@@ -164,7 +164,6 @@ class AuthService(private val wageTypeRepository: WageTypeRepository,
         val outOfTheBoxEmployeeRoles = mutableListOf(
             "Architect",
             "Engineer",
-            "Project Manager",
             "Construction Manager",
             "Site Supervisor",
             "Foreman",
