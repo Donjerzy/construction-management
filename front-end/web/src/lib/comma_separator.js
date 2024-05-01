@@ -1,4 +1,4 @@
-export default function commaSeparator(num) {
+export function commaSeparator(num) {
     let end;
     let result = [];
     if(num.includes(".")) {
