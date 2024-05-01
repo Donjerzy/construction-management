@@ -16,6 +16,7 @@
     let investedAmount = 0;
     let commitedAmount = 0;
 
+
     
 
     function hasOnlyLetters(inputString) {
