@@ -106,6 +106,21 @@ class ProjectController {
         )
     }
 
+    @GetMapping("/get-employee")
+    fun getEmployee(@RequestHeader("Authorization") header:String,
+                    @RequestParam(name = "project") project:Long,
+                    @RequestParam(name = "employee") employee:Long): ResponseEntity<Any> {
+        val userEmail = tokenService.extractEmail(header.substringAfter("Bearer "))
+        val employee = service.getProjectEmployee(email = userEmail!!, project = project, employee = employee)
+        return ResponseEntity.status(200).body(
+            GetEmployeeResponse(
+                httpStatus = 200,
+                message = "Employee Retrieved Successfully",
+                employee = employee
+            )
+        )
+    }
+
 
 
 }

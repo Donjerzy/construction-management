@@ -248,6 +248,53 @@ class ProjectService(private val clientService: ClientService ,
         return "ok"
     }
 
+    fun getProjectEmployee(email: String, project: Long, employee: Long): GetEmployee {
+        /**
+         * Validations
+         *  Is project Owner
+         *  Is employee in project.
+         */
+        when(getProjectEmployeeValidations(
+            projectManager = userService.getUserId(email)!!,
+            employee = employee,
+            project = project
+        )) {
+            "not-project-owner" -> throw CustomException("not-project-owner", null)
+            "employee-not-in-project" -> throw CustomException("employee-not-in-project", null)
+            else -> {
+                val fetchedEmployee = employeeService.getEmployee(employee)
+                val employeeTaskBreakdown = taskService.getEmployeeTasksBreakDown(employee = employee)
+                return GetEmployee (
+                    id = fetchedEmployee.id,
+                    archetype = "n/a",
+                    email = fetchedEmployee.email,
+                    employeeType = fetchedEmployee.employeeType.name,
+                    name = "${fetchedEmployee.firstName.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }} ${fetchedEmployee.lastName.replaceFirstChar {
+                        if (it.isLowerCase()) it.titlecase(
+                            Locale.getDefault()
+                        ) else it.toString()
+                    }}",
+                    wage = stringFormatter.doubleToString(fetchedEmployee.wage),
+                    wageType = fetchedEmployee.wageType.name,
+                    tasksOngoing = employeeTaskBreakdown.ongoing,
+                    tasksCompleted = employeeTaskBreakdown.done,
+                    tasksCompletedOnTime = employeeTaskBreakdown.doneOnTime,
+                    tasksCompletedPastTime = employeeTaskBreakdown.donePastTime,
+                    totalTasks = employeeTaskBreakdown.done + employeeTaskBreakdown.ongoing
+                )
+            }
+        }
+    }
+
+    fun getProjectEmployeeValidations(projectManager: Long, project: Long, employee: Long): String {
+        if (repository.isProjectManager(projectManager = projectManager, project = project) < 1 ) {
+            return "not-project-owner"
+        }
+        if (!employeeService.employeeInProjectEmployeeId(project = project, employee = employee)) {
+            return "employee-not-in-project"
+        }
+        return "ok"
+    }
 
 
 

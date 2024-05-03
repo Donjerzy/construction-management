@@ -102,6 +102,13 @@ class ExceptionHandler {
                 )
             )
 
+            "employee-not-in-project" -> ResponseEntity.status(400).body(
+                ExceptionResponse(
+                    httpStatus = 400,
+                    message = "Employee is not in the project"
+                )
+            )
+
             "invalid-employee-type" -> ResponseEntity.status(400).body(
                 ExceptionResponse(
                     httpStatus = 400,

@@ -32,6 +32,14 @@ class EmployeeService(private val repository: EmployeeRepository,
         return repository.employeeInProject(project = project, employeeEmail = employeeEmail.lowercase()) > 0
     }
 
+    fun employeeInProjectEmployeeId(project: Long, employee: Long): Boolean {
+        return repository.employeeInProjectEmployeeId(project = project, employeeId = employee) > 0
+    }
+
+    fun getEmployee(employee: Long): Employee {
+        return repository.findById(employee).get()
+    }
+
 
     fun addEmployee(employee: AddEmployee, userEmail: String): String {
         /**
