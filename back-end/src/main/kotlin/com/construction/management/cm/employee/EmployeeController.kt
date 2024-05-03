@@ -2,13 +2,12 @@ package com.construction.management.cm.employee
 
 import com.construction.management.cm.auth.TokenService
 import com.construction.management.cm.dto.AddEmployee
+import com.construction.management.cm.dto.NewPassword
 import com.construction.management.cm.response.DefaultNa
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestHeader
-import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.*
+import org.springframework.web.multipart.MultipartFile
 
 
 @RequestMapping("api/v1/employee")
@@ -16,10 +15,33 @@ import org.springframework.web.bind.annotation.RequestMapping
 class EmployeeController(private val service: EmployeeService,
                         private val tokenService: TokenService) {
 
-    @PostMapping("/add")
-    fun addEmployee(@RequestHeader("Authorization") header:String,
-                    @RequestBody employee: AddEmployee): ResponseEntity<Any> {
+    @PostMapping("/add", consumes = ["multipart/form-data"])
+    fun addEmployee(
+                    @RequestHeader("Authorization") header:String,
+                    @RequestParam(name = "firstName") firstName: String,
+                    @RequestParam(name = "lastName") lastName: String,
+                    @RequestParam(name = "email") email: String,
+                    @RequestParam(name = "password") password: String,
+                    @RequestParam(name = "wage") wage: Double,
+                    @RequestParam(name = "joinDate") joinDate: String,
+                    @RequestParam(name = "employeeType") employeeType: Long,
+                    @RequestParam(name = "wageType") wageType: Long,
+                    @RequestParam(name = "project") project: Long,
+                    @RequestParam(name = "contract") contract: MultipartFile? = null
+    ): ResponseEntity<Any> {
         val userEmail = tokenService.extractEmail(header.substringAfter("Bearer "))
+        val employee = AddEmployee(
+            firstName = firstName,
+            contract = contract,
+            email = email,
+            employeeType = employeeType,
+            wage = wage,
+            wageType = wageType,
+            joinDate = joinDate,
+            lastName = lastName,
+            password = password,
+            project = project
+        )
         val message: String = service.addEmployee(employee = employee, userEmail = userEmail!!)
         return ResponseEntity.status(200).body(
             DefaultNa(
@@ -28,6 +50,13 @@ class EmployeeController(private val service: EmployeeService,
             )
         )
     }
+
+
+    /**
+     *     val contract: MultipartFile
+     */
+
+
 
 
 }
