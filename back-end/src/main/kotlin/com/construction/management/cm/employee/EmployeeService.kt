@@ -11,6 +11,7 @@ import com.construction.management.cm.user.UserService
 import com.construction.management.cm.validator.Validator
 import com.construction.management.cm.wagetype.WageTypeRepository
 import org.springframework.stereotype.Service
+import java.io.File
 
 @Service
 class EmployeeService(private val repository: EmployeeRepository,
@@ -64,7 +65,20 @@ class EmployeeService(private val repository: EmployeeRepository,
         newEmployee.employeeType = employeeTypeRepository.findById(employee.employeeType).get()
         newEmployee.project = projectRepository.findById(employee.project).get()
         newEmployee.wageType = wageTypeRepository.findById(employee.wageType).get()
-        repository.save(newEmployee)
+        if (employee.contract == null) {
+            repository.save(newEmployee)
+        } else {
+            val contractDirectoryPath = "contracts"
+            val fileName = "${employee.email}-contract"
+            val contractDirectory = File(contractDirectoryPath)
+            if(!contractDirectory.exists()) {
+                contractDirectory.mkdir()
+            }
+            val fileSaveLocation = File(contractDirectory.absolutePath, fileName)
+            employee.contract.transferTo(fileSaveLocation)
+            newEmployee.contract = fileSaveLocation.absolutePath
+            repository.save(newEmployee)
+        }
         return "Employee Added Successfully"
     }
 

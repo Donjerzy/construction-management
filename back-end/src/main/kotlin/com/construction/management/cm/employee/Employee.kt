@@ -43,6 +43,8 @@ class Employee {
     @Column(name = "join_date", nullable = false)
     var joinDate: Date = Date()
 
+    @Column(name = "contract", nullable = true, unique = true)
+    var contract: String? = null
 
     // Table references
     @ManyToOne
