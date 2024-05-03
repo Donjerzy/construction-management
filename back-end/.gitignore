@@ -41,3 +41,6 @@ out/
 
 
 application.properties
+
+## Documents ##
+contracts/
