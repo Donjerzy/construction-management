@@ -274,7 +274,13 @@
                                         <TableBodyCell>{employee.employeeType}</TableBodyCell>
                                         <TableBodyCell>{employee.wageType}</TableBodyCell>
                                         <TableBodyCell>{numberWithCommas(employee.wage)}</TableBodyCell>
-                                        <TableBodyCell><a class="underline hover:cursor-pointer hover:text-primary-200" href={`/`}>Edit</a></TableBodyCell>
+                                        <TableBodyCell>
+                                            <div class="flex gap-4 items-center">
+                                                <a class="underline hover:cursor-pointer hover:text-primary-200" href={`/`}>View</a>
+                                                <a class="underline hover:cursor-pointer hover:text-primary-200" href={`/`}>Edit</a>
+                                            </div>
+                                            
+                                        </TableBodyCell>
                                     </TableBodyRow>
                                 {/each}
                             </TableBody>
