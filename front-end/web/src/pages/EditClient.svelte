@@ -14,15 +14,35 @@
     let title = "Edit Client";
     let loading = false;
     let name = originalClient.name;
-    let typeOfClient = originalClient.type;
+    let typeOfClient = originalClient.type === 'INDIVIDUAL' ? 'individual' : originalClient.type === "ORGANISATION" ? 'organisation' : 'group'                    
     let investedAmount = originalClient.investedAmount;
     let committedAmount = originalClient.committedAmount;
+    let committedAmountDisplay = formatWithCommas(originalClient.committedAmount);
+    let investedAmountDisplay = formatWithCommas(originalClient.investedAmount);
+
 
     
-
     function hasOnlyLetters(inputString) {
         return /^[a-zA-Z\s]*$/.test(inputString);
     }
+
+
+    function formatWithCommas(value) {
+        return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+
+    function updateCommitedAmount(event) {
+        committedAmount = event.target.value.replace(/,/g, '');
+        committedAmountDisplay = formatWithCommas(committedAmount);
+    }
+
+    function updateInvestedAmount(event) {
+        investedAmount = event.target.value.replace(/,/g, '');
+        investedAmountDisplay = formatWithCommas(investedAmount);
+    }
+
+
+
 
     async function EditClient(client) {
         loading = true;
@@ -118,8 +138,8 @@
             name: name,
             type: typeOfClient,
             project: projectId,
-            investedAmount: investedAmount,
-            committedAmount: committedAmount
+            investedAmount: parseFloat(investedAmount),
+            committedAmount: parseFloat(committedAmount)
         });
     }
 
@@ -149,11 +169,11 @@
             </div>
             <div class="flex flex-col gap-2 mt-2">
                 <label for="commited_amount">Committed Amount</label>
-                <input name="commited_amount" class="rounded border-primary-800" type="number" id="commited_amount" bind:value={committedAmount}>
+                <input name="commited_amount" class="rounded border-primary-800" type="text" id="commited_amount" bind:value={committedAmountDisplay} on:input={updateCommitedAmount}>
             </div>
             <div class="flex flex-col gap-2 mt-2">
                 <label for="invested_amount">Invested Amount</label>
-                <input name="invested_amount" class="rounded border-primary-800" type="number" id="invested_amount" bind:value={investedAmount}>
+                <input name="invested_amount" class="rounded border-primary-800" type="text" id="invested_amount" bind:value={investedAmountDisplay} on:input={updateInvestedAmount}>
             </div>
             <div class="mt-4">
                 {#if loading}
