@@ -12,5 +12,8 @@ data class GetEmployee(
     val wage: String,
     val wageType: String,
     val archetype: String,
-    val totalTasks: Int
+    val totalTasks: Int,
+    val joinDate: String,
+    val hasContract: String,
+    val wagesPaid: String
 )

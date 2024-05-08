@@ -280,7 +280,10 @@ class ProjectService(private val clientService: ClientService ,
                     tasksCompleted = employeeTaskBreakdown.done,
                     tasksCompletedOnTime = employeeTaskBreakdown.doneOnTime,
                     tasksCompletedPastTime = employeeTaskBreakdown.donePastTime,
-                    totalTasks = employeeTaskBreakdown.done + employeeTaskBreakdown.ongoing
+                    totalTasks = employeeTaskBreakdown.done + employeeTaskBreakdown.ongoing,
+                    joinDate = stringFormatter.timestampToString(fetchedEmployee.joinDate),
+                    hasContract = if (fetchedEmployee.contract == null) "no" else "yes",
+                    wagesPaid = stringFormatter.doubleToString(0.0)
                 )
             }
         }

@@ -31,6 +31,10 @@ class StringFormatter {
         return String.format("%.0f", value)
     }
 
+    fun timestampToString(date: Date): String {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd")
+        return dateFormat.format(date)
+    }
 
 
 
