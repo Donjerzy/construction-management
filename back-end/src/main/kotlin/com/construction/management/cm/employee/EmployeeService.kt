@@ -6,14 +6,15 @@ import com.construction.management.cm.employeetype.EmployeeTypeRepository
 import com.construction.management.cm.exceptionhandler.CustomException
 import com.construction.management.cm.formatters.StringFormatter
 import com.construction.management.cm.project.ProjectRepository
-import com.construction.management.cm.project.ProjectService
 import com.construction.management.cm.user.UserService
 import com.construction.management.cm.validator.Validator
 import com.construction.management.cm.wagetype.WageTypeRepository
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import java.io.File
+import java.io.FileInputStream
 import java.util.UUID
+import java.util.Base64
 
 @Service
 class EmployeeService(private val repository: EmployeeRepository,
@@ -170,6 +171,32 @@ class EmployeeService(private val repository: EmployeeRepository,
             return "employee-already-has-contract"
         }
         return "ok"
+    }
+
+    fun getContractValidations(employee: Long, projectOwner: Long) : String {
+        if (!repository.findById(employee).isPresent) {
+            return "employee-doesn't-exist"
+        }
+        val fetchedEmployee = repository.findById(employee).get()
+        if (fetchedEmployee.project.projectManager.id != projectOwner) {
+            return "not-project-owner"
+        }
+        if (fetchedEmployee.contract == null) {
+            return "employee-has-no-contract"
+        }
+        return "ok"
+    }
+
+    fun getContract(userEmail: String, employeeId: Long): String {
+        when (getContractValidations(employee = employeeId, projectOwner = userService.getUserId(userEmail)!!)) {
+            "employee-doesn't-exist" -> throw CustomException("employee-doesn't-exist", null)
+            "not-project-owner" -> throw CustomException("not-project-owner", null)
+            "employee-has-no-contract" -> throw CustomException("employee-has-no-contract", null)
+        }
+        val actualDocument = File(repository.findById(employeeId).get().contract!!)
+        val inputStream = FileInputStream(actualDocument)
+        val byteArray = inputStream.readAllBytes()
+        return Base64.getEncoder().encodeToString(byteArray)
     }
 
 

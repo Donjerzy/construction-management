@@ -81,6 +81,13 @@ class ExceptionHandler {
                 )
             )
 
+            "employee-has-no-contract" -> ResponseEntity.status(400).body(
+                ExceptionResponse(
+                    httpStatus = 400,
+                    message = "Employee has no contract"
+                )
+            )
+
             "employee-already-has-contract" -> ResponseEntity.status(400).body(
                 ExceptionResponse(
                     httpStatus = 400,
