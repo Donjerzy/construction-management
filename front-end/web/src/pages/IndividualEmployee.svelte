@@ -5,6 +5,10 @@
     import {firstName, accessToken, loggedIn} from '../stores.js'; 
     import { get } from "svelte/store";
     import Button from "../components/button.svelte";
+    import { onMount } from "svelte";
+    import { notifications } from "../lib/notification";
+    import Toast from '../components/toast.svelte';
+    import Loader from "../components/loading-component.svelte";
     let appName = "Mjengo Bora Construction";
     let contentTitle = "Employee"
     let employee = {
@@ -21,10 +25,89 @@
         "archetype": "n/a",
         "totalTasks": 0,
         "joinDate": "2024-02-25",
-        "hasContract": "yess"
+        "hasContract": "yess",
+        "wagesPaid": "500"
     }
     let contractChosen  = false;
     let contract = null;
+    let loading = false;
+
+    onMount(()=> {
+        let errorFetch = false;
+        fetch(`http://localhost:8080/api/v1/project/get-employee?project=${projectId}&employee=${employeeId}`, {
+            headers: {
+                'Authorization': `Bearer ${get(accessToken)}`
+            }
+        })
+        .then(response => {
+            if(!response.ok) {
+                errorFetch = true;
+               firstName.set("");
+               accessToken.set("");
+               loggedIn.set("false");
+               window.location.replace('/'); 
+            } else {
+                return response.json();
+            }
+        }).then((result)=> {
+            if(!errorFetch) {
+                employee = result.employee;
+            }
+        })
+    })
+
+
+
+    async function saveContract(employee) {
+        loading = true;
+        let error = false;
+        let existsError = false;
+        let errorMessage = "";
+        let data = new FormData();
+        data.append('employeeId', employee.employeeId);
+        data.append('contract', employee.contract)
+
+        await fetch('http://localhost:8080/api/v1/employee/add-contract', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${get(accessToken)}`
+            },
+            body: data
+        }).then(response=> {
+            loading = false;
+            if(response.status === 400) {
+                existsError = true;
+                return response.json();
+            }
+            if(!response.ok) {
+                error = true;
+                return
+            } else {
+                error = false;
+                existsError = false;
+                notifications.success("Contract added successfully", 1000);
+                window.location.reload();
+                return;
+            }
+        }).then((res)=> {
+            if(existsError) {
+                errorMessage = res.message
+            }
+        }).catch(error=> {
+            loading = false;
+        })
+        if(existsError) {
+            notifications.danger(errorMessage, 1000); 
+        }
+        if(error) {
+            firstName.set("");
+            accessToken.set("");
+            loggedIn.set("false");
+            window.location.replace('/'); 
+        }
+    
+    }
+
 
 
     function handleContractUpload(event) {
@@ -45,6 +128,7 @@
 
 
 <AdminComponent appName={appName} contentTitle={contentTitle} userFirstName={get(firstName)}>
+    <Toast />
     <div class="mt-4 min-h-4 rounded-md flex gap-8 items-center">
         <Button 
             height=10 width=36 label="Edit" fontSize="sm" padding="8px"
@@ -137,12 +221,12 @@
                         <p class="italic text-sm">{employee.wageType}</p>
                     </div>
                     <div class="flex items-center justify-between pr-4 border-b pb-2 pt-2">
-                        <p class="text-base">Wage Type:</p>
-                        <p class="italic text-sm">{employee.wageType}</p>
-                    </div>
-                    <div class="flex items-center justify-between pr-4 border-b pb-2 pt-2">
                         <p class="text-base">Wage:</p>
                         <p class="italic text-sm">{employee.wage}</p>
+                    </div>
+                    <div class="flex items-center justify-between pr-4 border-b pb-2 pt-2">
+                        <p class="text-base">Wage Paid:</p>
+                        <p class="italic text-sm">{employee.wagesPaid}</p>
                     </div>
                 </div>
             </div>
@@ -173,8 +257,16 @@
                                     <svg on:click={()=> removeContract()} class="h-7 w-7 hover:fill-primary-200 hover:cursor-pointer" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21.12 22.54L19 20.41L16.88 22.54L15.47 21.12L17.59 19L15.47 16.88L16.88 15.47L19 17.59L21.12 15.47L22.54 16.88L20.41 19L22.54 21.12L21.12 22.54M14 2H6C4.89 2 4 2.89 4 4V20C4 21.11 4.89 22 6 22H13.81C13.28 21.09 13 20.05 13 19C13 15.69 15.69 13 19 13C19.34 13 19.67 13.03 20 13.08V8L14 2M13 9V3.5L18.5 9H13Z" /></svg>
                                 </div>
                                 <div class="mt-4">
-                                    <Button height=10 width=36 label="Save" fontSize="sm" padding="8px"
-                                    />
+                                    {#if loading}
+                                        <Loader />
+                                    {:else}    
+                                        <Button on:click={()=> saveContract(
+                                            {
+                                                employeeId: employeeId,
+                                                contract: contract
+                                            }
+                                        )} height=10 width=36 label="Save" fontSize="sm" padding="8px" />
+                                    {/if} 
                                 </div> 
                             {/if}    
                         </div>
