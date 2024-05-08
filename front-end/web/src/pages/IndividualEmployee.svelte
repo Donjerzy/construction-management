@@ -241,8 +241,10 @@
                 <div class="flex justify-start w-[340px] max-h-full pt-4">
                     {#if employee.hasContract === 'yes'}
                         <div>
-                            <Button height=10 width=36 label="View" fontSize="sm" padding="8px"
-                            />
+                            <a href={`/contract/${employeeId}`} target="_blank">
+                                <Button height=10 width=36 label="View" fontSize="sm" padding="8px"
+                                />
+                            </a>
                         </div> 
                     {:else}
                         <div>
