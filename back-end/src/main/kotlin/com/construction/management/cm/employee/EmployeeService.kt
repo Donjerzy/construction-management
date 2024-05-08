@@ -11,7 +11,9 @@ import com.construction.management.cm.user.UserService
 import com.construction.management.cm.validator.Validator
 import com.construction.management.cm.wagetype.WageTypeRepository
 import org.springframework.stereotype.Service
+import org.springframework.web.multipart.MultipartFile
 import java.io.File
+import java.util.UUID
 
 @Service
 class EmployeeService(private val repository: EmployeeRepository,
@@ -76,18 +78,23 @@ class EmployeeService(private val repository: EmployeeRepository,
         if (employee.contract == null) {
             repository.save(newEmployee)
         } else {
-            val contractDirectoryPath = "contracts"
-            val fileName = "${employee.email}-contract"
-            val contractDirectory = File(contractDirectoryPath)
-            if(!contractDirectory.exists()) {
-                contractDirectory.mkdir()
-            }
-            val fileSaveLocation = File(contractDirectory.absolutePath, fileName)
-            employee.contract.transferTo(fileSaveLocation)
-            newEmployee.contract = fileSaveLocation.absolutePath
+            newEmployee.contract = saveEmployeeContract(email = employee.email, contract = employee.contract,
+                project = projectRepository.findById(employee.project).get().projectId)
             repository.save(newEmployee)
         }
         return "Employee Added Successfully"
+    }
+
+    fun saveEmployeeContract(email: String, contract: MultipartFile, project: UUID): String {
+        val contractDirectoryPath = "contracts"
+        val fileName = "${email.lowercase()}-$project-contract"
+        val contractDirectory = File(contractDirectoryPath)
+        if(!contractDirectory.exists()) {
+            contractDirectory.mkdir()
+        }
+        val fileSaveLocation = File(contractDirectory.absolutePath, fileName)
+        contract.transferTo(fileSaveLocation)
+        return fileSaveLocation.absolutePath
     }
 
     fun addEmployeeValidations(employee: AddEmployee, projectManager: Long): String {
@@ -132,6 +139,37 @@ class EmployeeService(private val repository: EmployeeRepository,
 
     fun getProjectEmployees(project: Long): MutableList<Employee> {
         return repository.getProjectEmployees(project = project)
+    }
+
+    fun addContract(employee: Long, userEmail: String, contract: MultipartFile): String {
+        when (addContractValidations(employee = employee, projectOwner = userService.getUserId(userEmail)!!)) {
+            "employee-doesn't-exist" -> throw CustomException("employee-doesn't-exist", null)
+            "not-project-owner" -> throw CustomException("not-project-owner", null)
+            "employee-already-has-contract" -> throw CustomException("employee-already-has-contract", null)
+        }
+        val fetchedEmployee = repository.findById(employee).get()
+        val contractLocation = saveEmployeeContract(
+            email = fetchedEmployee.email,
+            contract = contract,
+            project = fetchedEmployee.project.projectId
+        )
+        fetchedEmployee.contract = contractLocation
+        repository.save(fetchedEmployee)
+        return "Contract added successfully"
+    }
+
+    fun addContractValidations(employee: Long, projectOwner: Long) : String {
+        if (!repository.findById(employee).isPresent) {
+            return "employee-doesn't-exist"
+        }
+        val fetchedEmployee = repository.findById(employee).get()
+        if (fetchedEmployee.project.projectManager.id != projectOwner) {
+            return "not-project-owner"
+        }
+        if (fetchedEmployee.contract != null) {
+            return "employee-already-has-contract"
+        }
+        return "ok"
     }
 
 

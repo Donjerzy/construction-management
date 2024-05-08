@@ -51,10 +51,22 @@ class EmployeeController(private val service: EmployeeService,
         )
     }
 
+    @PostMapping("/add-contract", consumes = ["multipart/form-data"])
+    fun addContract(@RequestHeader("Authorization") header:String,
+                    @RequestParam(name = "employeeId") employeeId: Long,
+                    @RequestParam(name= "contract") contract: MultipartFile) : ResponseEntity<Any> {
+        val userEmail = tokenService.extractEmail(header.substringAfter("Bearer "))
+        val message: String = service.addContract(employee= employeeId, userEmail = userEmail!!, contract = contract)
+        return ResponseEntity.status(200).body(
+            DefaultNa(
+                httpStatus = 200,
+                message = message
+            )
+        )
 
-    /**
-     *     val contract: MultipartFile
-     */
+    }
+
+
 
 
 

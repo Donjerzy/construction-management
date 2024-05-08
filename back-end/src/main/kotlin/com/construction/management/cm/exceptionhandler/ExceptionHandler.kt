@@ -81,6 +81,13 @@ class ExceptionHandler {
                 )
             )
 
+            "employee-already-has-contract" -> ResponseEntity.status(400).body(
+                ExceptionResponse(
+                    httpStatus = 400,
+                    message = "Employee already has a contract"
+                )
+            )
+
             "first-name-empty" ->  ResponseEntity.status(400).body(
                 ExceptionResponse(
                     httpStatus = 400,
@@ -99,6 +106,13 @@ class ExceptionHandler {
                 ExceptionResponse(
                     httpStatus = 400,
                     message = "Employee is already in the project"
+                )
+            )
+
+            "employee-doesn't-exist" -> ResponseEntity.status(400).body(
+                ExceptionResponse(
+                    httpStatus = 400,
+                    message = "Employee doesn't exist"
                 )
             )
 

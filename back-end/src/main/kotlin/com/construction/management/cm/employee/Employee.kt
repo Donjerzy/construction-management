@@ -46,6 +46,9 @@ class Employee {
     @Column(name = "contract", nullable = true, unique = true)
     var contract: String? = null
 
+    @Column(name = "wage_paid")
+    var wagesPaid: Double = 0.0
+
     // Table references
     @ManyToOne
     @JoinColumn(name="employee_type")
