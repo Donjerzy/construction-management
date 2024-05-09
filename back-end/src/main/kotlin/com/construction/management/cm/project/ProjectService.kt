@@ -269,11 +269,8 @@ class ProjectService(private val clientService: ClientService ,
                     archetype = "n/a",
                     email = fetchedEmployee.email,
                     employeeType = fetchedEmployee.employeeType.name,
-                    name = "${fetchedEmployee.firstName.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }} ${fetchedEmployee.lastName.replaceFirstChar {
-                        if (it.isLowerCase()) it.titlecase(
-                            Locale.getDefault()
-                        ) else it.toString()
-                    }}",
+                    firstName = fetchedEmployee.firstName.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() },
+                    lastName = fetchedEmployee.lastName.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() },
                     wage = stringFormatter.doubleToString(fetchedEmployee.wage),
                     wageType = fetchedEmployee.wageType.name,
                     tasksOngoing = employeeTaskBreakdown.ongoing,

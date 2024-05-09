@@ -2,7 +2,8 @@ package com.construction.management.cm.dto
 
 data class GetEmployee(
     val id: Long,
-    val name: String,
+    val firstName: String,
+    val lastName: String,
     val employeeType: String,
     val email: String,
     val tasksCompleted: Int,

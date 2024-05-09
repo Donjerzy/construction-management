@@ -2,6 +2,7 @@ package com.construction.management.cm.employee
 
 import com.construction.management.cm.Runner.Runner
 import com.construction.management.cm.dto.AddEmployee
+import com.construction.management.cm.dto.ModifyName
 import com.construction.management.cm.employeetype.EmployeeTypeRepository
 import com.construction.management.cm.exceptionhandler.CustomException
 import com.construction.management.cm.formatters.StringFormatter
@@ -13,8 +14,7 @@ import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import java.io.File
 import java.io.FileInputStream
-import java.util.UUID
-import java.util.Base64
+import java.util.*
 
 @Service
 class EmployeeService(private val repository: EmployeeRepository,
@@ -199,5 +199,41 @@ class EmployeeService(private val repository: EmployeeRepository,
         return Base64.getEncoder().encodeToString(byteArray)
     }
 
+    fun modifyName(userEmail: String?, name: ModifyName): String {
+        when(modifyNameValidations(name = name, projectOwner = userService.getUserId(userEmail!!)!!)) {
+            "invalid-first-name" -> throw CustomException("invalid-first-name", null)
+            "employee-doesn't-exist" -> throw CustomException("employee-doesn't-exist", null)
+            "not-project-owner" -> throw CustomException("not-project-owner", null)
+            "invalid-last-name" -> throw CustomException("invalid-last-name", null)
+        }
+        val fetchedEmployee = repository.findById(name.employeeId).get()
+        fetchedEmployee.firstName = name.firstName.lowercase()
+        fetchedEmployee.lastName = name.lastName.lowercase()
+        repository.save(fetchedEmployee)
+        return "Name modified successfully"
+    }
+
+    fun modifyNameValidations(name: ModifyName, projectOwner: Long): String {
+        if (!repository.findById(name.employeeId).isPresent) {
+           return "employee-doesn't-exist"
+        }
+        val employee = repository.findById(name.employeeId).get()
+        if (projectOwner != employee.project.projectManager.id) {
+            return "not-project-owner"
+        }
+        if (name.firstName.isEmpty() || name.firstName.isBlank()) {
+            return "invalid-first-name"
+        }
+        if (name.lastName.isEmpty() || name.lastName.isBlank()) {
+            return "invalid-last-name"
+        }
+        if (name.lastName.length < 3) {
+            return "invalid-last-name"
+        }
+        if (name.firstName.length < 3) {
+            return "invalid-first-name"
+        }
+        return "ok"
+    }
 
 }

@@ -81,6 +81,20 @@ class ExceptionHandler {
                 )
             )
 
+            "invalid-first-name" -> ResponseEntity.status(400).body(
+                ExceptionResponse(
+                    httpStatus = 400,
+                    message = "Invalid first name"
+                )
+            )
+
+            "invalid-last-name" -> ResponseEntity.status(400).body(
+                ExceptionResponse(
+                    httpStatus = 400,
+                    message = "Invalid last name"
+                )
+            )
+
             "employee-has-no-contract" -> ResponseEntity.status(400).body(
                 ExceptionResponse(
                     httpStatus = 400,
