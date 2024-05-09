@@ -13,7 +13,8 @@
     let contentTitle = "Employee"
     let employee = {
         "id": 204,
-        "name": "Jane Doe",
+        "firstName": "Jane",
+        "lastName": "Doe",
         "employeeType": "Painter",
         "email": "jane.doe@gmail.com",
         "tasksCompleted": 0,
@@ -31,6 +32,21 @@
     let contractChosen  = false;
     let contract = null;
     let loading = false;
+    let editName = false;
+    let newFirstName;
+    let newLastName;
+    let nameLoading = false;
+
+
+    function validateEmail(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+    }
+
+    function containsDigit(str) {
+        return /\d/.test(str);
+    }
+
 
     onMount(()=> {
         let errorFetch = false;
@@ -52,9 +68,71 @@
         }).then((result)=> {
             if(!errorFetch) {
                 employee = result.employee;
+                newFirstName = result.firstName;
+                newLastName = result.lastName;
             }
         })
     })
+
+
+    async function saveName() {
+        if (newFirstName.length < 3) {
+            return notifications.danger("Invalid first name", 1000);
+        }
+        if (newLastName.length < 3) {
+            return notifications.danger("Invalid last name", 1000);
+        }
+        if (containsDigit(newFirstName)) {
+            return notifications.danger("Invalid first name", 1000);
+        }
+        if (containsDigit(newLastName)) {
+            return notifications.danger("Invalid last name", 1000);
+        }
+
+        nameLoading = true;
+        let error = false;
+        let existsError = false;
+        await fetch('http://localhost:8080/api/v1/employee/modify-name', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${get(accessToken)}`
+            },
+            body: JSON.stringify({
+                employeeId: employeeId,
+                firstName: newFirstName,
+                lastName: newLastName
+            })
+        }).then(response=> {
+            nameLoading = false;
+            if(response.status === 400) {
+                existsError = true;
+                return
+            }
+            if(!response.ok) {
+                error = true;
+                return
+            } else {
+                error = false;
+                existsError = false;
+                notifications.success("Name modified successfully", 1000);
+                window.location.reload();
+                return;
+            }
+        }).catch(error=> {
+            loading = false;
+            notifications.danger("Could make request to server", 1000)
+        })
+        if(existsError) {
+            notifications.danger("Client Already Exists", 1000); 
+        }
+        if(error) {
+            firstName.set("");
+            accessToken.set("");
+            loggedIn.set("false");
+            window.location.replace('/'); 
+        }
+    }
 
 
 
@@ -130,9 +208,11 @@
 <AdminComponent appName={appName} contentTitle={contentTitle} userFirstName={get(firstName)}>
     <Toast />
     <div class="mt-4 min-h-4 rounded-md flex gap-8 items-center">
-        <Button 
-            height=10 width=36 label="Edit" fontSize="sm" padding="8px"
-        />
+        <a href={`/project/${projectId}/${employeeId}/edit-employee`}>
+            <Button
+                height=10 width=36 label="Edit" fontSize="sm" padding="8px"
+            />
+        </a>
         <Button 
             height=10 width=36 label="Reset Password" fontSize="sm" padding="8px"
         />
@@ -147,12 +227,35 @@
                 <svg class="w-10 h-10 mx-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M2,3H22C23.05,3 24,3.95 24,5V19C24,20.05 23.05,21 22,21H2C0.95,21 0,20.05 0,19V5C0,3.95 0.95,3 2,3M14,6V7H22V6H14M14,8V9H21.5L22,9V8H14M14,10V11H21V10H14M8,13.91C6,13.91 2,15 2,17V18H14V17C14,15 10,13.91 8,13.91M8,6A3,3 0 0,0 5,9A3,3 0 0,0 8,12A3,3 0 0,0 11,9A3,3 0 0,0 8,6Z" /></svg>
             </div>
             <div class="flex flex-col w-[500px]">
-                <p class="underline text-lg">Personal Information</p>
+                <div>
+                    <p class="underline text-lg">Personal Information</p>
+                </div>
                 <div class="mt-2">
                     <div class="flex flex-col gap-1 max-h-72 overflow-auto w-[500px]">
                         <div class="flex items-center justify-between pr-4 border-b pb-2">
                             <p class="text-base">Name:</p>
-                            <p class="italic text-sm">{employee.name}</p>
+                            <p class="flex gap-2 items-center italic text-sm">
+                                {#if editName}
+                                    {#if nameLoading}
+                                        <Loader />
+                                    {:else}
+                                        <!-- svelte-ignore a11y-click-events-have-key-events -->
+                                        <!-- svelte-ignore a11y-no-static-element-interactions -->
+                                        <svg on:click={()=> {editName = false}} class="w-5 h-5 hover:fill-primary-200 hover:cursor-pointer" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C17.5 2 22 6.5 22 12S17.5 22 12 22 2 17.5 2 12 6.5 2 12 2M12 4C10.1 4 8.4 4.6 7.1 5.7L18.3 16.9C19.3 15.5 20 13.8 20 12C20 7.6 16.4 4 12 4M16.9 18.3L5.7 7.1C4.6 8.4 4 10.1 4 12C4 16.4 7.6 20 12 20C13.9 20 15.6 19.4 16.9 18.3Z" /></svg>
+                                        <input bind:value={newFirstName} class="w-40" type="text" placeholder="First Name...">
+                                        <input bind:value={newLastName} class="w-40" type="text" placeholder="Last Name...">
+                                        <!-- svelte-ignore a11y-click-events-have-key-events -->
+                                        <!-- svelte-ignore a11y-no-static-element-interactions -->
+                                        <svg on:click={saveName} class="w-5 h-5 hover:fill-primary-200 hover:cursor-pointer" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15,9H5V5H15M12,19A3,3 0 0,1 9,16A3,3 0 0,1 12,13A3,3 0 0,1 15,16A3,3 0 0,1 12,19M17,3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V7L17,3Z" /></svg>
+                                    {/if}
+                                    
+                                {:else}
+                                    <!-- svelte-ignore a11y-click-events-have-key-events -->
+                                    <!-- svelte-ignore a11y-no-static-element-interactions -->
+                                    <svg on:click={()=> {editName = true}} class="h-5 w-5 hover:cursor-pointer hover:fill-primary-200" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.06,9L15,9.94L5.92,19H5V18.08L14.06,9M17.66,3C17.41,3 17.15,3.1 16.96,3.29L15.13,5.12L18.88,8.87L20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18.17,3.09 17.92,3 17.66,3M14.06,6.19L3,17.25V21H6.75L17.81,9.94L14.06,6.19Z" /></svg>
+                                    {`${employee.firstName} ${employee.lastName}`}    
+                                {/if}
+                            </p>    
                         </div>
                         <div class="flex items-center justify-between pr-4 border-b pb-2">
                             <p class="text-base">Email:</p>
