@@ -2,6 +2,7 @@ package com.construction.management.cm.employee
 
 import com.construction.management.cm.auth.TokenService
 import com.construction.management.cm.dto.AddEmployee
+import com.construction.management.cm.dto.ModifyEmail
 import com.construction.management.cm.dto.ModifyName
 import com.construction.management.cm.dto.NewPassword
 import com.construction.management.cm.response.DefaultNa
@@ -89,6 +90,20 @@ class EmployeeController(private val service: EmployeeService,
     ): ResponseEntity<Any> {
         val userEmail = tokenService.extractEmail(header.substringAfter("Bearer "))
         val message: String = service.modifyName(userEmail = userEmail, name = name)
+        return ResponseEntity.status(200).body(
+            DefaultNa(
+                httpStatus = 200,
+                message = message
+            )
+        )
+    }
+
+    @PostMapping("/modify-email")
+    fun modifyEmail(@RequestHeader("Authorization") header:String,
+                   @RequestBody email: ModifyEmail
+    ): ResponseEntity<Any> {
+        val userEmail = tokenService.extractEmail(header.substringAfter("Bearer "))
+        val message: String = service.modifyEmail(userEmail = userEmail!!, email = email)
         return ResponseEntity.status(200).body(
             DefaultNa(
                 httpStatus = 200,

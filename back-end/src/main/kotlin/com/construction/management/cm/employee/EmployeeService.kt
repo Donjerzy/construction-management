@@ -2,6 +2,7 @@ package com.construction.management.cm.employee
 
 import com.construction.management.cm.Runner.Runner
 import com.construction.management.cm.dto.AddEmployee
+import com.construction.management.cm.dto.ModifyEmail
 import com.construction.management.cm.dto.ModifyName
 import com.construction.management.cm.employeetype.EmployeeTypeRepository
 import com.construction.management.cm.exceptionhandler.CustomException
@@ -232,6 +233,38 @@ class EmployeeService(private val repository: EmployeeRepository,
         }
         if (name.firstName.length < 3) {
             return "invalid-first-name"
+        }
+        return "ok"
+    }
+
+    fun modifyEmail(userEmail: String, email: ModifyEmail): String {
+        when(modifyEmailValidations(email = email, projectOwner = userService.getUserId(userEmail)!!)) {
+            "employee-doesn't-exist" -> throw CustomException("employee-doesn't-exist", null)
+            "not-project-owner" -> throw CustomException("not-project-owner", null)
+            "invalid-email" -> throw CustomException("invalid-email", null)
+            "employee-already-in-project" -> throw CustomException("employee-already-in-project", null)
+        }
+        val fetchedEmployee = repository.findById(email.employeeId).get()
+        fetchedEmployee.email = email.email.lowercase()
+        repository.save(fetchedEmployee)
+        return "Email modified successfully"
+    }
+
+
+
+    fun modifyEmailValidations(email: ModifyEmail, projectOwner: Long): String {
+        if (!repository.findById(email.employeeId).isPresent) {
+            return "employee-doesn't-exist"
+        }
+        val employee = repository.findById(email.employeeId).get()
+        if (projectOwner != employee.project.projectManager.id) {
+            return "not-project-owner"
+        }
+        if (!validator.isValidEmail(email.email)) {
+            return "invalid-email"
+        }
+        if (employeeInProject(employeeEmail = email.email, project = employee.project.id)) {
+            return "employee-already-in-project"
         }
         return "ok"
     }

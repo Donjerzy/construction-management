@@ -17,4 +17,5 @@ interface EmployeeRepository: JpaRepository<Employee, Long> {
     fun employeeInProjectEmployeeId(project: Long, employeeId: Long): Int
     @Query("select * from employee where project = :project", nativeQuery = true)
     fun getProjectEmployees(project: Long): MutableList<Employee>
+
 }
