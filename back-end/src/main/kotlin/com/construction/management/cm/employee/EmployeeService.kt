@@ -1,10 +1,7 @@
 package com.construction.management.cm.employee
 
 import com.construction.management.cm.Runner.Runner
-import com.construction.management.cm.dto.AddEmployee
-import com.construction.management.cm.dto.ModifyEmail
-import com.construction.management.cm.dto.ModifyName
-import com.construction.management.cm.dto.ModifyPassword
+import com.construction.management.cm.dto.*
 import com.construction.management.cm.employeetype.EmployeeTypeRepository
 import com.construction.management.cm.exceptionhandler.CustomException
 import com.construction.management.cm.formatters.StringFormatter
@@ -292,6 +289,32 @@ class EmployeeService(private val repository: EmployeeRepository,
         }
         if (!validator.isValidPassword(modifyBody.newPassword)) {
             return "invalid-password"
+        }
+        return "ok"
+    }
+
+    fun getWageInformation(userEmail: String, employeeId: Long): WageInfo {
+        when (getWageInfoValidations(projectManager = userService.getUserId(userEmail)!!,
+            employeeId = employeeId
+        )) {
+            "employee-doesn't-exist" -> throw CustomException("employee-doesn't-exist", null)
+            "not-project-owner" -> throw CustomException("not-project-owner", null)
+        }
+        val employee = repository.findById(employeeId).get()
+        return WageInfo(
+            wage = stringFormatter.doubleToString(employee.wage),
+            numberOfDays = employee.wageType.period,
+            type = employee.wageType.name
+        )
+    }
+
+    fun getWageInfoValidations(projectManager: Long, employeeId: Long): String {
+        if (!repository.findById(employeeId).isPresent) {
+            return "employee-doesn't-exist"
+        }
+        val employee = repository.findById(employeeId).get()
+        if (projectManager != employee.project.projectManager.id) {
+            return "not-project-owner"
         }
         return "ok"
     }

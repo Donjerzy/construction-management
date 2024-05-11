@@ -4,6 +4,7 @@ import com.construction.management.cm.auth.TokenService
 import com.construction.management.cm.dto.*
 import com.construction.management.cm.response.DefaultNa
 import com.construction.management.cm.response.GetContractResponse
+import com.construction.management.cm.response.GetWageInfoResponse
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
@@ -111,7 +112,7 @@ class EmployeeController(private val service: EmployeeService,
 
     @PostMapping("/modify-password")
     fun modifyPassword(@RequestHeader("Authorization") header:String,
-                    @RequestBody modifyBody: ModifyPassword
+                       @RequestBody modifyBody: ModifyPassword
     ): ResponseEntity<Any> {
         val userEmail = tokenService.extractEmail(header.substringAfter("Bearer "))
         val message: String = service.modifyPassword(userEmail = userEmail!!, modifyBody = modifyBody)
@@ -123,6 +124,20 @@ class EmployeeController(private val service: EmployeeService,
         )
     }
 
-
+    @GetMapping("/wage-info")
+    fun getWageInfo(
+        @RequestHeader("Authorization") header:String,
+        @RequestParam(name = "employee_id") employeeId: Long
+    ): ResponseEntity<Any> {
+        val userEmail = tokenService.extractEmail(header.substringAfter("Bearer "))
+        val wageInfo = service.getWageInformation(userEmail = userEmail!!, employeeId = employeeId)
+        return ResponseEntity.status(200).body(
+            GetWageInfoResponse(
+                httpStatus = 200,
+                message = "Wage Information Retrieved Successfully",
+                wageInfo = wageInfo
+            )
+        )
+    }
 
 }
