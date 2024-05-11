@@ -19,12 +19,14 @@
     let generatedAmount = 0;
     let noOfPeriod = 0;
     let nextValidPaymentDate;
-
+    let customStartDate;
+    let customEndDate;
+    let customAmount;
+    let customAmountDisplay;
 
     function numberWithCommas(x) {
         return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
-
 
     onMount(()=> {
         let errorFetch = false;
@@ -93,6 +95,86 @@
         currentDate.setDate(currentDate.getDate() + 1);
         const formattedDate = currentDate.toLocaleDateString('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '-');
         return formattedDate;
+    }
+
+    function formatWithCommas(value) {
+        return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+
+
+    function customAmountChange(event) {
+        customAmount = event.target.value.replace(/,/g, '');
+        customAmountDisplay = formatWithCommas(customAmount);
+    }
+
+    async function customPay() {
+        let testStart = new Date(customStartDate);
+        let testEnd = new Date(customEndDate);
+        let testValid = new Date(nextValidPaymentDate);
+        if(customStartDate === undefined) {
+           return  notifications.danger("Start Date is a requered field", 1000);
+        }
+        if(testStart < testValid) {
+            return notifications.danger("Invalid start date", 1000);
+        }
+        if(customEndDate === undefined) {
+            return notifications.danger("End Date is a requered field", 1000);
+        }
+        if(testEnd < testStart) {
+            return notifications.danger("Invalid date period", 1000);
+        }
+        if(customAmount <= 0 || customAmount === undefined || isNaN(parseFloat(customAmount))) {
+            return notifications.danger("Invalid amount", 1000);
+        }
+        loading = true;
+        let error = false;
+        let existsError = false;
+        await fetch('http://localhost:8080/api/v1/employee/pay', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${get(accessToken)}`
+            },
+            body: JSON.stringify({   
+                employeeId: employeeId,
+                amount: parseFloat(customAmount),
+                startDate: customStartDate,
+                endDate: customEndDate
+            })
+        }).then(response=> {
+            loading = false;
+            if(response.status === 400) {
+                existsError = true;
+                return
+            }
+            if(!response.ok) {
+                error = true;
+                return
+            } else {
+                error = false;
+                existsError = false;
+                notifications.success("Transaction recorded successfully", 1000);
+                customAmount = 0;
+                customAmountDisplay = "0";
+                customStartDate = null;
+                customEndDate = null;
+                window.location.reload();
+                return;
+            }
+        }).catch(error=> {
+            loading = false;
+            notifications.danger("Could make request to server", 1000)
+        })
+        if(existsError) {
+            notifications.danger("Client Already Exists", 1000); 
+        }
+        if(error) {
+            firstName.set("");
+            accessToken.set("");
+            loggedIn.set("false");
+            window.location.replace('/'); 
+        }
+        
     }
 
 
@@ -171,6 +253,7 @@
                 notifications.success("Transaction recorded successfully", 1000);
                 noOfPeriod = 0;
                 generatedAmount = 0;
+                window.location.reload();
                 return;
             }
         }).catch(error=> {
@@ -253,7 +336,32 @@
                                 {/if} 
                         </div>
                     </div>
-                {/if}   
+                {:else}
+                    <div class="mt-3">
+                        <div class="flex-col gap-40 mt-2">
+                            <label for="custom_start_date" class="block">Start Date</label>
+                            <input class="mt-1 w-full" type="date" id="custom_start_date" min={nextValidPaymentDate}  bind:value={customStartDate}>
+                        </div>
+                        <div class="flex-col gap-40 mt-2">
+                            <label for="custom_end_date" class="block">End Date</label>
+                            <input class="mt-1 w-full" type="date" id="custom_start_date" min={customStartDate}  bind:value={customEndDate}>
+                        </div>
+                        <div class="flex-col gap-40 mt-2">
+                            <label for="custom_amount" class="block">Amount</label>
+                            <input class="mt-1 w-full" type="text" id="custom_amount" bind:value={customAmountDisplay} on:input={customAmountChange}>
+                        </div>
+                    </div>
+                    <div class="flex-col gap-40 mt-4">
+                        {#if loading}
+                            <Loader />
+                        {:else}
+                            <Button 
+                                height=12 width=36 label="Pay Wage" fontSize="sm" padding="8px"
+                                on:click={customPay} />
+                            {/if} 
+                    </div>    
+                {/if}
+
             </div> 
         </div>
     {:else if currentPage === 'history'}
