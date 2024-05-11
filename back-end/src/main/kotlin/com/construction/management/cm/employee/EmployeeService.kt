@@ -4,6 +4,7 @@ import com.construction.management.cm.Runner.Runner
 import com.construction.management.cm.dto.AddEmployee
 import com.construction.management.cm.dto.ModifyEmail
 import com.construction.management.cm.dto.ModifyName
+import com.construction.management.cm.dto.ModifyPassword
 import com.construction.management.cm.employeetype.EmployeeTypeRepository
 import com.construction.management.cm.exceptionhandler.CustomException
 import com.construction.management.cm.formatters.StringFormatter
@@ -265,6 +266,31 @@ class EmployeeService(private val repository: EmployeeRepository,
         }
         if (employeeInProject(employeeEmail = email.email, project = employee.project.id)) {
             return "employee-already-in-project"
+        }
+        return "ok"
+    }
+
+    fun modifyPassword(userEmail: String, modifyBody: ModifyPassword): String {
+
+        when (modifyPasswordValidations(projectManager = userService.getUserId(userEmail)!!, modifyBody = modifyBody) )  {
+            "invalid-password" -> throw CustomException("invalid-password", null)
+        }
+        val employee = repository.findById(modifyBody.employeeId).get()
+        employee.password = stringFormatter.toPassword(modifyBody.newPassword)
+        repository.save(employee)
+        return "Password reset successfully"
+    }
+
+    private fun modifyPasswordValidations(projectManager: Long, modifyBody: ModifyPassword): String {
+        if (!repository.findById(modifyBody.employeeId).isPresent) {
+            return "employee-doesn't-exist"
+        }
+        val employee = repository.findById(modifyBody.employeeId).get()
+        if (projectManager != employee.project.projectManager.id) {
+            return "not-project-owner"
+        }
+        if (!validator.isValidPassword(modifyBody.newPassword)) {
+            return "invalid-password"
         }
         return "ok"
     }

@@ -1,10 +1,7 @@
 package com.construction.management.cm.employee
 
 import com.construction.management.cm.auth.TokenService
-import com.construction.management.cm.dto.AddEmployee
-import com.construction.management.cm.dto.ModifyEmail
-import com.construction.management.cm.dto.ModifyName
-import com.construction.management.cm.dto.NewPassword
+import com.construction.management.cm.dto.*
 import com.construction.management.cm.response.DefaultNa
 import com.construction.management.cm.response.GetContractResponse
 import org.springframework.http.ResponseEntity
@@ -111,6 +108,21 @@ class EmployeeController(private val service: EmployeeService,
             )
         )
     }
+
+    @PostMapping("/modify-password")
+    fun modifyPassword(@RequestHeader("Authorization") header:String,
+                    @RequestBody modifyBody: ModifyPassword
+    ): ResponseEntity<Any> {
+        val userEmail = tokenService.extractEmail(header.substringAfter("Bearer "))
+        val message: String = service.modifyPassword(userEmail = userEmail!!, modifyBody = modifyBody)
+        return ResponseEntity.status(200).body(
+            DefaultNa(
+                httpStatus = 200,
+                message = message
+            )
+        )
+    }
+
 
 
 }
