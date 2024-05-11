@@ -103,8 +103,8 @@
     }
 
     function numberWithCommas(x) {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-}
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
 
 
 </script>
@@ -277,7 +277,6 @@
                                         <TableBodyCell>
                                             <div class="flex gap-4 items-center">
                                                 <a class="underline hover:cursor-pointer hover:text-primary-200" href={`/project/${projectId}/${employee.id}`}>View</a>
-                                                <a class="underline hover:cursor-pointer hover:text-primary-200" href={`/`}>Edit</a>
                                             </div>
                                             
                                         </TableBodyCell>

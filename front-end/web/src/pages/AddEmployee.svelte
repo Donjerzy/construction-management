@@ -127,7 +127,6 @@
             if(response.status === 400) {
                 existsError = true;
                 return response.json();
-                return
             }
             if(!response.ok) {
                 error = true;

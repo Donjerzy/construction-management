@@ -33,9 +33,12 @@
     let contract = null;
     let loading = false;
     let editName = false;
+    let editEmail = false;
     let newFirstName;
     let newLastName;
+    let newEmail;
     let nameLoading = false;
+    let emailLoading = false;
 
 
     function validateEmail(email) {
@@ -70,9 +73,66 @@
                 employee = result.employee;
                 newFirstName = result.firstName;
                 newLastName = result.lastName;
+                newEmail = result.email;
             }
         })
     })
+
+
+
+    async function saveEmail() {
+        if(!validateEmail(newEmail)) {
+            return notifications.danger("Invalid email", 1000);
+        }
+        emailLoading = true;
+        let error = false;
+        let existsError = false;
+        let errorMessage;
+        await fetch('http://localhost:8080/api/v1/employee/modify-email', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${get(accessToken)}`
+            },
+            body: JSON.stringify({
+                employeeId: employeeId,
+                email: newEmail
+            })
+        }).then(response=> {
+            emailLoading = false;
+            if(response.status === 400) {
+                existsError = true;
+                return response.json();
+            }
+            if(!response.ok) {
+                error = true;
+                return
+            } else {
+                error = false;
+                existsError = false;
+                notifications.success("Email modified successfully", 1000);
+                window.location.reload();
+                return;
+            }
+        }).then((res)=> {
+            if(existsError) {
+                errorMessage = res.message
+            }
+        }).catch(error=> {
+            loading = false;
+            notifications.danger("Could make request to server", 1000)
+        })
+        if(existsError) {
+            notifications.danger(errorMessage, 1000); 
+        }
+        if(error) {
+            firstName.set("");
+            accessToken.set("");
+            loggedIn.set("false");
+            window.location.replace('/'); 
+        }
+
+    }
 
 
     async function saveName() {
@@ -208,17 +268,16 @@
 <AdminComponent appName={appName} contentTitle={contentTitle} userFirstName={get(firstName)}>
     <Toast />
     <div class="mt-4 min-h-4 rounded-md flex gap-8 items-center">
-        <a href={`/project/${projectId}/${employeeId}/edit-employee`}>
-            <Button
-                height=10 width=36 label="Edit" fontSize="sm" padding="8px"
+        <a href={`/project/${projectId}/${employeeId}/reset-password`}>
+            <Button 
+            height=10 width=36 label="Reset Password" fontSize="sm" padding="8px"
             />
         </a>
-        <Button 
-            height=10 width=36 label="Reset Password" fontSize="sm" padding="8px"
-        />
-        <Button 
-            height=10 width=36 label="Pay Wages" fontSize="sm" padding="8px"
-        />
+        <a href={`/project/${projectId}/${employeeId}/wage`}>
+            <Button 
+            height=10 width=36 label="Wages" fontSize="sm" padding="8px"
+            />
+        </a>
     </div>
     <div class="mt-6 flex gap-4">
         <!-- Card -->
@@ -257,9 +316,30 @@
                                 {/if}
                             </p>    
                         </div>
+
+                        <!--Email-->
                         <div class="flex items-center justify-between pr-4 border-b pb-2">
                             <p class="text-base">Email:</p>
-                            <p class="italic text-sm">{employee.email}</p>
+                            <p class="flex gap-2 items-center italic text-sm">
+                                {#if editEmail}
+                                    {#if emailLoading}
+                                        <Loader />
+                                    {:else}
+                                        <!-- svelte-ignore a11y-click-events-have-key-events -->
+                                        <!-- svelte-ignore a11y-no-static-element-interactions -->
+                                        <svg on:click={()=> {editEmail = false}} class="w-5 h-5 hover:fill-primary-200 hover:cursor-pointer" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C17.5 2 22 6.5 22 12S17.5 22 12 22 2 17.5 2 12 6.5 2 12 2M12 4C10.1 4 8.4 4.6 7.1 5.7L18.3 16.9C19.3 15.5 20 13.8 20 12C20 7.6 16.4 4 12 4M16.9 18.3L5.7 7.1C4.6 8.4 4 10.1 4 12C4 16.4 7.6 20 12 20C13.9 20 15.6 19.4 16.9 18.3Z" /></svg>
+                                        <input bind:value={newEmail} class="w-44" type="text" placeholder="example@mail.com">
+                                        <!-- svelte-ignore a11y-click-events-have-key-events -->
+                                        <!-- svelte-ignore a11y-no-static-element-interactions -->
+                                        <svg on:click={saveEmail} class="w-5 h-5 hover:fill-primary-200 hover:cursor-pointer" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15,9H5V5H15M12,19A3,3 0 0,1 9,16A3,3 0 0,1 12,13A3,3 0 0,1 15,16A3,3 0 0,1 12,19M17,3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V7L17,3Z" /></svg>
+                                    {/if}    
+                                {:else}
+                                    <!-- svelte-ignore a11y-click-events-have-key-events -->
+                                    <!-- svelte-ignore a11y-no-static-element-interactions -->
+                                    <svg on:click={()=> {editEmail = true}} class="h-5 w-5 hover:cursor-pointer hover:fill-primary-200" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.06,9L15,9.94L5.92,19H5V18.08L14.06,9M17.66,3C17.41,3 17.15,3.1 16.96,3.29L15.13,5.12L18.88,8.87L20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18.17,3.09 17.92,3 17.66,3M14.06,6.19L3,17.25V21H6.75L17.81,9.94L14.06,6.19Z" /></svg>
+                                    {employee.email}   
+                                {/if}
+                            </p>    
                         </div>
                     </div>
                 </div>

@@ -1,0 +1,281 @@
+<script>
+    import AdminComponent from "../components/admin-component.svelte";
+    import {firstName, accessToken, loggedIn} from '../stores.js'; 
+    import { get } from "svelte/store";
+    import Button from "../components/button.svelte";
+    import { onMount } from "svelte";
+    import { notifications } from "../lib/notification";
+    import Toast from '../components/toast.svelte';
+    import Loader from "../components/loading-component.svelte";
+    import {page} from '$app/stores';
+    let appName = "Mjengo Bora Construction";
+    let contentTitle = "Wage";
+    let loading = false;
+    let employeeId = $page.params.employeeId;
+    let currentPage = 'pay'; // pay || history
+    let employeeWageType;
+    let employeeWage;
+    let paymentType = 'gen';
+    let generatedAmount = 0;
+    let noOfPeriod = 0;
+    let nextValidPaymentDate;
+
+
+    function numberWithCommas(x) {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+
+
+    onMount(()=> {
+        let errorFetch = false;
+        fetch(`http://localhost:8080/api/v1/employee/wage-info?employee_id=${employeeId}`, {
+            headers: {
+                'Authorization': `Bearer ${get(accessToken)}`
+            }
+        })
+        .then(response => {
+            if(!response.ok) {
+                errorFetch = true;
+               firstName.set("");
+               accessToken.set("");
+               loggedIn.set("false");
+               window.location.replace('/'); 
+            } else {
+                return response.json();
+            }
+        }).then((result)=> {
+            if(!errorFetch) {
+                employeeWageType = result.wageInfo.type;
+                employeeWage = parseFloat(result.wageInfo.wage);
+                nextValidPaymentDate = result.wageInfo.nextValidPaymentDate;
+            }
+        })
+    });
+
+
+    function addOneMonthToCurrentDate(startDate) {
+        const currentDate = new Date(startDate);
+        // Get the current month and year
+        let currentMonth = currentDate.getMonth();
+        let currentYear = currentDate.getFullYear();
+
+        // Add one month
+        currentMonth++;
+        if (currentMonth > 11) {
+            currentMonth = 0;
+            currentYear++;
+        }
+
+        // Update the date
+        currentDate.setMonth(currentMonth);
+        currentDate.setFullYear(currentYear);
+
+        const formattedDate = currentDate.toLocaleDateString('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '-');
+        return formattedDate;
+    }
+
+    function addOneWeekToCurrentDate(startDate) {
+        const currentDate = new Date(startDate);
+        currentDate.setDate(currentDate.getDate() + 6);
+        const formattedDate = currentDate.toLocaleDateString('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '-');
+        return formattedDate;
+    }
+
+    function addOneWeekToCurrentDateVariation(startDate) {
+        const currentDate = new Date(startDate);
+        currentDate.setDate(currentDate.getDate() + 7);
+        const formattedDate = currentDate.toLocaleDateString('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '-');
+        return formattedDate;
+    }
+
+    function addOneDayToCurrentDate(startDate) {
+        const currentDate = new Date(startDate);
+        currentDate.setDate(currentDate.getDate() + 1);
+        const formattedDate = currentDate.toLocaleDateString('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '-');
+        return formattedDate;
+    }
+
+
+
+    async function automaticPay() {
+        let endDate;
+        if(isNaN(parseFloat(noOfPeriod))) {
+            return notifications.danger("Invalid Period", 1000);
+        }
+        if(parseFloat(noOfPeriod) <= 0 ) {
+            return notifications.danger("Invalid Period", 1000);
+        }
+        switch(employeeWageType.toLowerCase()) {
+            case "monthly":
+                for (let i = 0; i< noOfPeriod; i++) {
+                    if(i === 0) {
+                        endDate = addOneMonthToCurrentDate(nextValidPaymentDate);
+                    } else {
+                        endDate = addOneMonthToCurrentDate(endDate);
+                    }
+                }
+                break;
+            case "daily":
+                if(noOfPeriod == 1) {
+                    endDate = nextValidPaymentDate;
+                } else {
+                    endDate = nextValidPaymentDate;
+                    for (let i = 0; i < noOfPeriod - 1; i++) {
+                        endDate = addOneDayToCurrentDate(endDate);    
+                    }
+                }    
+                break;
+            case "weekly":
+                if(noOfPeriod == 1) {
+                    endDate = addOneWeekToCurrentDate(nextValidPaymentDate)
+                } else {
+                    endDate = nextValidPaymentDate;
+                    for (let i = 0; i < noOfPeriod; i++) {
+                        if(i == 0) {
+                            endDate = addOneWeekToCurrentDate(endDate);  
+                        } else {
+                            endDate = addOneWeekToCurrentDateVariation(endDate);
+                        }
+                          
+                    }
+                } 
+                break;
+        }
+        loading = true;
+        let error = false;
+        let existsError = false;
+        await fetch('http://localhost:8080/api/v1/employee/pay', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${get(accessToken)}`
+            },
+            body: JSON.stringify({   
+                employeeId: employeeId,
+                amount: parseFloat(generatedAmount),
+                startDate: nextValidPaymentDate,
+                endDate: endDate
+            })
+        }).then(response=> {
+            loading = false;
+            if(response.status === 400) {
+                existsError = true;
+                return
+            }
+            if(!response.ok) {
+                error = true;
+                return
+            } else {
+                error = false;
+                existsError = false;
+                notifications.success("Transaction recorded successfully", 1000);
+                noOfPeriod = 0;
+                generatedAmount = 0;
+                return;
+            }
+        }).catch(error=> {
+            loading = false;
+            notifications.danger("Could make request to server", 1000)
+        })
+        if(existsError) {
+            notifications.danger("Client Already Exists", 1000); 
+        }
+        if(error) {
+            firstName.set("");
+            accessToken.set("");
+            loggedIn.set("false");
+            window.location.replace('/'); 
+        }
+    }
+
+
+    function calculateWage() {
+        let amount = employeeWage * parseFloat(noOfPeriod);
+        generatedAmount = amount;
+    }
+
+
+    function navigate(to) {
+        currentPage = to;
+    }
+
+
+</script>
+
+<svelte:head>
+    <title>Wage</title>
+</svelte:head>
+
+
+
+<AdminComponent appName={appName} contentTitle={contentTitle} userFirstName={get(firstName)}>
+    <Toast />
+    {#if currentPage === 'pay' }
+        <div class="mt-10">
+            <!-- Naviagtion-->
+            <div class="flex justify-between h-8 align-middle text-base w-fit ml-auto mr-auto gap-20">
+                <!-- svelte-ignore a11y-click-events-have-key-events -->
+                    <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" id="active-link"  on:click={()=> navigate("pay")}>Pay</p>
+                    <!-- svelte-ignore a11y-click-events-have-key-events -->
+                    <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("history")}>History</p>
+            </div>
+            <div class="mt-5">
+                <div>
+                    <label for="payment-type" class="block">Payment Type</label>
+                    <select class="mt-2 w-full"  id="payment-type" bind:value={paymentType}>
+                        <option value="gen">Generated</option>
+                        <option value="custom">Custom</option>
+                    </select>
+                </div>
+                {#if paymentType === 'gen'}
+                    <div class="mt-3">
+                        <div class="flex-col gap-40 mt-1">
+                            <p>Wage Type</p>
+                            <p  class="italic border mt-1 border-primary-100 p-2 bg-primary-100">{employeeWageType}</p>
+                        </div>
+                        <div class="flex-col gap-40 mt-2">
+                            <label for="number_of_periods" class="block">Number of Period (Months/days/weeks)</label>
+                            <input class="mt-1 w-full" type="number" id="number_of_periods" bind:value={noOfPeriod} on:input={calculateWage}>
+                        </div>
+                        <div class="flex-col gap-40 mt-1">
+                            <p>Amount</p>
+                            <p  class="italic border mt-1 border-primary-100 p-2 bg-primary-100">{isNaN(generatedAmount) ? 0 : numberWithCommas(generatedAmount)}</p>
+                        </div>
+                        <div class="flex-col gap-40 mt-4">
+                            {#if loading}
+                                <Loader />
+                            {:else}
+                                <Button 
+                                    height=12 width=36 label="Pay Wage" fontSize="sm" padding="8px"
+                                    on:click={automaticPay} />
+                                {/if} 
+                        </div>
+                    </div>
+                {/if}   
+            </div> 
+        </div>
+    {:else if currentPage === 'history'}
+    <div class="mt-10">
+        <!-- Naviagtion-->
+        <div class="flex justify-between h-8 align-middle text-base w-fit ml-auto mr-auto gap-20">
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
+                <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+                <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200"  on:click={()=> navigate("pay")}>Pay</p>
+                <!-- svelte-ignore a11y-click-events-have-key-events -->
+                <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+                <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" id="active-link" on:click={()=> navigate("history")}>History</p>
+        </div>
+
+    </div>
+    {/if}
+</AdminComponent>
+
+
+<style>
+    #active-link {
+        color: var(--tertiary-clr);
+        font-size: 1.2rem;
+    }
+</style>
