@@ -140,4 +140,19 @@ class EmployeeController(private val service: EmployeeService,
         )
     }
 
+    @PostMapping("/pay")
+    fun payEmployee(
+        @RequestHeader("Authorization") header:String,
+        @RequestBody payEmployeeBody: PayEmployeeBody
+    ): ResponseEntity<Any> {
+        val userEmail = tokenService.extractEmail(header.substringAfter("Bearer "))
+        val message = service.payEmployee(userEmail = userEmail!!,  payEmployeeBody = payEmployeeBody)
+        return ResponseEntity.status(200).body(
+            DefaultNa(
+                httpStatus = 200,
+                message = message
+            )
+        )
+    }
+
 }

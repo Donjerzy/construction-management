@@ -172,6 +172,20 @@ class ExceptionHandler {
                 )
             )
 
+            "invalid-amount" -> ResponseEntity.status(400).body(
+                ExceptionResponse(
+                    httpStatus = 400,
+                    message = "Amount provided is invalid"
+                )
+            )
+
+            "invalid-date-period" -> ResponseEntity.status(400).body(
+                ExceptionResponse(
+                    httpStatus = 400,
+                    message = "Date period entered is invalid"
+                )
+            )
+
             "invalid-password" -> ResponseEntity.status(400).body(
                 ExceptionResponse(
                     httpStatus = 400,

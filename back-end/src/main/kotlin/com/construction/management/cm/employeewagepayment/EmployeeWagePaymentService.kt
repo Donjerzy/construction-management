@@ -7,6 +7,8 @@ import com.construction.management.cm.exceptionhandler.CustomException
 import com.construction.management.cm.formatters.StringFormatter
 import com.construction.management.cm.user.UserService
 import org.springframework.stereotype.Service
+import java.time.ZoneId
+import java.util.*
 
 @Service
 class EmployeeWagePaymentService(
@@ -40,6 +42,17 @@ class EmployeeWagePaymentService(
             return "not-project-owner"
         }
         return "ok"
+    }
+
+    fun noPaymentsMade(employeeId: Long): Boolean {
+        return repository.numberOfPaymentsMade(employeeId) == 0
+    }
+
+    fun nextPaymentDate(employeeId: Long): String {
+        val lastPayment: Date = repository.lastPaymentDate(employeeId) ?: return formatter.timestampToString(employeeRepository.findById(employeeId).get().joinDate)
+        val localDate = lastPayment.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+        val nextPaymentDate: Date = Date.from(localDate.plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant())
+        return formatter.timestampToString(nextPaymentDate)
     }
 
 }

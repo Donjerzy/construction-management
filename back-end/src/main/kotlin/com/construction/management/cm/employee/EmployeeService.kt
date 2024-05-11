@@ -3,16 +3,23 @@ package com.construction.management.cm.employee
 import com.construction.management.cm.Runner.Runner
 import com.construction.management.cm.dto.*
 import com.construction.management.cm.employeetype.EmployeeTypeRepository
+import com.construction.management.cm.employeewagepayment.EmployeeWagePayment
+import com.construction.management.cm.employeewagepayment.EmployeeWagePaymentRepository
+import com.construction.management.cm.employeewagepayment.EmployeeWagePaymentService
 import com.construction.management.cm.exceptionhandler.CustomException
 import com.construction.management.cm.formatters.StringFormatter
 import com.construction.management.cm.project.ProjectRepository
 import com.construction.management.cm.user.UserService
 import com.construction.management.cm.validator.Validator
 import com.construction.management.cm.wagetype.WageTypeRepository
+import jakarta.persistence.Column
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.ManyToOne
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import java.io.File
 import java.io.FileInputStream
+import java.time.ZoneId
 import java.util.*
 
 @Service
@@ -23,7 +30,9 @@ class EmployeeService(private val repository: EmployeeRepository,
                       private val wageTypeRepository: WageTypeRepository,
                       private val stringFormatter: StringFormatter,
                       private val projectRepository: ProjectRepository,
-                      private val runner: Runner) {
+                      private val runner: Runner,
+                      private val employeeWagePaymentService: EmployeeWagePaymentService,
+                      private val employeeWagePaymentRepository: EmployeeWagePaymentRepository  ) {
 
     fun getNumberOfEmployeesInProject(projectId:Long):Int {
         return repository.numberOfEmployeesInProject(projectId)
@@ -304,7 +313,11 @@ class EmployeeService(private val repository: EmployeeRepository,
         return WageInfo(
             wage = stringFormatter.doubleToString(employee.wage),
             numberOfDays = employee.wageType.period,
-            type = employee.wageType.name
+            type = employee.wageType.name,
+            nextValidPaymentDate = when(employeeWagePaymentService.noPaymentsMade(employeeId)) {
+                true -> stringFormatter.timestampToString(employee.joinDate)
+                false -> employeeWagePaymentService.nextPaymentDate(employeeId)
+            }
         )
     }
 
@@ -318,5 +331,52 @@ class EmployeeService(private val repository: EmployeeRepository,
         }
         return "ok"
     }
+
+    fun payEmployee(userEmail: String, payEmployeeBody: PayEmployeeBody): String {
+        when(payEmployeeValidations(
+            projectManager = userService.getUserId(userEmail)!!,
+            payEmployeeBody = payEmployeeBody
+        )) {
+            "employee-doesn't-exist" -> throw CustomException("employee-doesn't-exist", null)
+            "not-project-owner" -> throw CustomException("not-project-owner", null)
+            "invalid-amount" -> throw CustomException("invalid-amount", null)
+            "invalid-date-period" -> throw CustomException("invalid-date-period", null)
+
+        }
+        val employee = repository.findById(payEmployeeBody.employeeId).get()
+        val transaction = EmployeeWagePayment()
+        transaction.periodStart = payEmployeeBody.startDate
+        transaction.periodEnd = payEmployeeBody.endDate
+        transaction.amount = payEmployeeBody.amount
+        transaction.employee = employee
+        employeeWagePaymentRepository.save(transaction)
+        return "Transaction Recorded Successfully"
+    }
+
+    fun payEmployeeValidations(projectManager: Long, payEmployeeBody: PayEmployeeBody): String {
+        if (!repository.findById(payEmployeeBody.employeeId).isPresent) {
+            return "employee-doesn't-exist"
+        }
+        val employee = repository.findById(payEmployeeBody.employeeId).get()
+        if (projectManager != employee.project.projectManager.id) {
+            return "not-project-owner"
+        }
+        if (payEmployeeBody.amount <= 0) {
+            return "invalid-amount"
+        }
+        if (
+            payEmployeeBody.startDate.before(
+                stringFormatter.toDate(employeeWagePaymentService.nextPaymentDate(employeeId = payEmployeeBody.employeeId)))
+            ) {
+            return "invalid-date-period"
+        }
+        if (payEmployeeBody.startDate.after(payEmployeeBody.endDate)) {
+            return "invalid-date-period"
+        }
+        return "ok"
+    }
+
+
+
 
 }

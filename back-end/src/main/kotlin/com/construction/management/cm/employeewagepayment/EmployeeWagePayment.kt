@@ -13,13 +13,13 @@ class EmployeeWagePayment {
     val id: Long = 0
 
     @Column(name = "period_start", nullable = false)
-    val periodStart: Date = Date()
+    var periodStart: Date = Date()
 
     @Column(name = "period_end", nullable = false)
-    val periodEnd: Date = Date()
+    var periodEnd: Date = Date()
 
     @Column(name = "amount", nullable = false)
-    val amount: Double = 0.0
+    var amount: Double = 0.0
 
     @Column(name = "transaction_date", nullable = false)
     val transactionDate: Date = Date()
@@ -27,7 +27,7 @@ class EmployeeWagePayment {
     // Table references
     @ManyToOne
     @JoinColumn(name = "employee")
-    val employee = Employee()
+    var employee = Employee()
 
 
 
