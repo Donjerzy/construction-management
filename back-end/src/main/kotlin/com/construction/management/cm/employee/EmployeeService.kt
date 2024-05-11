@@ -271,8 +271,9 @@ class EmployeeService(private val repository: EmployeeRepository,
     }
 
     fun modifyPassword(userEmail: String, modifyBody: ModifyPassword): String {
-
         when (modifyPasswordValidations(projectManager = userService.getUserId(userEmail)!!, modifyBody = modifyBody) )  {
+            "employee-doesn't-exist" -> throw CustomException("employee-doesn't-exist", null)
+            "not-project-owner" -> throw CustomException("not-project-owner", null)
             "invalid-password" -> throw CustomException("invalid-password", null)
         }
         val employee = repository.findById(modifyBody.employeeId).get()

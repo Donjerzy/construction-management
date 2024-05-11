@@ -1,6 +1,7 @@
 package com.construction.management.cm.employee
 
 import com.construction.management.cm.employeetype.EmployeeType
+import com.construction.management.cm.employeewagepayment.EmployeeWagePayment
 import com.construction.management.cm.project.Project
 import com.construction.management.cm.subtask.SubTask
 import com.construction.management.cm.task.Task
@@ -63,6 +64,9 @@ class Employee {
 
     @OneToMany(targetEntity = SubTask::class, mappedBy = "employee", cascade = [CascadeType.ALL])
     var subTasks = mutableSetOf<SubTask>()
+
+    @OneToMany(targetEntity = EmployeeWagePayment::class, mappedBy = "employee", cascade = [CascadeType.ALL])
+    var wagePayments = mutableSetOf<EmployeeWagePayment>()
 
     @ManyToOne
     @JoinColumn(name="project")
