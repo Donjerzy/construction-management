@@ -5,9 +5,12 @@
     import { Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, Checkbox, TableSearch } from 'flowbite-svelte';    
     import { get } from "svelte/store";
     import {onMount} from 'svelte';
+    import Toast from '../components/toast.svelte';
+    import { notifications } from "../lib/notification";
     export let projectId;
 
     let clients = [];
+    let projectCode = "56TRT-SUGUFSO-SFGSVF";
     let employees = [];
     let active = 'overview';
     let appName = 'Mjengo Bora Construction'; //  overview | 
@@ -95,6 +98,28 @@
             }
         })
 
+
+        fetch(`http://localhost:8080/api/v1/project/code?project=${projectId}`, {
+            headers: {
+                'Authorization': `Bearer ${get(accessToken)}`
+            }
+        })
+        .then(response => {
+            if(!response.ok) {
+                errorFetch = true;
+               firstName.set("");
+               accessToken.set("");
+               loggedIn.set("false");
+               window.location.replace('/'); 
+            } else {
+                return response.json();
+            }
+        }).then((result)=> {
+            if(!errorFetch) {
+                projectCode = result.code;
+            }
+        })
+
     
     });
 
@@ -107,6 +132,12 @@
         return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
 
+    function copyProjectCode() {
+        console.log('clicked');
+        navigator.clipboard.writeText(projectCode);
+        notifications.success('Project code copied', 1000);
+    }
+
 
 </script>
 
@@ -116,6 +147,7 @@
 </svelte:head>
 
 <AdminComponent appName={appName} userFirstName={get(firstName)} contentTitle={projectOverview.projectName}>
+    <Toast />
     {#if active === 'overview'}
     <div class="container">
         <div class="flex justify-between h-8 align-middle text-base">
@@ -290,6 +322,42 @@
                     </TableSearch>
                 </div>
             </div>
+        {:else if active === 'actions'}
+            <div class="container">
+                <div class="flex justify-between h-8 align-middle text-base">
+                    <!-- svelte-ignore a11y-click-events-have-key-events -->
+                    <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200"  on:click={()=> navigate("overview")}>Overview</p>
+                    <!-- svelte-ignore a11y-click-events-have-key-events -->
+                    <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("clients")}>Clients</p>
+                    <!-- svelte-ignore a11y-click-events-have-key-events -->
+                    <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200"  on:click={()=> navigate("employees")}>Employees</p>
+                    <!-- svelte-ignore a11y-click-events-have-key-events -->
+                    <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("tasks")}>Tasks</p>
+                    <!-- svelte-ignore a11y-click-events-have-key-events -->
+                    <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("expenses")}>Expenses</p>
+                    <!-- svelte-ignore a11y-click-events-have-key-events -->
+                    <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" id="active-link" on:click={()=> navigate("actions")}>Actions</p>
+                </div>
+
+                <div class="mt-5">
+                    <p class="text-sm">Project Code</p>
+                    <div class="mt-2 border-black bg-white h-16 rounded p-4 flex justify-between items-center">
+                        <p>{projectCode}</p>
+                        
+                        <!-- svelte-ignore a11y-click-events-have-key-events -->
+                        <!-- svelte-ignore a11y-no-static-element-interactions -->
+                        <svg on:click={copyProjectCode} class="w-5 h-5 hover:fill-primary-200 hover:cursor-pointer" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z" /></svg>
+                    </div>
+                </div>
+
+
+            </div>    
         {/if}
 </AdminComponent>
 
