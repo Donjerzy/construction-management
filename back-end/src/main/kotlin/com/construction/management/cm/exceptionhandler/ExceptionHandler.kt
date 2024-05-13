@@ -179,6 +179,13 @@ class ExceptionHandler {
                 )
             )
 
+            "invalid-project" -> ResponseEntity.status(400).body(
+                ExceptionResponse(
+                    httpStatus = 400,
+                    message = "Invalid project"
+                )
+            )
+
             "invalid-date-period" -> ResponseEntity.status(400).body(
                 ExceptionResponse(
                     httpStatus = 400,

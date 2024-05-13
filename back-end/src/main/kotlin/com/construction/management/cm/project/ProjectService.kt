@@ -297,9 +297,27 @@ class ProjectService(private val clientService: ClientService ,
         return "ok"
     }
 
+    fun getProjectCode(userEmail: String, project: Long): String {
+        when(getProjectCodeValidations(
+            projectManager = userService.getUserId(userEmail)!!,
+            project = project
+        )) {
+            "invalid-project" -> throw CustomException("invalid-project", null)
+            "not-project-owner" -> throw CustomException("not-project-owner", null)
+        }
+        return repository.findById(project).get().projectId.toString()
+    }
 
-
-
+    fun getProjectCodeValidations(projectManager: Long, project:Long): String {
+        if (!repository.findById(project).isPresent) {
+            return "invalid-project"
+        }
+        val fetchedProject = repository.findById(project).get()
+        if (fetchedProject.projectManager.id != projectManager) {
+            return "not-project-owner"
+        }
+        return "ok"
+    }
 
 
 }

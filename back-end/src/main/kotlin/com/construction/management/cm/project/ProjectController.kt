@@ -121,6 +121,20 @@ class ProjectController {
         )
     }
 
+    @GetMapping("/code")
+    fun getProjectCode(@RequestHeader("Authorization") header:String,
+                       @RequestParam("project") project: Long): ResponseEntity<Any> {
+        val userEmail = tokenService.extractEmail(header.substringAfter("Bearer "))
+        val code = service.getProjectCode(userEmail = userEmail!!, project = project)
+        return ResponseEntity.status(200).body(
+            GetProjectCodeResponse(
+                httpStatus = 200,
+                message = "Project retrieved successfully",
+                code = code
+            )
+        )
+    }
+
 
 
 
