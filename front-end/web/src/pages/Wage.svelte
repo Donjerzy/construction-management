@@ -1,13 +1,14 @@
 <script>
     import AdminComponent from "../components/admin-component.svelte";
     import {firstName, accessToken, loggedIn} from '../stores.js'; 
-    import { get } from "svelte/store";
+    import { get, writable } from "svelte/store";
     import Button from "../components/button.svelte";
     import { onMount } from "svelte";
     import { notifications } from "../lib/notification";
     import Toast from '../components/toast.svelte';
     import Loader from "../components/loading-component.svelte";
     import {page} from '$app/stores';
+    import { Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, Checkbox, TableSearch } from 'flowbite-svelte';
     let appName = "Mjengo Bora Construction";
     let contentTitle = "Wage";
     let loading = false;
@@ -24,6 +25,40 @@
     let customAmount;
     let customAmountDisplay;
     let wageNote = null;
+    let wageHistory = [];
+
+
+    // table history sort
+    const sortKey = writable('periodStart'); // default sort key
+    const sortDirection = writable(1); // default sort direction (ascending)
+    const sortItems = writable(wageHistory.slice()); // make a copy of the items array
+
+    // Define a function to sort the items
+    const sortTable = (key) => {
+        // If the same key is clicked, reverse the sort direction
+        if ($sortKey === key) {
+        sortDirection.update((val) => -val);
+        } else {
+        sortKey.set(key);
+        sortDirection.set(1);
+        }
+    };
+
+    $: {
+        const key = $sortKey;
+        const direction = $sortDirection;
+        const sorted = [...$sortItems].sort((a, b) => {
+        const aVal = a[key];
+        const bVal = b[key];
+        if (aVal < bVal) {
+            return -direction;
+        } else if (aVal > bVal) {
+            return direction;
+        }
+        return 0;
+        });
+        sortItems.set(sorted);
+    }
 
     function numberWithCommas(x) {
         return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -53,6 +88,30 @@
                 nextValidPaymentDate = result.wageInfo.nextValidPaymentDate;
             }
         })
+
+        fetch(`http://localhost:8080/api/v1/employee/wage-history?employee_id=${employeeId}`, {
+            headers: {
+                'Authorization': `Bearer ${get(accessToken)}`
+            }
+        })
+        .then(response => {
+            if(!response.ok) {
+                errorFetch = true;
+               firstName.set("");
+               accessToken.set("");
+               loggedIn.set("false");
+               window.location.replace('/'); 
+            } else {
+                return response.json();
+            }
+        }).then((result)=> {
+            if(!errorFetch) {
+                wageHistory = result.wageHistory;
+                sortItems.set(result.wageHistory);
+            }
+        })
+
+
     });
 
 
@@ -285,6 +344,11 @@
     }
 
 
+
+    
+
+
+
 </script>
 
 <svelte:head>
@@ -381,7 +445,30 @@
                 <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
                 <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" id="active-link" on:click={()=> navigate("history")}>History</p>
         </div>
-
+        <div class="mt-8">
+            <Table divClass="max-h-80 overflow-auto" shadow hoverable={true}>
+                <TableHead defaultRow={false} theadClass="border-black">
+                    <tr class="bg-primary-100">
+                        <TableHeadCell on:click={() => sortTable('periodStart')} class="text-white hover:cursor-pointer">Period Start</TableHeadCell>
+                        <TableHeadCell on:click={() => sortTable('periodEnd')} class="text-white hover:cursor-pointer">Period End</TableHeadCell>
+                        <TableHeadCell on:click={() => sortTable('amount')} class="text-white hover:cursor-pointer">Amount</TableHeadCell>
+                        <TableHeadCell on:click={() => sortTable('transactionDate')} class="text-white hover:cursor-pointer">Transaction Date</TableHeadCell>
+                        <TableHeadCell  class="text-white">Note</TableHeadCell>
+                    </tr>
+                </TableHead>
+                <TableBody>
+                    {#each $sortItems as history }
+                        <TableBodyRow>
+                            <TableBodyCell>{history.periodStart}</TableBodyCell>
+                            <TableBodyCell>{history.periodEnd}</TableBodyCell>
+                            <TableBodyCell>{numberWithCommas(history.amount)}</TableBodyCell>
+                            <TableBodyCell>{history.transactionDate}</TableBodyCell>
+                            <TableBodyCell>{history.note}</TableBodyCell>
+                        </TableBodyRow>
+                    {/each}
+                </TableBody>
+            </Table>
+        </div>
     </div>
     {/if}
 </AdminComponent>
