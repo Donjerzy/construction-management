@@ -49,6 +49,7 @@
 
 <style>
     :global(body) {
+        position: relative;
         margin: 0; 
         padding: 0; 
         box-sizing: border-box;
@@ -58,6 +59,7 @@
         --primary-clr: #5c595c;
         --tertiary-clr: #38aa3b;
         font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        /* border: 1px solid black; */
     }
     * {
         margin: 0;
@@ -65,6 +67,7 @@
         box-sizing: border-box;
     }
     .container {
+        /* border: 1px solid black; */
         width: 100%;
         height: 100%;
         display: grid;
