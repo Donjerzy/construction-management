@@ -344,6 +344,9 @@ class EmployeeService(private val repository: EmployeeRepository,
 
         }
         val employee = repository.findById(payEmployeeBody.employeeId).get()
+        val project = projectRepository.findById(employee.project.id).get()
+        project.totalBudgetAmountSpent += payEmployeeBody.amount
+        projectRepository.save(project)
         val transaction = EmployeeWagePayment()
         transaction.periodStart = payEmployeeBody.startDate
         transaction.periodEnd = payEmployeeBody.endDate
