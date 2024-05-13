@@ -4,6 +4,7 @@ import com.construction.management.cm.auth.TokenService
 import com.construction.management.cm.dto.*
 import com.construction.management.cm.response.DefaultNa
 import com.construction.management.cm.response.GetContractResponse
+import com.construction.management.cm.response.GetWageHistoryResponse
 import com.construction.management.cm.response.GetWageInfoResponse
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
@@ -136,6 +137,23 @@ class EmployeeController(private val service: EmployeeService,
                 httpStatus = 200,
                 message = "Wage Information Retrieved Successfully",
                 wageInfo = wageInfo
+            )
+        )
+    }
+
+
+    @GetMapping("/wage-history")
+    fun getWageHistory (
+        @RequestHeader("Authorization") header:String,
+        @RequestParam(name = "employee_id") employeeId: Long
+    ): ResponseEntity<Any> {
+        val userEmail = tokenService.extractEmail(header.substringAfter("Bearer "))
+        val wageHistory = service.getWageHistory(userEmail = userEmail!!, employeeId = employeeId)
+        return ResponseEntity.status(200).body(
+            GetWageHistoryResponse (
+                httpStatus = 200,
+                message = "Wage History Retrieved Successfully",
+                wageHistory = wageHistory
             )
         )
     }

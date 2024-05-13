@@ -386,7 +386,40 @@ class EmployeeService(private val repository: EmployeeRepository,
         return "ok"
     }
 
+    fun getWageHistory(userEmail: String, employeeId: Long): MutableList<GetWageHistory> {
+        when (getWageHistoryValidations(
+            projectManager = userService.getUserId(userEmail)!!,
+            employee = employeeId
+        )) {
+            "employee-doesn't-exist" -> throw CustomException("employee-doesn't-exist", null)
+            "not-project-owner" -> throw CustomException("not-project-owner", null)
+        }
+        val history = employeeWagePaymentRepository.getByEmployeeOrderPeriodAsc(employeeId)
+        val result = mutableListOf<GetWageHistory>()
+        for (entry in history) {
+            result.add (
+                GetWageHistory (
+                    note = entry.note ?: "n/a",
+                    amount = stringFormatter.doubleToString(entry.amount),
+                    periodStart = stringFormatter.timestampToString(entry.periodStart),
+                    periodEnd = stringFormatter.timestampToString(entry.periodEnd),
+                    transactionDate = stringFormatter.timestampToString(entry.transactionDate)
+                )
+            )
+        }
+        return result
+    }
 
+    fun getWageHistoryValidations(projectManager: Long, employee: Long): String {
+        if (!repository.findById(employee).isPresent) {
+            return "employee-doesn't-exist"
+        }
+        val employee = repository.findById(employee).get()
+        if (projectManager != employee.project.projectManager.id) {
+            return "not-project-owner"
+        }
+        return "ok"
+    }
 
 
 }
