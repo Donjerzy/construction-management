@@ -1,5 +1,6 @@
 package com.construction.management.cm.project
 
+import com.construction.management.cm.dto.ProjectBudgetDb
 import jakarta.transaction.Transactional
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Modifying
@@ -26,6 +27,12 @@ interface ProjectRepository: JpaRepository<Project, Long> {
     @Query("select count(*) from project where id = :project and project_manager = :projectManager", nativeQuery = true)
     fun isProjectManager(projectManager: Long, project:Long) : Int
 
+    @Query("select sum(total_budget_amount_received) from project where project_manager = :projectManager", nativeQuery = true)
+    fun totalAvailableBudget(projectManager: Long): Double
+
+    @Query("select name, total_budget_amount_received from project where project_manager = :projectManager", nativeQuery = true)
+    fun projectsWithBudgets(projectManager: Long): MutableList<ProjectBudgetDb>
+
     @Query("select total_budget_amount_spent from project where id = :project", nativeQuery = true)
     fun getProjectBudgetSpent(project: Long): Double
 
@@ -39,5 +46,12 @@ interface ProjectRepository: JpaRepository<Project, Long> {
     @Modifying
     @Query("update project set total_budget_amount_received = :amount where id = :projectId", nativeQuery = true)
     fun modifyInvestedAmount(projectId: Long, amount: Double)
+    @Query("select count(*) from project where lower(status) = 'ongoing' and project_manager = :projectManager", nativeQuery = true)
+    fun getOngoingCount(projectManager: Long): Int
+    @Query("select count(*) from project where lower(status) = 'complete' and project_manager = :projectManager", nativeQuery = true)
+    fun getCompleteCount(projectManager: Long): Int
+
+    @Query("select count(*) from project where lower(status) = 'abandoned' and project_manager = :projectManager", nativeQuery = true)
+    fun getAbandonedCount(projectManager: Long): Int
 
 }

@@ -1,3 +1,6 @@
 package com.construction.management.cm.dto
 
-data class ProjectBugdetResponse()
+data class ProjectBudgetResponse (
+    val name: String,
+    val budget: String
+)

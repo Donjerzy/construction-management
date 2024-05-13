@@ -1,3 +1,6 @@
 package com.construction.management.cm.dto
 
-data class ProjectBudget()
+data class ProjectBudgetDb (
+    val project: String,
+    val budget: Double
+)
