@@ -101,7 +101,8 @@ class ProjectService(private val clientService: ClientService ,
             numberOfTasksDone = taskService.getProjectTaskStatus(project).done,
             numberOfTasksOngoing = taskService.getProjectTaskStatus(project).ongoing,
             budgetAvailable = repository.getProjectBudgetAvailable(project),
-            budgetSpent = repository.getProjectBudgetSpent(project)
+            budgetSpent = repository.getProjectBudgetSpent(project),
+            projectBudgetReceived = repository.getProjectBudgetReceived(project)
         )
     }
 

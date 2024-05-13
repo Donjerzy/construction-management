@@ -24,19 +24,12 @@ class EmployeeWagePayment {
     @Column(name = "transaction_date", nullable = false)
     val transactionDate: Date = Date()
 
+    @Column(name = "note", nullable = true)
+    var note: String? = null
+
     // Table references
     @ManyToOne
     @JoinColumn(name = "employee")
     var employee = Employee()
-
-
-
-
-
-
-
-
-
-
 
 }

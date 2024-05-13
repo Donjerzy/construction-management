@@ -6,6 +6,7 @@ data class Overview(
     val numberOfEmployees: Int,
     val numberOfTasksDone: Int,
     val numberOfTasksOngoing: Int,
+    val projectBudgetReceived: Double,
     val budgetAvailable: Double,
     val budgetSpent: Double
 )

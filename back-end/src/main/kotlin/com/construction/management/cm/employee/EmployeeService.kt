@@ -341,10 +341,11 @@ class EmployeeService(private val repository: EmployeeRepository,
             "not-project-owner" -> throw CustomException("not-project-owner", null)
             "invalid-amount" -> throw CustomException("invalid-amount", null)
             "invalid-date-period" -> throw CustomException("invalid-date-period", null)
-
         }
         val employee = repository.findById(payEmployeeBody.employeeId).get()
         val project = projectRepository.findById(employee.project.id).get()
+        employee.wagesPaid += payEmployeeBody.amount
+        repository.save(employee)
         project.totalBudgetAmountSpent += payEmployeeBody.amount
         projectRepository.save(project)
         val transaction = EmployeeWagePayment()
@@ -352,6 +353,12 @@ class EmployeeService(private val repository: EmployeeRepository,
         transaction.periodEnd = payEmployeeBody.endDate
         transaction.amount = payEmployeeBody.amount
         transaction.employee = employee
+        transaction.note = when {
+            payEmployeeBody.note == null -> null
+            payEmployeeBody.note.isEmpty() -> null
+            payEmployeeBody.note.isBlank() -> null
+            else -> payEmployeeBody.note
+        }
         employeeWagePaymentRepository.save(transaction)
         return "Transaction Recorded Successfully"
     }

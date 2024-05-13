@@ -6,5 +6,6 @@ data class PayEmployeeBody(
     val employeeId: Long,
     val amount: Double,
     val startDate: Date,
-    val endDate: Date
+    val endDate: Date,
+    val note: String?
 )

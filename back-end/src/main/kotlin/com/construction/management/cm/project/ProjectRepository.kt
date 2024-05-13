@@ -27,8 +27,8 @@ interface ProjectRepository: JpaRepository<Project, Long> {
     @Query("select count(*) from project where id = :project and project_manager = :projectManager", nativeQuery = true)
     fun isProjectManager(projectManager: Long, project:Long) : Int
 
-    @Query("select sum(total_budget_amount_received) from project where project_manager = :projectManager", nativeQuery = true)
-    fun totalAvailableBudget(projectManager: Long): Double
+    @Query("select coalesce(sum(total_budget_amount_received), 0) from project where project_manager = :projectManager", nativeQuery = true)
+    fun totalBudgetReceived(projectManager: Long): Double
 
     @Query("select name, total_budget_amount_received from project where project_manager = :projectManager", nativeQuery = true)
     fun projectsWithBudgets(projectManager: Long): MutableList<ProjectBudgetDb>
@@ -38,6 +38,10 @@ interface ProjectRepository: JpaRepository<Project, Long> {
 
     @Query("select total_budget_amount_received - total_budget_amount_spent from project where id = :project", nativeQuery = true)
     fun getProjectBudgetAvailable(project:Long): Double
+
+    @Query("select total_budget_amount_received from project where id = :project", nativeQuery = true)
+    fun getProjectBudgetReceived(project:Long): Double
+
     @Transactional
     @Modifying
     @Query("update project set committed_budget = :amount where id = :projectId", nativeQuery = true)
