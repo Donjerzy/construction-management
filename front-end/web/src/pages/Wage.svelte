@@ -23,6 +23,7 @@
     let customEndDate;
     let customAmount;
     let customAmountDisplay;
+    let wageNote = null;
 
     function numberWithCommas(x) {
         return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -139,7 +140,8 @@
                 employeeId: employeeId,
                 amount: parseFloat(customAmount),
                 startDate: customStartDate,
-                endDate: customEndDate
+                endDate: customEndDate,
+                note: wageNote
             })
         }).then(response=> {
             loading = false;
@@ -349,6 +351,10 @@
                         <div class="flex-col gap-40 mt-2">
                             <label for="custom_amount" class="block">Amount</label>
                             <input class="mt-1 w-full" type="text" id="custom_amount" bind:value={customAmountDisplay} on:input={customAmountChange}>
+                        </div>
+                        <div class="mt-2 w-full">
+                            <label class="block" for="note">Note</label>
+                            <textarea class="w-full" bind:value={wageNote}  id="note"></textarea>
                         </div>
                     </div>
                     <div class="flex-col gap-40 mt-4">

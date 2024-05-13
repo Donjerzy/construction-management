@@ -1,5 +1,5 @@
 <script>
-    import {firstName, accessToken} from '../stores.js' 
+    import {firstName, accessToken, loggedIn} from '../stores.js' 
     import { get } from "svelte/store";
     import AdminComponent from '../components/admin-component.svelte';
     import { onMount } from 'svelte';
@@ -11,7 +11,7 @@
     let projectStatusLabels = ['Ongoing', 'Complete', 'Abandoned'];
     let projectStatusCtx;
     let projectStatusCanvas;
-    let projectCount;
+    let projectCount = 0;
     let totalAvailableBudget;
     let projectBudgetValues = [];
     let projectBudgetLabels = [];
@@ -135,9 +135,9 @@
         <div id="projects_content">
             <div style="display: flex; flex-direction: column; justify-content: flex-start;">
                 <p class="text-xs w-fit m-auto mb-0">Total</p>
-                <p class="text-9xl w-fit mt-0 p-0">{projectCount}</p>
+                <p class="text-9xl w-fit m-auto mt-0 p-0">{projectCount}</p>
             </div> 
-            <canvas id="projectStatus" bind:this={projectStatusCanvas}></canvas>
+            <canvas class="max-h-64 max-w-64" id="projectStatus" bind:this={projectStatusCanvas}></canvas>
         </div>
 
         <div id="budget">
@@ -147,9 +147,9 @@
         <div id="budget_content">
             <div style="display: flex; flex-direction: column; justify-content: flex-start;">
                 <p class="text-xs w-fit m-auto">Total Available Budget</p>
-                <p class="text-3xl w-fit">{numberWithCommas(totalAvailableBudget === undefined ? 0 : totalAvailableBudget)}</p>
+                <p class="text-3xl m-auto  w-fit">{numberWithCommas(totalAvailableBudget === undefined ? 0 : totalAvailableBudget)}</p>
             </div> 
-            <canvas id="projectStatus" bind:this={projectBudgetCanvas}></canvas>
+            <canvas class="max-h-64 max-w-64" id="projectStatus" bind:this={projectBudgetCanvas}></canvas>
         </div>
 
     </div>

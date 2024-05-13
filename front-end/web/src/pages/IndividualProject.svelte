@@ -17,6 +17,7 @@
         numberOfEmployees: 0,
         numberOfTasksDone: 0,
         numberOfTasksOngoing: 0,
+        projectBudgetReceived:0.0,
         budgetAvailable: 0.0,
         budgetSpent: 0.0
     }
@@ -145,13 +146,14 @@
                         <TableHeadCell class="border-black border-collapse border text-white">Clients</TableHeadCell>
                         <TableHeadCell class="border-black border-collapse border text-white">Employees</TableHeadCell>
                         <TableHeadCell class="border-black border-collapse border text-white text-center " colspan="2">Tasks</TableHeadCell>
-                        <TableHeadCell class="border-black border-collapse border text-white text-center" colspan="2">Budget</TableHeadCell>
+                        <TableHeadCell class="border-black border-collapse border text-white text-center" colspan="3">Budget</TableHeadCell>
                     </tr>
                     <tr class="bg-primary-100">
                         <TableHeadCell class="border-black border-collapse border">No</TableHeadCell>
                         <TableHeadCell class="border-black border-collapse border">No</TableHeadCell>
                         <TableHeadCell class="border-black border-collapse border">Done</TableHeadCell>
                         <TableHeadCell class="border-black border-collapse border">Open</TableHeadCell>
+                        <TableHeadCell class="border-black border-collapse border">Received</TableHeadCell>
                         <TableHeadCell class="border-black border-collapse border">Available</TableHeadCell>
                         <TableHeadCell class="border-black border-collapse border">Spent</TableHeadCell>
                     </tr>
@@ -162,6 +164,7 @@
                         <TableBodyCell class="border-black border-collapse border">{projectOverview.numberOfEmployees}</TableBodyCell>
                         <TableBodyCell class="border-black border-collapse border">{projectOverview.numberOfTasksDone}</TableBodyCell>
                         <TableBodyCell class="border-black border-collapse border">{projectOverview.numberOfTasksOngoing}</TableBodyCell>
+                        <TableBodyCell class="border-black border-collapse border">{numberWithCommas(projectOverview.projectBudgetReceived)}</TableBodyCell>
                         <TableBodyCell class="border-black border-collapse border">{numberWithCommas(projectOverview.budgetAvailable)}</TableBodyCell>
                         <TableBodyCell class="border-black border-collapse border">{numberWithCommas(projectOverview.budgetSpent)}</TableBodyCell>
                     </TableBodyRow>

@@ -257,6 +257,12 @@
         contract = null;
         contractChosen = false;
     }
+
+
+    function numberWithCommas(x) {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+
 </script>
 
 
@@ -405,11 +411,11 @@
                     </div>
                     <div class="flex items-center justify-between pr-4 border-b pb-2 pt-2">
                         <p class="text-base">Wage:</p>
-                        <p class="italic text-sm">{employee.wage}</p>
+                        <p class="italic text-sm">{numberWithCommas(employee.wage)}</p>
                     </div>
                     <div class="flex items-center justify-between pr-4 border-b pb-2 pt-2">
                         <p class="text-base">Wage Paid:</p>
-                        <p class="italic text-sm">{employee.wagesPaid}</p>
+                        <p class="italic text-sm">{numberWithCommas(employee.wagesPaid)}</p>
                     </div>
                 </div>
             </div>
