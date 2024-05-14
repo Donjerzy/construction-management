@@ -2,6 +2,8 @@ package com.construction.management.cm.client
 
 import com.construction.management.cm.auth.TokenService
 import com.construction.management.cm.dto.AddClient
+import com.construction.management.cm.dto.GetExpectedInvestment
+import com.construction.management.cm.dto.ReceiveInvestment
 import com.construction.management.cm.exceptionhandler.CustomException
 import com.construction.management.cm.formatters.StringFormatter
 import com.construction.management.cm.project.ProjectRepository
@@ -97,7 +99,7 @@ class ClientService (private val repository: ClientRepository,
         return "Client Added Successfully"
     }
 
-    fun getExpectedInvestment(userEmail: String, client: Long): String {
+    fun getExpectedInvestment(userEmail: String, client: Long): GetExpectedInvestment {
         when(getExpectedInvestmentValidations(
             projectManager = userService.getUserId(userEmail)!!,
             client = client
@@ -107,7 +109,12 @@ class ClientService (private val repository: ClientRepository,
         }
         val fetchedClient = repository.findById(client).get()
         val expectedInvestment = fetchedClient.committedAmount - fetchedClient.investedAmount
-        return stringFormatter.doubleToString(expectedInvestment)
+        return GetExpectedInvestment(
+            client = fetchedClient.name,
+            totalCommitted = stringFormatter.doubleToString(fetchedClient.committedAmount),
+            totalInvested = stringFormatter.doubleToString(fetchedClient.investedAmount),
+            remainingAmount = stringFormatter.doubleToString(expectedInvestment)
+        )
     }
 
     fun getExpectedInvestmentValidations(
@@ -120,6 +127,43 @@ class ClientService (private val repository: ClientRepository,
         val authenticProjectManager = repository.findById(client).get().project.projectManager.id
         if (authenticProjectManager != projectManager) {
             return "not-project-owner"
+        }
+        return "ok"
+    }
+
+    fun receiveInvestment(userEmail: String, investment: ReceiveInvestment): String {
+        when(receiveInvestmentValidations(
+            projectManager = userService.getUserId(userEmail)!!,
+            investment = investment
+        )) {
+            "client-doesn't-exist" -> throw CustomException("client-doesn't-exist", null)
+            "not-project-owner" -> throw CustomException("not-project-owner", null)
+            "invalid-amount" -> throw CustomException("invalid-amount", null)
+        }
+        val fetchedClient = repository.findById(investment.client).get()
+        val project = projectRepository.findById(fetchedClient.project.id).get()
+        project.totalBudgetAmountReceived += investment.amount
+        projectRepository.save(project)
+        fetchedClient.investedAmount += investment.amount
+        repository.save(fetchedClient)
+        return "Investment recorded successfully"
+    }
+
+    fun receiveInvestmentValidations(projectManager: Long, investment: ReceiveInvestment): String {
+        if (!repository.findById(investment.client).isPresent) {
+            return "client-doesn't-exist"
+        }
+        val authenticProjectManager = repository.findById(investment.client).get().project.projectManager.id
+        if (authenticProjectManager != projectManager) {
+            return "not-project-owner"
+        }
+        if (investment.amount <= 0) {
+            return "invalid-amount"
+        }
+        val fetchedClient = repository.findById(investment.client).get()
+        val expectedInvestment = fetchedClient.committedAmount - fetchedClient.investedAmount
+        if (investment.amount > expectedInvestment) {
+            return "invalid-amount"
         }
         return "ok"
     }
