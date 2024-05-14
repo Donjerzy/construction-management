@@ -8,7 +8,10 @@ import com.construction.management.cm.employee.Employee
 import com.construction.management.cm.employee.EmployeeRepository
 import com.construction.management.cm.exceptionhandler.CustomException
 import com.construction.management.cm.project.ProjectRepository
+import com.construction.management.cm.taskhistory.TaskHistory
+import com.construction.management.cm.taskhistory.TaskHistoryRepository
 import com.construction.management.cm.user.UserService
+import jakarta.persistence.Column
 import org.springframework.stereotype.Service
 import java.util.*
 
@@ -16,7 +19,8 @@ import java.util.*
 class TaskService(private val repository: TaskRepository,
                 private val userService: UserService,
                 private val projectRepository: ProjectRepository,
-                private val employeeRepository: EmployeeRepository) {
+                private val employeeRepository: EmployeeRepository,
+                private val taskHistoryRepository: TaskHistoryRepository) {
 
     fun getProjectTaskStatus(project: Long): ProjectTaskStatus {
         return ProjectTaskStatus(
@@ -59,7 +63,13 @@ class TaskService(private val repository: TaskRepository,
             )
         }
         task.employees = employees
-        repository.save(task)
+        val savedTask = repository.save(task)
+        val taskHistory = TaskHistory()
+        taskHistory.taskId = savedTask.id
+        taskHistory.status = savedTask.status
+        taskHistory.entryDate = savedTask.creationDate
+        taskHistory.user = userService.getUserId(userEmail)!!
+        taskHistoryRepository.save(taskHistory)
         return "Task added successfully"
     }
 
@@ -93,7 +103,7 @@ class TaskService(private val repository: TaskRepository,
         return "ok"
     }
 
-    fun getProjectsTasks(project: Long, userEmail: String): MutableSet<GetProjectTasks> {
+    fun getProjectsTasks (project: Long, userEmail: String): MutableSet<GetProjectTasks> {
        when (getProjectTasksValidations(
            project = project,
            projectOwner = userService.getUserId(userEmail)!!
