@@ -361,9 +361,73 @@
                         <svg on:click={copyProjectCode} class="w-5 h-5 hover:fill-primary-200 hover:cursor-pointer" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z" /></svg>
                     </div>
                 </div>
-
-
             </div>    
+        {:else if active === 'tasks'}    
+            <div class="container">
+                <div class="flex justify-between h-8 align-middle text-base">
+                    <!-- svelte-ignore a11y-click-events-have-key-events -->
+                    <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200"  on:click={()=> navigate("overview")}>Overview</p>
+                    <!-- svelte-ignore a11y-click-events-have-key-events -->
+                    <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("clients")}>Clients</p>
+                    <!-- svelte-ignore a11y-click-events-have-key-events -->
+                    <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200"  on:click={()=> navigate("employees")}>Employees</p>
+                    <!-- svelte-ignore a11y-click-events-have-key-events -->
+                    <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" id="active-link" on:click={()=> navigate("tasks")}>Tasks</p>
+                    <!-- svelte-ignore a11y-click-events-have-key-events -->
+                    <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("expenses")}>Expenses</p>
+                    <!-- svelte-ignore a11y-click-events-have-key-events -->
+                    <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200"  on:click={()=> navigate("actions")}>Actions</p>
+                </div>
+                <div class="mt-2 flex justify-end">
+                    <a href={`/`}><Button fontSize="base" height="10" label="Add Task" padding="7" width="32" /> </a>
+                </div>
+                <div id="task-tracks">
+                    <div id="to-do">
+                        <div>
+                            <p class="-rotate-90 mr-3">TODO</p>
+                        </div>
+                        <div class="flex border border-black flex-col justify-between bg-primary-50 text-white h-full  pt-4 pl-2 pr-4 pb-2 min-w-[160px] max-w-[200px] rounded-md   mr-20 text-ellipsis text-nowrap ">
+                            <div class="overflow-hidden text-base">Add windows to room in second floor</div>
+                            <div class="flex gap-3">
+                                <p class="text-white underline hover:cursor-pointer hover:text-primary-200">View</p>
+                                <svg class="h-6 w-6 hover:fill-primary-200 hover:cursor-pointer" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11,4H13V16L18.5,10.5L19.92,11.92L12,19.84L4.08,11.92L5.5,10.5L11,16V4Z" /></svg>
+                            </div>
+                        </div> 
+                    </div>
+                    <div id="in-progress">
+                        <div>
+                            <p class="-rotate-90 mr-3">IN-PROGRESS</p>
+                        </div>
+                        <div class="flex border border-black flex-col justify-between bg-primary-50 text-white h-full  pt-4 pl-2 pr-4 pb-2 min-w-[160px] max-w-[200px] rounded-md   mr-20 text-ellipsis text-nowrap ">
+                            <div class="overflow-hidden text-base">Add windows to room in second floor</div>
+                            <div class="flex gap-3">
+                                <p class="text-white underline hover:cursor-pointer hover:text-primary-200">View</p>
+                                <svg class="h-6 w-6 hover:fill-primary-200 hover:cursor-pointer" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11,4H13V16L18.5,10.5L19.92,11.92L12,19.84L4.08,11.92L5.5,10.5L11,16V4Z" /></svg>
+                                <svg class="h-6 w-6 hover:fill-primary-200 hover:cursor-pointer" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13,20H11V8L5.5,13.5L4.08,12.08L12,4.16L19.92,12.08L18.5,13.5L13,8V20Z" /></svg>
+                            </div>
+                        </div> 
+                    </div>
+                    <div id="done">
+                        <div>
+                            <p class="-rotate-90 mr-3">DONE</p>
+                        </div>
+                        <div class="flex border border-black flex-col justify-between bg-primary-50 text-white h-full  pt-4 pl-2 pr-4 pb-2 min-w-[160px] max-w-[200px] rounded-md   mr-20 text-ellipsis text-nowrap ">
+                            <div class="overflow-hidden text-base">Add windows to room in second floor</div>
+                            <div class="flex gap-3">
+                                <p class="text-white underline hover:cursor-pointer hover:text-primary-200">View</p>
+                                <svg class="h-6 w-6 hover:fill-primary-200 hover:cursor-pointer" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13,20H11V8L5.5,13.5L4.08,12.08L12,4.16L19.92,12.08L18.5,13.5L13,8V20Z" /></svg>
+                            </div>
+                        </div> 
+                    </div>
+
+                </div>
+            </div>
         {/if}
 </AdminComponent>
 
@@ -371,6 +435,8 @@
 <style>
     .container {
         margin-top: 40px;
+        height: 70%;
+        max-height: 70%;
     }
     #active-link {
         color: var(--tertiary-clr);
@@ -378,6 +444,58 @@
     }
     .overview-table {
         margin-top: 40px;
+    }
+    #task-tracks {
+        display: grid;
+        grid-template-rows: 32% 32% 32%;
+        grid-template-areas: 
+            "todo"
+            "in-progress"
+            "done";
+        margin-top: 20px;
+        height: 100%;
+        max-height: 100%;
+    }
+    #to-do {
+        grid-area: todo;
+        border: 1px solid #ccc;
+        padding-left: 8px; 
+        display: flex; 
+        flex-wrap: nowrap; 
+        overflow-x: auto;
+        align-items: center;
+        padding-top: 12px;
+        padding-bottom: 12px;
+        border-radius: 4px;
+        padding-right: 8px;
+        background-color: aliceblue;
+    }
+    #in-progress {
+        grid-area: in-progress;
+        border: 1px solid #ccc;
+        display: flex; 
+        flex-wrap: nowrap; 
+        overflow-x: auto;
+        align-items: center;
+        padding-top: 12px;
+        padding-bottom: 12px;
+        border-radius: 4px;
+        padding-right: 8px;
+        background-color: aliceblue;
+    }
+    #done {
+        grid-area: done;
+        border: 1px solid #ccc;
+        padding-left: 8px; 
+        display: flex; 
+        flex-wrap: nowrap; 
+        overflow-x: auto;
+        align-items: center;
+        padding-top: 12px;
+        padding-bottom: 12px;
+        border-radius: 4px;
+        padding-right: 8px;
+        background-color: aliceblue;
     }
     /* Table{
        border-collapse: collapse;
