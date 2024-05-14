@@ -167,8 +167,7 @@
                     <Button 
                     height=12 width=36 label="Add Client" fontSize="sm" padding="8px"
                     on:click={validateInput} />
-                {/if}
-                
+                {/if} 
             </div>
         </form>
     </div>

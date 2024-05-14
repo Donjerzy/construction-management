@@ -9,6 +9,9 @@
     import { notifications } from "../lib/notification";
     export let projectId;
 
+
+    // style=" margin-left: 40px; display: flex; gap: 200px; border: 1px solid black; margin-top: 80px; flex-wrap: nowrap; overflow-x: auto; height: 80px;"
+
     let clients = [];
     let projectCode = "56TRT-SUGUFSO-SFGSVF";
     let employees = [];
@@ -249,7 +252,7 @@
                                     <TableBodyCell>{client.type}</TableBodyCell>
                                     <TableBodyCell>{numberWithCommas(client.committedAmount)}</TableBodyCell>
                                     <TableBodyCell>{numberWithCommas(client.investedAmount)}</TableBodyCell>
-                                    <TableBodyCell><a on:click={()=> {
+                                    <TableBodyCell class="flex gap-8"><a on:click={()=> {
                                         projectClient.set({
                                             id: client.id,
                                             name: client.name,
@@ -257,7 +260,10 @@
                                             committedAmount: client.committedAmount,
                                             investedAmount: client.investedAmount
                                         })
-                                    } } class="underline hover:cursor-pointer hover:text-primary-200" href={`/project/${projectId}/edit-client`}>Edit</a></TableBodyCell>
+                                    } } class="underline hover:cursor-pointer hover:text-primary-200" href={`/project/${projectId}/edit-client`}>Edit</a>
+                                    
+                                    <a class="underline hover:cursor-pointer hover:text-primary-200" href={`/${client.id}/receive-investment`}>Receive investment</a>
+                                </TableBodyCell>
                                 </TableBodyRow>
                             {/each}
                         </TableBody>
