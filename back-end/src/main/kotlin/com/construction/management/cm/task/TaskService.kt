@@ -105,9 +105,10 @@ class TaskService(private val repository: TaskRepository,
         val result = mutableSetOf<GetProjectTasks>()
         for (task in tasks) {
             result.add (
-                GetProjectTasks(
+                GetProjectTasks (
                     taskId = task.id,
-                    title = task.name
+                    title = task.name,
+                    status = task.status.lowercase()
                 )
             )
         }
