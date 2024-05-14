@@ -29,16 +29,16 @@ class Task {
     var creationDate: Date = Date()
 
     @Column(name = "completion_date")
-    var completionDate: Date = Date()
+    var completionDate: Date? = null
 
     // Table references
     @ManyToOne
     @JoinColumn(name = "project")
     var project = Project()
 
-    @ManyToOne
-    @JoinColumn(name = "stage")
-    var projectStage = ProjectStage()
+//    @ManyToOne
+//    @JoinColumn(name = "stage")
+//    var projectStage = ProjectStage()
 
     @ManyToMany(targetEntity = Employee::class)
     @JoinTable(

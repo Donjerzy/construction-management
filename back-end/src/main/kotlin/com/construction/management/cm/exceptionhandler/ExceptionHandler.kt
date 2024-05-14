@@ -151,6 +151,20 @@ class ExceptionHandler {
                 )
             )
 
+            "invalid-title" -> ResponseEntity.status(400).body(
+                ExceptionResponse(
+                    httpStatus = 400,
+                    message = "Title cannot be empty"
+                )
+            )
+
+            "invalid-employee" -> ResponseEntity.status(400).body(
+                ExceptionResponse(
+                    httpStatus = 400,
+                    message = "Invalid employee id provided"
+                )
+            )
+
             "invalid-wage-type" -> ResponseEntity.status(400).body(
                 ExceptionResponse(
                     httpStatus = 400,

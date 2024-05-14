@@ -15,8 +15,8 @@ class ProjectStage {
     val name: String = "-"
 
     // Table references
-    @OneToMany(targetEntity = Task::class, mappedBy = "projectStage", cascade = [CascadeType.ALL])
-    val tasks = mutableSetOf<Task>()
+//    @OneToMany(targetEntity = Task::class, mappedBy = "projectStage", cascade = [CascadeType.ALL])
+//    val tasks = mutableSetOf<Task>()
 
 
 }
