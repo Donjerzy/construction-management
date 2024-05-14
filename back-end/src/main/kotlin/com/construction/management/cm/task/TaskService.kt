@@ -2,6 +2,7 @@ package com.construction.management.cm.task
 
 import com.construction.management.cm.dto.AddTask
 import com.construction.management.cm.dto.EmployeeTaskBreakdown
+import com.construction.management.cm.dto.GetProjectTasks
 import com.construction.management.cm.dto.ProjectTaskStatus
 import com.construction.management.cm.employee.Employee
 import com.construction.management.cm.employee.EmployeeRepository
@@ -88,6 +89,41 @@ class TaskService(private val repository: TaskRepository,
             if (employeeRepository.findById(employee).get().project.id != project.id) {
                 return "invalid-employee"
             }
+        }
+        return "ok"
+    }
+
+    fun getProjectsTasks(project: Long, userEmail: String): MutableSet<GetProjectTasks> {
+       when (getProjectTasksValidations(
+           project = project,
+           projectOwner = userService.getUserId(userEmail)!!
+       )) {
+           "invalid-project" -> throw CustomException("invalid-project", null)
+           "not-project-owner" -> throw CustomException("not-project-owner", null)
+       }
+        val tasks = repository.getProjectTasks(projectId = project)
+        val result = mutableSetOf<GetProjectTasks>()
+        for (task in tasks) {
+            result.add (
+                GetProjectTasks(
+                    taskId = task.id,
+                    title = task.name
+                )
+            )
+        }
+        return result
+    }
+
+    fun getProjectTasksValidations (
+        projectOwner: Long,
+        project: Long
+    ): String {
+        if(!projectRepository.findById(project).isPresent) {
+            return "invalid-project"
+        }
+        val fetchedProject = projectRepository.findById(project).get()
+        if (fetchedProject.projectManager.id != projectOwner) {
+            return "not-project-owner"
         }
         return "ok"
     }
