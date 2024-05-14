@@ -97,4 +97,32 @@ class ClientService (private val repository: ClientRepository,
         return "Client Added Successfully"
     }
 
+    fun getExpectedInvestment(userEmail: String, client: Long): String {
+        when(getExpectedInvestmentValidations(
+            projectManager = userService.getUserId(userEmail)!!,
+            client = client
+        )) {
+            "client-doesn't-exist" -> throw CustomException("client-doesn't-exist", null)
+            "not-project-owner" -> throw CustomException("not-project-owner", null)
+        }
+        val fetchedClient = repository.findById(client).get()
+        val expectedInvestment = fetchedClient.committedAmount - fetchedClient.investedAmount
+        return stringFormatter.doubleToString(expectedInvestment)
+    }
+
+    fun getExpectedInvestmentValidations(
+        projectManager: Long,
+        client: Long
+    ): String {
+        if (!repository.findById(client).isPresent) {
+            return "client-doesn't-exist"
+        }
+        val authenticProjectManager = repository.findById(client).get().project.projectManager.id
+        if (authenticProjectManager != projectManager) {
+            return "not-project-owner"
+        }
+        return "ok"
+    }
+
+
 }

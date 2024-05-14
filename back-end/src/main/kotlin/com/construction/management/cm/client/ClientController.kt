@@ -4,12 +4,10 @@ import com.construction.management.cm.auth.TokenService
 import com.construction.management.cm.dto.AddClient
 import com.construction.management.cm.response.DefaultNa
 import com.construction.management.cm.response.DefaultString
+import com.construction.management.cm.response.GetExpectedInvestmentResponse
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestHeader
-import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.*
 
 @Controller
 @RequestMapping("api/v1/client")
@@ -28,5 +26,20 @@ class ClientController(private val tokenService: TokenService,
             )
         )
     }
+
+    @GetMapping("/expected-investment")
+    fun getExpectedInvestment(@RequestHeader("Authorization") header:String,
+                              @RequestParam("client") client: Long) : ResponseEntity<Any> {
+        val userEmail = tokenService.extractEmail(header.substringAfter("Bearer "))
+        val expectedInvestment = service.getExpectedInvestment(userEmail = userEmail!!, client = client)
+        return ResponseEntity.status(200).body(
+            GetExpectedInvestmentResponse(
+                httpStatus = 200,
+                message = "Expected investment retrieved successfully",
+                expectedInvestment = expectedInvestment
+            )
+        )
+    }
+
 
 }
