@@ -27,6 +27,9 @@
         budgetAvailable: 0.0,
         budgetSpent: 0.0
     }
+    let toDoTasks = [];
+    let inProgressTasks = [];
+    let doneTasks = [];
     let searchTerm = '';
     
     $: filteredItems = clients.filter((client) => client.name.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1);
@@ -121,7 +124,30 @@
             if(!errorFetch) {
                 projectCode = result.code;
             }
+        });
+
+        fetch(`http://localhost:8080/api/v1/task/project/list?project=${projectId}`, {
+            headers: {
+                'Authorization': `Bearer ${get(accessToken)}`
+            }
         })
+        .then(response => {
+            if(!response.ok) {
+                errorFetch = true;
+               firstName.set("");
+               accessToken.set("");
+               loggedIn.set("false");
+               window.location.replace('/'); 
+            } else {
+                return response.json();
+            }
+        }).then((result)=> {
+            if(!errorFetch) {
+                toDoTasks = result.tasks.filter((task)=> task.status === 'todo');
+                inProgressTasks = result.tasks.filter((task)=> task.status === 'in_progress');
+                doneTasks = result.tasks.filter((task)=> task.status === 'done');
+            }
+        });
 
     
     });
@@ -385,45 +411,53 @@
                     <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200"  on:click={()=> navigate("actions")}>Actions</p>
                 </div>
                 <div class="mt-2 flex justify-end">
-                    <a href={`/`}><Button fontSize="base" height="10" label="Add Task" padding="7" width="32" /> </a>
+                    <a href={`/project/${projectId}/add-task`}><Button fontSize="base" height="10" label="Add Task" padding="7" width="32" /> </a>
                 </div>
                 <div id="task-tracks">
                     <div id="to-do">
                         <div>
                             <p class="-rotate-90 mr-3">TODO</p>
                         </div>
-                        <div class="flex border border-black flex-col justify-between bg-primary-50 text-white h-full  pt-4 pl-2 pr-4 pb-2 min-w-[160px] max-w-[200px] rounded-md   mr-20 text-ellipsis text-nowrap ">
-                            <div class="overflow-hidden text-base">Add windows to room in second floor</div>
-                            <div class="flex gap-3">
-                                <p class="text-white underline hover:cursor-pointer hover:text-primary-200">View</p>
-                                <svg class="h-6 w-6 hover:fill-primary-200 hover:cursor-pointer" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11,4H13V16L18.5,10.5L19.92,11.92L12,19.84L4.08,11.92L5.5,10.5L11,16V4Z" /></svg>
+                        {#each toDoTasks as task }
+                            <div class="flex border border-black flex-col justify-between bg-primary-50 text-white h-full  pt-4 pl-2 pr-4 pb-2 min-w-[160px] max-w-[200px] rounded-md   mr-20 text-ellipsis text-nowrap">
+                                
+                                    <div class="overflow-hidden text-base">{task.title}</div>
+                                    <div class="flex gap-3">
+                                        <p class="text-white underline hover:cursor-pointer hover:text-primary-200">View</p>
+                                        <svg class="h-6 w-6 hover:fill-primary-200 hover:cursor-pointer" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11,4H13V16L18.5,10.5L19.92,11.92L12,19.84L4.08,11.92L5.5,10.5L11,16V4Z" /></svg>
+                                    </div>  
                             </div>
-                        </div> 
+                        {/each}  
                     </div>
                     <div id="in-progress">
                         <div>
                             <p class="-rotate-90 mr-3">IN-PROGRESS</p>
                         </div>
-                        <div class="flex border border-black flex-col justify-between bg-primary-50 text-white h-full  pt-4 pl-2 pr-4 pb-2 min-w-[160px] max-w-[200px] rounded-md   mr-20 text-ellipsis text-nowrap ">
-                            <div class="overflow-hidden text-base">Add windows to room in second floor</div>
-                            <div class="flex gap-3">
-                                <p class="text-white underline hover:cursor-pointer hover:text-primary-200">View</p>
-                                <svg class="h-6 w-6 hover:fill-primary-200 hover:cursor-pointer" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11,4H13V16L18.5,10.5L19.92,11.92L12,19.84L4.08,11.92L5.5,10.5L11,16V4Z" /></svg>
-                                <svg class="h-6 w-6 hover:fill-primary-200 hover:cursor-pointer" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13,20H11V8L5.5,13.5L4.08,12.08L12,4.16L19.92,12.08L18.5,13.5L13,8V20Z" /></svg>
-                            </div>
-                        </div> 
+                        {#each inProgressTasks as task }
+                            <div class="flex border border-black flex-col justify-between bg-primary-50 text-white h-full  pt-4 pl-2 pr-4 pb-2 min-w-[160px] max-w-[200px] rounded-md   mr-20 text-ellipsis text-nowrap ">
+                                    
+                                        <div class="overflow-hidden text-base">{task.title}</div>
+                                        <div class="flex gap-3">
+                                            <p class="text-white underline hover:cursor-pointer hover:text-primary-200">View</p>
+                                            <svg class="h-6 w-6 hover:fill-primary-200 hover:cursor-pointer" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11,4H13V16L18.5,10.5L19.92,11.92L12,19.84L4.08,11.92L5.5,10.5L11,16V4Z" /></svg>
+                                            <svg class="h-6 w-6 hover:fill-primary-200 hover:cursor-pointer" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13,20H11V8L5.5,13.5L4.08,12.08L12,4.16L19.92,12.08L18.5,13.5L13,8V20Z" /></svg>
+                                        </div>            
+                            </div> 
+                        {/each} 
                     </div>
                     <div id="done">
                         <div>
                             <p class="-rotate-90 mr-3">DONE</p>
                         </div>
-                        <div class="flex border border-black flex-col justify-between bg-primary-50 text-white h-full  pt-4 pl-2 pr-4 pb-2 min-w-[160px] max-w-[200px] rounded-md   mr-20 text-ellipsis text-nowrap ">
-                            <div class="overflow-hidden text-base">Add windows to room in second floor</div>
-                            <div class="flex gap-3">
-                                <p class="text-white underline hover:cursor-pointer hover:text-primary-200">View</p>
-                                <svg class="h-6 w-6 hover:fill-primary-200 hover:cursor-pointer" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13,20H11V8L5.5,13.5L4.08,12.08L12,4.16L19.92,12.08L18.5,13.5L13,8V20Z" /></svg>
-                            </div>
-                        </div> 
+                        {#each doneTasks as task}
+                            <div class="flex border border-black flex-col justify-between bg-primary-50 text-white h-full  pt-4 pl-2 pr-4 pb-2 min-w-[160px] max-w-[200px] rounded-md   mr-20 text-ellipsis text-nowrap ">
+                                <div class="overflow-hidden text-base">{task.title}</div>
+                                <div class="flex gap-3">
+                                    <p class="text-white underline hover:cursor-pointer hover:text-primary-200">View</p>
+                                    <svg class="h-6 w-6 hover:fill-primary-200 hover:cursor-pointer" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13,20H11V8L5.5,13.5L4.08,12.08L12,4.16L19.92,12.08L18.5,13.5L13,8V20Z" /></svg>
+                                </div> 
+                            </div> 
+                        {/each}  
                     </div>
 
                 </div>
