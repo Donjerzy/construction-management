@@ -7,6 +7,7 @@
     import {onMount} from 'svelte';
     import Toast from '../components/toast.svelte';
     import { notifications } from "../lib/notification";
+    import Loader from "../components/loading-component.svelte";
     export let projectId;
 
 
@@ -31,6 +32,7 @@
     let inProgressTasks = [];
     let doneTasks = [];
     let searchTerm = '';
+    let bigLoading = false;
     
     $: filteredItems = clients.filter((client) => client.name.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1);
 
@@ -153,6 +155,34 @@
     });
 
 
+    async function fetchTasks() {
+        let errorFetch = false;
+        fetch(`http://localhost:8080/api/v1/task/project/list?project=${projectId}`, {
+            headers: {
+                'Authorization': `Bearer ${get(accessToken)}`
+            }
+        })
+        .then(response => {
+            if(!response.ok) {
+                errorFetch = true;
+               firstName.set("");
+               accessToken.set("");
+               loggedIn.set("false");
+               window.location.replace('/'); 
+            } else {
+                return response.json();
+            }
+        }).then((result)=> {
+            if(!errorFetch) {
+                toDoTasks = result.tasks.filter((task)=> task.status === 'todo');
+                inProgressTasks = result.tasks.filter((task)=> task.status === 'in_progress');
+                doneTasks = result.tasks.filter((task)=> task.status === 'done');
+                bigLoading = false;
+            }
+        });
+    }
+
+
     function navigate(to) {
         active = to;
     }
@@ -165,6 +195,51 @@
         console.log('clicked');
         navigator.clipboard.writeText(projectCode);
         notifications.success('Project code copied', 1000);
+    }
+
+    async function moveTask(taskId,to) {
+        bigLoading = true;
+        let error = false;
+        let existsError = false;
+        await fetch('http://localhost:8080/api/v1/task/move', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${get(accessToken)}`
+            },
+            body: JSON.stringify({
+                taskId: taskId,
+                action: to 
+            })
+        }).then(response=> {
+            if(response.status === 400) {
+                bigLoading = false;
+                existsError = true;
+                return
+            }
+            if(!response.ok) {
+                bigLoading = false;
+                error = true;
+                return
+            } else {
+                error = false;
+                existsError = false;
+                fetchTasks();
+                return;
+            }
+        }).catch(error=> {
+            bigLoading = false;
+            notifications.danger("Could make request to server", 1000)
+        })
+        if(existsError) {
+            notifications.danger("Client Already Exists", 1000); 
+        }
+        if(error) {
+            firstName.set("");
+            accessToken.set("");
+            loggedIn.set("false");
+            window.location.replace('/'); 
+        }
     }
 
 
@@ -381,7 +456,6 @@
                     <p class="text-sm">Project Code</p>
                     <div class="mt-2 border-black bg-white h-16 rounded p-4 flex justify-between items-center">
                         <p>{projectCode}</p>
-                        
                         <!-- svelte-ignore a11y-click-events-have-key-events -->
                         <!-- svelte-ignore a11y-no-static-element-interactions -->
                         <svg on:click={copyProjectCode} class="w-5 h-5 hover:fill-primary-200 hover:cursor-pointer" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z" /></svg>
@@ -414,18 +488,24 @@
                     <a href={`/project/${projectId}/add-task`}><Button fontSize="base" height="10" label="Add Task" padding="7" width="32" /> </a>
                 </div>
                 <div id="task-tracks">
+                    {#if bigLoading}
+                        <div class="mt-20">
+                            <Loader />
+                        </div>
+                    {:else}
                     <div id="to-do">
                         <div>
                             <p class="-rotate-90 mr-3">TODO</p>
                         </div>
                         {#each toDoTasks as task }
                             <div class="flex border border-black flex-col justify-between bg-primary-50 text-white h-full  pt-4 pl-2 pr-4 pb-2 min-w-[160px] max-w-[200px] rounded-md   mr-20 text-ellipsis text-nowrap">
-                                
-                                    <div class="overflow-hidden text-base">{task.title}</div>
-                                    <div class="flex gap-3">
-                                        <p class="text-white underline hover:cursor-pointer hover:text-primary-200">View</p>
-                                        <svg class="h-6 w-6 hover:fill-primary-200 hover:cursor-pointer" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11,4H13V16L18.5,10.5L19.92,11.92L12,19.84L4.08,11.92L5.5,10.5L11,16V4Z" /></svg>
-                                    </div>  
+                                <div class="overflow-hidden text-base">{task.title}</div>
+                                <div class="flex gap-3">
+                                    <p class="text-white underline hover:cursor-pointer hover:text-primary-200">View</p>
+                                    <!-- svelte-ignore a11y-click-events-have-key-events -->
+                                    <!-- svelte-ignore a11y-no-static-element-interactions -->
+                                    <svg on:click={()=> moveTask(task.taskId, "in_progress")} class="h-6 w-6 hover:fill-primary-200 hover:cursor-pointer" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11,4H13V16L18.5,10.5L19.92,11.92L12,19.84L4.08,11.92L5.5,10.5L11,16V4Z" /></svg>
+                                </div>  
                             </div>
                         {/each}  
                     </div>
@@ -435,13 +515,16 @@
                         </div>
                         {#each inProgressTasks as task }
                             <div class="flex border border-black flex-col justify-between bg-primary-50 text-white h-full  pt-4 pl-2 pr-4 pb-2 min-w-[160px] max-w-[200px] rounded-md   mr-20 text-ellipsis text-nowrap ">
-                                    
-                                        <div class="overflow-hidden text-base">{task.title}</div>
-                                        <div class="flex gap-3">
-                                            <p class="text-white underline hover:cursor-pointer hover:text-primary-200">View</p>
-                                            <svg class="h-6 w-6 hover:fill-primary-200 hover:cursor-pointer" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11,4H13V16L18.5,10.5L19.92,11.92L12,19.84L4.08,11.92L5.5,10.5L11,16V4Z" /></svg>
-                                            <svg class="h-6 w-6 hover:fill-primary-200 hover:cursor-pointer" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13,20H11V8L5.5,13.5L4.08,12.08L12,4.16L19.92,12.08L18.5,13.5L13,8V20Z" /></svg>
-                                        </div>            
+                                <div class="overflow-hidden text-base">{task.title}</div>
+                                    <!-- svelte-ignore a11y-click-events-have-key-events -->
+                                    <div class="flex gap-3">
+                                        <p class="text-white underline hover:cursor-pointer hover:text-primary-200">View</p>
+                                        <!-- svelte-ignore a11y-click-events-have-key-events -->
+                                        <!-- svelte-ignore a11y-no-static-element-interactions -->
+                                        <svg on:click={()=> moveTask(task.taskId, "done")} class="h-6 w-6 hover:fill-primary-200 hover:cursor-pointer" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11,4H13V16L18.5,10.5L19.92,11.92L12,19.84L4.08,11.92L5.5,10.5L11,16V4Z" /></svg>
+                                        <!-- svelte-ignore a11y-no-static-element-interactions -->
+                                        <svg on:click={()=> moveTask(task.taskId, "todo")} class="h-6 w-6 hover:fill-primary-200 hover:cursor-pointer" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13,20H11V8L5.5,13.5L4.08,12.08L12,4.16L19.92,12.08L18.5,13.5L13,8V20Z" /></svg>
+                                    </div>            
                             </div> 
                         {/each} 
                     </div>
@@ -452,15 +535,18 @@
                         {#each doneTasks as task}
                             <div class="flex border border-black flex-col justify-between bg-primary-50 text-white h-full  pt-4 pl-2 pr-4 pb-2 min-w-[160px] max-w-[200px] rounded-md   mr-20 text-ellipsis text-nowrap ">
                                 <div class="overflow-hidden text-base">{task.title}</div>
+                                <!-- svelte-ignore a11y-no-static-element-interactions -->
                                 <div class="flex gap-3">
                                     <p class="text-white underline hover:cursor-pointer hover:text-primary-200">View</p>
-                                    <svg class="h-6 w-6 hover:fill-primary-200 hover:cursor-pointer" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13,20H11V8L5.5,13.5L4.08,12.08L12,4.16L19.92,12.08L18.5,13.5L13,8V20Z" /></svg>
+                                    <!-- svelte-ignore a11y-click-events-have-key-events -->
+                                    <svg on:click={()=> moveTask(task.taskId, "in_progress")} class="h-6 w-6 hover:fill-primary-200 hover:cursor-pointer" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13,20H11V8L5.5,13.5L4.08,12.08L12,4.16L19.92,12.08L18.5,13.5L13,8V20Z" /></svg>
                                 </div> 
                             </div> 
                         {/each}  
                     </div>
-
+                {/if}    
                 </div>
+                
             </div>
         {/if}
 </AdminComponent>

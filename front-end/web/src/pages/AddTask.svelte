@@ -142,9 +142,7 @@
 <AdminComponent appName={appName} contentTitle={contentTitle} userFirstName={get(firstName)}>
     <Toast />
     <div class="mt-4">
-
         <form>
-
             <div class="flex flex-col gap-2 mt-1">
                 <label for="title">Title</label>
                 <input name="name" class="rounded border-primary-800" type="text" id="title" bind:value={title}>
