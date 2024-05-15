@@ -2,6 +2,7 @@ package com.construction.management.cm.task
 
 import com.construction.management.cm.auth.TokenService
 import com.construction.management.cm.dto.AddTask
+import com.construction.management.cm.dto.MoveTask
 import com.construction.management.cm.response.DefaultNa
 import com.construction.management.cm.response.GetProjectTasksResponse
 import org.springframework.http.ResponseEntity
@@ -47,5 +48,22 @@ class TaskController(
             )
         )
     }
+
+
+    @PostMapping("/move")
+    fun moveTask(@RequestHeader("Authorization") header:String,
+                 @RequestBody task: MoveTask
+    ): ResponseEntity<Any> {
+        val userEmail = tokenService.extractEmail(header.substringAfter("Bearer "))
+        val message = service.moveTask(userEmail = userEmail!!, task = task)
+        return ResponseEntity.status(200).body(
+            DefaultNa(
+                httpStatus = 200,
+                message = message
+            )
+        )
+
+    }
+
 
 }

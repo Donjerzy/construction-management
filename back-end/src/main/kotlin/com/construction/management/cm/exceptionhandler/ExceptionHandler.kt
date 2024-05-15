@@ -165,6 +165,20 @@ class ExceptionHandler {
                 )
             )
 
+            "invalid-move-action" -> ResponseEntity.status(400).body(
+                ExceptionResponse(
+                    httpStatus = 400,
+                    message = "Invalid task move action"
+                )
+            )
+
+            "task-doesn't-exist" -> ResponseEntity.status(400).body(
+                ExceptionResponse(
+                    httpStatus = 400,
+                    message = "Invalid task provided"
+                )
+            )
+
             "invalid-wage-type" -> ResponseEntity.status(400).body(
                 ExceptionResponse(
                     httpStatus = 400,

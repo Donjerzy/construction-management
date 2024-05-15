@@ -1,9 +1,6 @@
 package com.construction.management.cm.task
 
-import com.construction.management.cm.dto.AddTask
-import com.construction.management.cm.dto.EmployeeTaskBreakdown
-import com.construction.management.cm.dto.GetProjectTasks
-import com.construction.management.cm.dto.ProjectTaskStatus
+import com.construction.management.cm.dto.*
 import com.construction.management.cm.employee.Employee
 import com.construction.management.cm.employee.EmployeeRepository
 import com.construction.management.cm.exceptionhandler.CustomException
@@ -138,6 +135,51 @@ class TaskService(private val repository: TaskRepository,
         }
         return "ok"
     }
+
+    fun moveTask(userEmail: String, task: MoveTask): String {
+        when (moveTaskValidations(
+            projectOwner = userService.getUserId(userEmail)!!,
+            task = task
+        )) {
+            "task-doesn't-exist" -> throw CustomException("task-doesn't-exist", null)
+            "not-project-owner" -> throw CustomException("not-project-owner", null)
+            "invalid-move-action" -> throw CustomException("invalid-move-action", null)
+        }
+        val fetchedTask = repository.findById(task.taskId).get()
+        fetchedTask.status = when(task.action.lowercase()) {
+            "todo" -> TaskStatus.TODO.name
+            "in_progress" -> TaskStatus.IN_PROGRESS.name
+            else -> TaskStatus.DONE.name
+        }
+        val savedTask = repository.save(fetchedTask)
+        val taskHistory = TaskHistory()
+        taskHistory.taskId = savedTask.id
+        taskHistory.status = savedTask.status
+        taskHistory.entryDate = savedTask.creationDate
+        taskHistory.user = userService.getUserId(userEmail)!!
+        taskHistoryRepository.save(taskHistory)
+        return "Task moved successfully"
+    }
+
+    fun moveTaskValidations(task: MoveTask, projectOwner: Long): String {
+        if (!repository.findById(task.taskId).isPresent) {
+            return "task-doesn't-exist"
+        }
+        val fetchedProjectOwner = repository.findById(task.taskId).get().project.projectManager.id
+        if (fetchedProjectOwner != projectOwner) {
+            return "not-project-owner"
+        }
+        if (task.action.lowercase() !in listOf("todo", "in_progress", "done")) {
+            return "invalid-move-action"
+        }
+        val fetchedTask = repository.findById(task.taskId).get()
+        val currentPosition = fetchedTask.status.lowercase()
+        if (currentPosition == task.action.lowercase()) {
+            return "invalid-move-action"
+        }
+        return "ok"
+    }
+
 
 
 }
