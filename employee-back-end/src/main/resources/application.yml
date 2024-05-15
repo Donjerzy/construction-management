@@ -1,0 +1,19 @@
+server:
+  port: 8081
+
+spring:
+  datasource:
+    url: ${CM_DB_URL}
+    username: ${CM_USER}
+    password: ${CM_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+jwt:
+  key: ${JWT_KEY}
+  access-token-expiration: 86400000
+  refresh-token-expiration: 0
