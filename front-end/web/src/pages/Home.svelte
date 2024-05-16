@@ -8,6 +8,10 @@
     let authenticationError = false;
     let passwordError = false;
     let loading = false;
+    let projectError = false;
+    let projectCode;
+
+    let chosenModule = "admin";
 
     function validateEmail(email) {
         const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -43,6 +47,14 @@
         notifications.danger("Invalid Credientials", 1000);
     }
 
+    function setProjectError() {
+        projectError = true;
+    }
+
+    function clearProjectError() {
+        projectError = false;
+    }
+
     function clearAuthenticationError() {
         authenticationError = false;
     }
@@ -51,6 +63,7 @@
         clearEmailError();
         clearPasswordError();
         clearAuthenticationError();
+        clearProjectError();
     }
 
     async function authenticateAdmin(email, password) {
@@ -85,9 +98,36 @@
     }
 
 
-    async function authenticateEmployee () {
-        notifications.info("TODO", 1000)
-        loading = false;
+    async function authenticateEmployee (project, email, password) {
+        let error = false;
+        await fetch('http://localhost:8080/api/v1/employee/auth/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify( {
+                project: project,
+                email: email,
+                password: password
+            })
+        }).then(response=> {
+            loading = false;
+            if(!response.ok) {
+                setAuthenticationError();
+                error = true;
+                return
+            } else {
+                return response.json();
+            }
+        }).then(transformed=> {
+            if(!error) {
+                updateLogIn(transformed.user.token, transformed.user.firstName);
+                window.location.replace('/employee/home');
+            } 
+        }).catch(error=> {
+            loading = false;
+            notifications.danger("Could make request to server", 1000)
+        })
         return
     }
 
@@ -105,11 +145,19 @@
              setPasswordError();
              return
         }
+        if(chosenModule === "employee" && projectCode === undefined) {
+            setProjectError();
+            return
+        }
+        if(chosenModule === "employee" && projectCode.length === 0) {
+            setProjectError();
+            return
+        }
         loading = true;
         if (chosenModule === 'admin') {
             authenticateAdmin(e.target.elements.email.value.toLowerCase(), e.target.elements.pass.value);
         } else {
-            authenticateEmployee();
+            authenticateEmployee(projectCode, e.target.elements.email.value.toLowerCase(), e.target.elements.pass.value);
         }        
     }
 </script>
@@ -133,11 +181,19 @@
         <form on:submit={validateLogInDetails}>
             <label style="font-family: 'Times New Roman', Times, serif; font-size: 1rem;" for="module">Module</label>
             <!--  class="block appearance-none border w-32 border-primary-100"-->
-            <select name="module" style=" cursor: pointer; border: 1px #ccc solid; display:block; width: 240px; margin-top: 8px;" id="module">
+            <select bind:value={chosenModule} name="module" style=" cursor: pointer; border: 1px #ccc solid; display:block; width: 240px; margin-top: 8px;" id="module">
                 <option style="height: 80px;" value="admin">Admin</option>
                 <option style="height: 80px;" value="employee">Employee</option>
             </select>
 
+            {#if chosenModule === "employee"}
+                <label for="project_id" style="display:block; font-family: 'Times New Roman', Times, serif; font-size: 1rem; margin-top: 8px;">Project</label>
+                <input bind:value={projectCode} name="project_id" style="border: 1px #ccc solid; display:block; width: 240px; margin-top: 8px;" type="text" id="project_id" on:change={clearProjectError}>
+                {#if projectError}
+                    <p class="text-primary-700 text-base mb-3 font-serif mt-1">Invalid Project</p>
+                {/if}
+            {/if}
+            
             <label style="display:block; font-family: 'Times New Roman', Times, serif; font-size: 1rem; margin-top: 8px;" for="email">Email</label>
             <input style="border: 1px #ccc solid; display:block; width: 240px; margin-top: 8px;" type="email" name="email" id="email" on:change={clearEmailError}  >
             {#if emailError}
