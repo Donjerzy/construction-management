@@ -7,8 +7,8 @@ class EmployeeAuth {
 
     @Id
     @Column(name = "id", unique = true, nullable = false)
-    val id: Long = 0
+    var id: Long = 0
 
     @Column(name = "token", unique = true, nullable = true)
-    val token: String? = null
+    var token: String? = null
 }

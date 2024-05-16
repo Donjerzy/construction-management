@@ -35,7 +35,7 @@ class SecurityConfiguration {
             }
             .authorizeHttpRequests {
                 it.
-                    requestMatchers("/api/v1/auth/**", "/api/v1/employee/**")
+                    requestMatchers("/api/v1/auth/**", "/api/v1/employee/**", "/api/v1/employee/auth/**")
                     .permitAll()
                     .anyRequest()
                     .fullyAuthenticated()

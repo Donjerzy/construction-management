@@ -25,6 +25,13 @@ class ExceptionHandler {
                 )
             )
 
+            "invalid-credentials" -> ResponseEntity.status(400).body(
+                ExceptionResponse(
+                    httpStatus = 400,
+                    message = "Invalid credentials"
+                )
+            )
+
             "client-with-provided-name-exists" -> ResponseEntity.status(400).body(
                 ExceptionResponse(
                     httpStatus = 400,
