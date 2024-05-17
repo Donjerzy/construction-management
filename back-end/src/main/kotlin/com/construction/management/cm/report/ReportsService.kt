@@ -1,21 +1,31 @@
 package com.construction.management.cm.report
 
 import com.construction.management.cm.Runner.Runner
-import com.construction.management.cm.dto.ProjectBudgetDb
-import com.construction.management.cm.dto.ProjectBudgetResponse
-import com.construction.management.cm.dto.ProjectReport
+import com.construction.management.cm.client.ClientRepository
+import com.construction.management.cm.dto.*
 import com.construction.management.cm.formatters.StringFormatter
 import com.construction.management.cm.project.Project
 import com.construction.management.cm.project.ProjectRepository
 import com.construction.management.cm.user.UserService
+import net.sf.jasperreports.engine.*
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource
 import org.springframework.stereotype.Service
+import java.io.File
+import java.io.FileInputStream
+import java.util.*
 
 @Service
 class ReportsService (
     private val projectsRepository: ProjectRepository,
     private val userService: UserService,
     private val formatter: StringFormatter,
-    private val runner: Runner) {
+    private val runner: Runner,
+    private val clientRepository: ClientRepository) {
+
+
+    private val generalReportTemplate =
+        "C:\\software\\construction-management\\back-end\\src\\main\\resources\\templates\\general_report.jrxml"
+    private val reportsOutputDir = "C:\\software\\construction-management\\back-end\\src\\main\\resources\\static"
     fun getDashboardReport(userEmail: String): ProjectReport {
         val userId: Long = userService.getUserId(userEmail)!!
         val userProjects = projectsRepository.getProjects(userId)
@@ -45,4 +55,90 @@ class ReportsService (
         return result
     }
 
+    fun getGeneralReport(userEmail: String): String {
+
+        val userId = userService.getUserId(userEmail)!!
+
+        // Report Creation
+        val numberOfProjectsCreated = NumberOfProjectsCreated(
+            years = "${projectsRepository.getEarliestProjectYear(userId)} - ${
+                projectsRepository.getLatestProjectYear(
+                    userId
+                )
+            }",
+            numberOfProjectsCreated = projectsRepository.getTotalNumberOfProjects(userId)
+        )
+        val projectsCreatedDataset = JRBeanCollectionDataSource(mutableSetOf(numberOfProjectsCreated))
+
+
+        val projectStatusPieChart = mutableListOf<ProjectStatusPieChart>()
+        projectStatusPieChart.addAll(
+            listOf(
+                ProjectStatusPieChart(
+                    projectStatus = "Ongoing",
+                    count = projectsRepository.getOngoingCount(userId)
+                ),
+                ProjectStatusPieChart(
+                    projectStatus = "Complete",
+                    count = projectsRepository.getCompleteCount(userId)
+                ),
+                ProjectStatusPieChart(
+                    projectStatus = "Abandoned",
+                    count = projectsRepository.getAbandonedCount(userId)
+                ),
+            )
+        )
+        val projectStatusPieChartDataset = JRBeanCollectionDataSource(projectStatusPieChart)
+
+        val projectBudget = mutableListOf<ProjectBudgetTable>()
+        val projects = projectsRepository.getProjects(userId)
+        for (project in projects) {
+            val totalCommittedAmount = clientRepository.getTotalProjectCommittedAmount(project.id)
+            projectBudget.add(
+                ProjectBudgetTable(
+                    name = project.name,
+                    status = project.status.lowercase()
+                        .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() },
+                    totalAmountCommitted = formatter.doubleToStringCommaSeparated(totalCommittedAmount),
+                    totalAmountReceived = formatter.doubleToStringCommaSeparated(project.totalBudgetAmountReceived),
+                    totalAmountSpent = formatter.doubleToStringCommaSeparated(project.totalBudgetAmountSpent),
+                    totalAmountAvailable = formatter.doubleToStringCommaSeparated(project.totalBudgetAmountReceived - project.totalBudgetAmountSpent)
+                )
+            )
+        }
+        val projectBudgetDataSet = JRBeanCollectionDataSource(projectBudget)
+
+        val projectEmployees = mutableListOf<ProjectEmployeesTable>()
+        for (project in projects) {
+            projectEmployees.add(
+                ProjectEmployeesTable(
+                    name = project.name,
+                    count = project.employees.size
+                )
+            )
+        }
+        val projectEmployeesDataSet = JRBeanCollectionDataSource(projectEmployees)
+
+        val calendar = Calendar.getInstance()
+        val currentYear = calendar.get(Calendar.YEAR)
+
+        val parameters = mutableMapOf<String, Any>()
+        parameters["reportYear"] = currentYear.toString()
+        parameters["projectStatusPieChartDataSet"] = projectStatusPieChartDataset
+        parameters["projectEmployeeDataset"] = projectEmployeesDataSet
+        parameters["numberOfProjectsCreated"] = projectsCreatedDataset
+
+        parameters["projectBudgetBreakdown"] = projectBudgetDataSet
+
+        val report: JasperReport = JasperCompileManager.compileReport(generalReportTemplate)
+        val dataSource = JREmptyDataSource()
+        val print: JasperPrint = JasperFillManager.fillReport(report, parameters, dataSource)
+        JasperExportManager.exportReportToPdfFile(print, "$reportsOutputDir/general-report.pdf")
+
+        val generatedReport = File("$reportsOutputDir/general-report.pdf")
+        val inputStream = FileInputStream(generatedReport)
+        val byteArray = inputStream.readAllBytes()
+        return Base64.getEncoder().encodeToString(byteArray)
+
+    }
 }

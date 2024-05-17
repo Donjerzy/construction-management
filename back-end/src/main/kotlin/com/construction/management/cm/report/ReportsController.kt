@@ -1,6 +1,7 @@
 package com.construction.management.cm.report
 
 import com.construction.management.cm.auth.TokenService
+import com.construction.management.cm.response.GeneralReportResponse
 import com.construction.management.cm.response.ProjectReportResponse
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
@@ -29,6 +30,23 @@ class ReportsController(
             )
         )
     }
+
+    @GetMapping("/general")
+    fun getGeneralReport(
+        @RequestHeader("Authorization") header:String,
+    ): ResponseEntity<Any> {
+        val userEmail = tokenService.extractEmail(header.substringAfter("Bearer "))
+        val report = service.getGeneralReport(userEmail = userEmail!!)
+        return ResponseEntity.status(200).body(
+            GeneralReportResponse(
+                httpStatus = 200,
+                message = "General report retrieved successfully",
+                report = report
+            )
+        )
+    }
+
+
 
 
 }

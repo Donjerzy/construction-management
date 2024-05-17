@@ -22,5 +22,11 @@ interface ClientRepository: JpaRepository<Client, Long> {
     @Query("select count(*) from client where project = :projectId and id = :id", nativeQuery = true)
     fun clientExistsId(projectId: Long, id: Long): Int
 
+    @Query("select coalesce(sum(coalesce(committed_amount,0)),0) from client where project = :projectId", nativeQuery = true)
+    fun getTotalProjectCommittedAmount(projectId: Long): Double
+
+    @Query("select coalesce(sum(coalesce(invested_amount,0)),0) from client where project = :projectId", nativeQuery = true)
+    fun getTotalProjectReceivedAmount(projectId: Long): Double
+
 
 }

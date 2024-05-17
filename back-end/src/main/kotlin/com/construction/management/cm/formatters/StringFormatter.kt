@@ -3,6 +3,7 @@ package com.construction.management.cm.formatters
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
+import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.Date
 
@@ -29,6 +30,11 @@ class StringFormatter {
 
     fun doubleToString(value: Double): String {
         return String.format("%.0f", value)
+    }
+
+    fun doubleToStringCommaSeparated(value: Double): String {
+        val decimalFormat = DecimalFormat("#,###")
+        return decimalFormat.format(value)
     }
 
     fun timestampToString(date: Date): String {

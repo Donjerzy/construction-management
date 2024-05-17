@@ -15,6 +15,14 @@ interface ProjectRepository: JpaRepository<Project, Long> {
     @Query("select count(*) from project where lower(name) = :project and project_manager = :user", nativeQuery = true)
     fun projectExists(project:String, user:Long): Int
 
+
+    @Query("select count(*) from project where project_manager = :projectManager", nativeQuery = true)
+    fun getTotalNumberOfProjects(projectManager: Long): Int
+    @Query("select extract('Year' from min(creation_date)) from project where project_manager = :projectManager", nativeQuery = true)
+    fun getEarliestProjectYear(projectManager: Long): Int
+    @Query("select extract('Year' from max(creation_date)) from project where project_manager = :projectManager", nativeQuery = true)
+    fun getLatestProjectYear(projectManager: Long): Int
+
     @Query("select count(*) from project where id = :project and project_manager = :user", nativeQuery = true)
     fun projectExistsId(project:Long, user:Long): Int
 

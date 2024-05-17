@@ -44,3 +44,4 @@ application.properties
 
 ## Documents ##
 contracts/
+src/main/resources/static/

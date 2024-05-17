@@ -17,6 +17,9 @@ java {
 
 repositories {
 	mavenCentral()
+	maven {
+		url = uri("https://jaspersoft.jfrog.io/jaspersoft/jaspersoft-repo")
+	}
 }
 
 dependencies {
@@ -30,6 +33,7 @@ dependencies {
 	implementation("io.jsonwebtoken:jjwt-api:0.12.5")
 	implementation("io.jsonwebtoken:jjwt-impl:0.12.5")
 	implementation("io.jsonwebtoken:jjwt-jackson:0.12.5")
+	implementation("net.sf.jasperreports:jasperreports:6.20.5")
 	runtimeOnly("org.postgresql:postgresql")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.security:spring-security-test")
