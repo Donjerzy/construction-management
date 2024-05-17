@@ -11,7 +11,14 @@
     export let projectId;
 
 
-    // style=" margin-left: 40px; display: flex; gap: 200px; border: 1px solid black; margin-top: 80px; flex-wrap: nowrap; overflow-x: auto; height: 80px;"
+    
+    let reports = [{ id: 1 ,name: "General Project Report"}]
+
+
+    let reportSearchTerm = '';
+    
+    $: filteredReports = reports.filter((report) => report.name.toLowerCase().indexOf(reportSearchTerm.toLowerCase()) !== -1);
+
 
     let clients = [];
     let projectCode = "56TRT-SUGUFSO-SFGSVF";
@@ -272,6 +279,9 @@
             <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("expenses")}>Expenses</p>
             <!-- svelte-ignore a11y-click-events-have-key-events -->
             <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+            <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("reports")}>Reports</p>
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
+            <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
             <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("actions")}>Actions</p>
         </div>
 
@@ -327,6 +337,9 @@
                 <!-- svelte-ignore a11y-click-events-have-key-events -->
                 <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
                 <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("expenses")}>Expenses</p>
+                <!-- svelte-ignore a11y-click-events-have-key-events -->
+                <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+                <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("reports")}>Reports</p>
                 <!-- svelte-ignore a11y-click-events-have-key-events -->
                 <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
                 <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("actions")}>Actions</p>
@@ -392,6 +405,9 @@
                     <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("expenses")}>Expenses</p>
                     <!-- svelte-ignore a11y-click-events-have-key-events -->
                     <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("reports")}>Reports</p>
+                    <!-- svelte-ignore a11y-click-events-have-key-events -->
+                    <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
                     <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("actions")}>Actions</p>
                 </div>
                 <div class="flex mt-5 justify-end">
@@ -449,6 +465,9 @@
                     <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("expenses")}>Expenses</p>
                     <!-- svelte-ignore a11y-click-events-have-key-events -->
                     <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("reports")}>Reports</p>
+                    <!-- svelte-ignore a11y-click-events-have-key-events -->
+                    <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
                     <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" id="active-link" on:click={()=> navigate("actions")}>Actions</p>
                 </div>
 
@@ -480,6 +499,9 @@
                     <!-- svelte-ignore a11y-click-events-have-key-events -->
                     <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
                     <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("expenses")}>Expenses</p>
+                    <!-- svelte-ignore a11y-click-events-have-key-events -->
+                    <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("reports")}>Reports</p>
                     <!-- svelte-ignore a11y-click-events-have-key-events -->
                     <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
                     <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200"  on:click={()=> navigate("actions")}>Actions</p>
@@ -545,9 +567,58 @@
                         {/each}  
                     </div>
                 {/if}    
-                </div>
-                
+                </div>   
             </div>
+        {:else if active === 'reports'}     
+            <div class="container">
+                <div class="flex justify-between h-8 align-middle text-base">
+                    <!-- svelte-ignore a11y-click-events-have-key-events -->
+                    <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200"  on:click={()=> navigate("overview")}>Overview</p>
+                    <!-- svelte-ignore a11y-click-events-have-key-events -->
+                    <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("clients")}>Clients</p>
+                    <!-- svelte-ignore a11y-click-events-have-key-events -->
+                    <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200"  on:click={()=> navigate("employees")}>Employees</p>
+                    <!-- svelte-ignore a11y-click-events-have-key-events -->
+                    <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("tasks")}>Tasks</p>
+                    <!-- svelte-ignore a11y-click-events-have-key-events -->
+                    <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("expenses")}>Expenses</p>
+                    <!-- svelte-ignore a11y-click-events-have-key-events -->
+                    <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" id="active-link" on:click={()=> navigate("reports")}>Reports</p>
+                    <!-- svelte-ignore a11y-click-events-have-key-events -->
+                    <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200"  on:click={()=> navigate("actions")}>Actions</p>
+                </div>
+                <div class="mt-5">
+                    <TableSearch placeholder="Search by report name" hoverable={true} bind:inputValue={reportSearchTerm}>
+                        <Table divClass="max-h-80 overflow-auto" shadow>
+                             <TableHead defaultRow={false} theadClass="border-black">
+                                 <tr class="bg-primary-100">
+                                     <TableHeadCell class="text-white">#</TableHeadCell>
+                                     <TableHeadCell class="text-white">Name</TableHeadCell>
+                                     <TableHeadCell class="text-white">Action</TableHeadCell>
+                                 </tr>
+                             </TableHead>
+                             <TableBody>
+                                 {#each filteredReports as report}
+                                     <TableBodyRow>
+                                         <TableBodyCell>{report.id}</TableBodyCell>
+                                         <TableBodyCell>{report.name}</TableBodyCell>
+                                         <TableBodyCell class="flex gap-8">                
+                                             <a target="_blank" class="underline hover:cursor-pointer hover:text-primary-200" href={`/report/general`}>View</a>
+                                     </TableBodyCell>
+                                     </TableBodyRow>
+                                 {/each}
+                             </TableBody>
+                        </Table> 
+                     </TableSearch>
+                </div>
+            </div>    
         {/if}
 </AdminComponent>
 

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
 @RequestMapping("api/v1/report")
@@ -45,6 +46,21 @@ class ReportsController(
             )
         )
     }
+
+    @GetMapping("/project-general")
+    fun getGeneralProjectReport(@RequestHeader("Authorization") header:String,
+                                @RequestParam(name = "project") project: Long): ResponseEntity<Any> {
+        val userEmail = tokenService.extractEmail(header.substringAfter("Bearer "))
+        val report = service.getProjectGeneralReport(userEmail = userEmail!!, project = project)
+        return ResponseEntity.status(200).body(GeneralReportResponse (
+            httpStatus = 200,
+            message = "General project report retrieved successfully",
+            report = report
+            )
+        )
+    }
+
+
 
 
 
