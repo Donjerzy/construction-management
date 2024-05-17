@@ -89,6 +89,9 @@ class EmployeeAuthService(
         if (userId == -1L) {
             throw CustomException("auth-user-na", null)
         }
+        if (!repository.findById(userId).isPresent) {
+            throw CustomException("auth-user-na", null)
+        }
         val record = repository.findById(userId).get()
         if (record.token != actualToken) {
             throw CustomException("auth-user-na", null)
@@ -100,9 +103,10 @@ class EmployeeAuthService(
         return userId
     }
 
-
-
-
+    fun logOut(user: Long, token: String): String {
+        repository.deleteById(user)
+        return "User logged out successfully"
+    }
 
 
 }

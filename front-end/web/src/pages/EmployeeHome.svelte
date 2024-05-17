@@ -1,8 +1,10 @@
+<script>
+    import EmployeeComponent from "../components/employee-component.svelte";
+    let contentTitle = "Home";
+
+</script>
 
 
+<EmployeeComponent contentTitle={contentTitle}>
 
-
-
-<h1>
-    Hello from Employee Tasks
-</h1>
+</EmployeeComponent>

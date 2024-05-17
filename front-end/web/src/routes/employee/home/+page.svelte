@@ -8,4 +8,4 @@
     <title>Home</title>
 </svelte:head>
 
-<EmployeeHome />
+<EmployeeHome  />

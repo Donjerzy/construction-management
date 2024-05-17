@@ -234,10 +234,10 @@
                     </datasetRun>
                     <jr:column width="100" uuid="20a96506-7eee-4618-9a1d-0388babe68fa">
                         <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
-                        <jr:columnHeader style="Table 1_CH" height="30" rowSpan="1">
+                        <jr:columnHeader style="Table 1_CH" height="50" rowSpan="1">
                             <property name="com.jaspersoft.studio.unit.width" value="px"/>
                             <staticText>
-                                <reportElement x="0" y="0" width="100" height="30" uuid="cd527b2b-9d0a-46ae-97ed-b306f6616294"/>
+                                <reportElement x="0" y="0" width="100" height="50" uuid="cd527b2b-9d0a-46ae-97ed-b306f6616294"/>
                                 <textElement textAlignment="Center" verticalAlignment="Middle">
                                     <font fontName="Times New Roman" size="12"/>
                                 </textElement>
@@ -254,12 +254,12 @@
                             </textField>
                         </jr:detailCell>
                     </jr:column>
-                    <jr:column width="60" uuid="86fe82d8-33c5-4e2b-adf7-7412876ef8a5">
+                    <jr:column width="50" uuid="86fe82d8-33c5-4e2b-adf7-7412876ef8a5">
                         <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
-                        <jr:columnHeader style="Table 1_CH" height="30" rowSpan="1">
-                            <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                        <jr:columnHeader style="Table 1_CH" height="50" rowSpan="1">
+                            <property name="com.jaspersoft.studio.unit.height" value="px"/>
                             <staticText>
-                                <reportElement x="0" y="0" width="60" height="30" uuid="9b122690-d560-4d30-8ce4-3ff168b9abe3"/>
+                                <reportElement x="0" y="0" width="50" height="50" uuid="9b122690-d560-4d30-8ce4-3ff168b9abe3"/>
                                 <textElement textAlignment="Center" verticalAlignment="Middle">
                                     <font fontName="Times New Roman" size="12"/>
                                 </textElement>
@@ -268,7 +268,7 @@
                         </jr:columnHeader>
                         <jr:detailCell style="Table 1_TD" height="30">
                             <textField>
-                                <reportElement x="0" y="0" width="60" height="30" uuid="1f2f2f5d-d61e-4e2e-8cf7-0e3d535ed287"/>
+                                <reportElement x="0" y="0" width="50" height="30" uuid="1f2f2f5d-d61e-4e2e-8cf7-0e3d535ed287"/>
                                 <textElement textAlignment="Center" verticalAlignment="Middle">
                                     <font fontName="Times New Roman" size="12"/>
                                 </textElement>
@@ -276,12 +276,12 @@
                             </textField>
                         </jr:detailCell>
                     </jr:column>
-                    <jr:column width="70" uuid="a3e380d2-2787-4168-b3ca-8ebe14fb5093">
+                    <jr:column width="90" uuid="a3e380d2-2787-4168-b3ca-8ebe14fb5093">
                         <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
-                        <jr:columnHeader style="Table 1_CH" height="30" rowSpan="1">
-                            <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                        <jr:columnHeader style="Table 1_CH" height="50" rowSpan="1">
+                            <property name="com.jaspersoft.studio.unit.height" value="px"/>
                             <staticText>
-                                <reportElement x="0" y="0" width="70" height="30" uuid="6a62ca43-cf0e-4842-ab53-b42cced8a0c2"/>
+                                <reportElement x="0" y="0" width="90" height="50" uuid="6a62ca43-cf0e-4842-ab53-b42cced8a0c2"/>
                                 <textElement textAlignment="Center" verticalAlignment="Middle">
                                     <font fontName="Times New Roman" size="12"/>
                                 </textElement>
@@ -290,7 +290,7 @@
                         </jr:columnHeader>
                         <jr:detailCell style="Table 1_TD" height="30">
                             <textField>
-                                <reportElement x="0" y="0" width="70" height="30" uuid="899e2223-b436-497f-87aa-ffd39737d0e2"/>
+                                <reportElement x="0" y="0" width="90" height="30" uuid="899e2223-b436-497f-87aa-ffd39737d0e2"/>
                                 <textElement textAlignment="Center" verticalAlignment="Middle">
                                     <font fontName="Times New Roman" size="12"/>
                                 </textElement>
@@ -298,12 +298,12 @@
                             </textField>
                         </jr:detailCell>
                     </jr:column>
-                    <jr:column width="70" uuid="57534173-f3d7-4578-a39e-da2f51498b40">
+                    <jr:column width="90" uuid="57534173-f3d7-4578-a39e-da2f51498b40">
                         <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
-                        <jr:columnHeader style="Table 1_CH" height="30" rowSpan="1">
+                        <jr:columnHeader style="Table 1_CH" height="50" rowSpan="1">
                             <property name="com.jaspersoft.studio.unit.width" value="px"/>
                             <staticText>
-                                <reportElement x="0" y="0" width="70" height="30" uuid="db179788-e67b-4562-a2ae-57de1238d48a"/>
+                                <reportElement x="0" y="0" width="90" height="50" uuid="db179788-e67b-4562-a2ae-57de1238d48a"/>
                                 <textElement textAlignment="Center" verticalAlignment="Middle">
                                     <font fontName="Times New Roman" size="12"/>
                                 </textElement>
@@ -312,7 +312,7 @@
                         </jr:columnHeader>
                         <jr:detailCell style="Table 1_TD" height="30">
                             <textField>
-                                <reportElement x="0" y="0" width="70" height="30" uuid="33d017b4-2dd6-4cac-9472-23dac2b98f5f"/>
+                                <reportElement x="0" y="0" width="90" height="30" uuid="33d017b4-2dd6-4cac-9472-23dac2b98f5f"/>
                                 <textElement textAlignment="Center" verticalAlignment="Middle">
                                     <font fontName="Times New Roman" size="12"/>
                                 </textElement>
@@ -320,12 +320,12 @@
                             </textField>
                         </jr:detailCell>
                     </jr:column>
-                    <jr:column width="70" uuid="ff48a385-7ed2-4fe7-b79f-a7f74186a4b9">
+                    <jr:column width="90" uuid="ff48a385-7ed2-4fe7-b79f-a7f74186a4b9">
                         <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column5"/>
-                        <jr:columnHeader style="Table 1_CH" height="30" rowSpan="1">
+                        <jr:columnHeader style="Table 1_CH" height="50" rowSpan="1">
                             <property name="com.jaspersoft.studio.unit.width" value="px"/>
                             <staticText>
-                                <reportElement x="0" y="0" width="70" height="30" uuid="e6deeddf-15ec-4021-9084-dd5b99564f1b"/>
+                                <reportElement x="0" y="0" width="90" height="50" uuid="e6deeddf-15ec-4021-9084-dd5b99564f1b"/>
                                 <textElement textAlignment="Center" verticalAlignment="Middle">
                                     <font fontName="Times New Roman" size="12"/>
                                 </textElement>
@@ -334,7 +334,7 @@
                         </jr:columnHeader>
                         <jr:detailCell style="Table 1_TD" height="30">
                             <textField>
-                                <reportElement x="0" y="0" width="70" height="30" uuid="d2c7d751-0c86-446a-a300-9ce592be27bd"/>
+                                <reportElement x="0" y="0" width="90" height="30" uuid="d2c7d751-0c86-446a-a300-9ce592be27bd"/>
                                 <textElement textAlignment="Center" verticalAlignment="Middle">
                                     <font fontName="Times New Roman" size="12"/>
                                 </textElement>
@@ -342,12 +342,11 @@
                             </textField>
                         </jr:detailCell>
                     </jr:column>
-                    <jr:column width="70" uuid="4cb3e2b9-83c6-473a-970d-bc431eb13706">
+                    <jr:column width="90" uuid="4cb3e2b9-83c6-473a-970d-bc431eb13706">
                         <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column6"/>
-                        <jr:columnHeader style="Table 1_CH" height="30" rowSpan="1">
-                            <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                        <jr:columnHeader style="Table 1_CH" height="50" rowSpan="1">
                             <staticText>
-                                <reportElement x="0" y="0" width="70" height="30" uuid="eacecc17-b9e4-41c0-a49e-52c0c7af1770"/>
+                                <reportElement x="0" y="0" width="90" height="50" uuid="eacecc17-b9e4-41c0-a49e-52c0c7af1770"/>
                                 <textElement textAlignment="Center" verticalAlignment="Middle">
                                     <font fontName="Times New Roman" size="12"/>
                                 </textElement>
@@ -356,7 +355,7 @@
                         </jr:columnHeader>
                         <jr:detailCell style="Table 1_TD" height="30">
                             <textField>
-                                <reportElement x="0" y="0" width="70" height="30" uuid="3b8d008b-6dfe-4366-a918-942850fdd94f"/>
+                                <reportElement x="0" y="0" width="90" height="30" uuid="3b8d008b-6dfe-4366-a918-942850fdd94f"/>
                                 <textElement textAlignment="Center" verticalAlignment="Middle">
                                     <font fontName="Times New Roman" size="12"/>
                                 </textElement>
@@ -397,7 +396,7 @@
                 </piePlot>
             </pieChart>
             <staticText>
-                <reportElement x="0" y="440" width="230" height="20" uuid="5f018392-4a64-4205-b3db-07c7e246e39c"/>
+                <reportElement x="0" y="450" width="230" height="20" uuid="5f018392-4a64-4205-b3db-07c7e246e39c"/>
                 <textElement verticalAlignment="Middle">
                     <font fontName="Times New Roman" size="14" isBold="true"/>
                 </textElement>
@@ -421,11 +420,12 @@
                     <datasetRun subDataset="projectEmployeeDataset" uuid="68466035-692d-4ffe-8f66-7ffc696c2d87">
                         <dataSourceExpression><![CDATA[$P{projectEmployeeDataset}]]></dataSourceExpression>
                     </datasetRun>
-                    <jr:column width="100" uuid="f46addb6-0525-44ed-9234-f8e031d8ab79">
+                    <jr:column width="80" uuid="f46addb6-0525-44ed-9234-f8e031d8ab79">
                         <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
                         <jr:columnHeader style="Table 2_CH" height="30" rowSpan="1">
+                            <property name="com.jaspersoft.studio.unit.width" value="px"/>
                             <staticText>
-                                <reportElement x="0" y="0" width="100" height="30" uuid="974956d0-4bf7-4d1f-971a-b81ff8fe2474"/>
+                                <reportElement x="0" y="0" width="80" height="30" uuid="974956d0-4bf7-4d1f-971a-b81ff8fe2474"/>
                                 <textElement textAlignment="Center" verticalAlignment="Middle">
                                     <font fontName="Times New Roman"/>
                                 </textElement>
@@ -434,7 +434,7 @@
                         </jr:columnHeader>
                         <jr:detailCell style="Table 2_TD" height="30">
                             <textField>
-                                <reportElement x="0" y="0" width="100" height="30" uuid="2cb5c2a1-1184-4db3-8572-1868e452d2c1"/>
+                                <reportElement x="0" y="0" width="80" height="30" uuid="2cb5c2a1-1184-4db3-8572-1868e452d2c1"/>
                                 <textElement textAlignment="Center" verticalAlignment="Middle">
                                     <font fontName="Times New Roman" size="12"/>
                                 </textElement>
