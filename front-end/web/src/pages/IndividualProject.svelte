@@ -610,7 +610,7 @@
                                          <TableBodyCell>{report.id}</TableBodyCell>
                                          <TableBodyCell>{report.name}</TableBodyCell>
                                          <TableBodyCell class="flex gap-8">                
-                                             <a target="_blank" class="underline hover:cursor-pointer hover:text-primary-200" href={`/report/general`}>View</a>
+                                             <a target="_blank" class="underline hover:cursor-pointer hover:text-primary-200" href={`/project/${projectId}/report/general`}>View</a>
                                      </TableBodyCell>
                                      </TableBodyRow>
                                  {/each}
