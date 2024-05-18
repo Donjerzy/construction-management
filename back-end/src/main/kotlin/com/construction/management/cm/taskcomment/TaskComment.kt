@@ -15,6 +15,9 @@ class TaskComment {
     @Column(name = "comment", length = 50, nullable = false)
     val comment: String = "-"
 
+    @Column(name = "comment_owner", nullable = false)
+    val commentUserId: String = ""
+
     @Column(name = "author_first_name", length = 50, nullable = false)
     val authorFirstName: String = "-"
 

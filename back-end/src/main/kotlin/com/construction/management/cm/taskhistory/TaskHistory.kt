@@ -21,6 +21,6 @@ class TaskHistory {
     var entryDate: Date = Date()
 
     @Column(name = "modifying_user", nullable = false)
-    var user: Long = 0
+    var user: String = ""
 
 }

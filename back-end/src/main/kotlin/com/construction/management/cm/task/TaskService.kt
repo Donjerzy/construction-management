@@ -65,7 +65,7 @@ class TaskService(private val repository: TaskRepository,
         taskHistory.taskId = savedTask.id
         taskHistory.status = savedTask.status
         taskHistory.entryDate = savedTask.creationDate
-        taskHistory.user = userService.getUserId(userEmail)!!
+        taskHistory.user = "O${userService.getUserId(userEmail)!!}"
         taskHistoryRepository.save(taskHistory)
         return "Task added successfully"
     }
@@ -156,7 +156,7 @@ class TaskService(private val repository: TaskRepository,
         taskHistory.taskId = savedTask.id
         taskHistory.status = savedTask.status
         taskHistory.entryDate = savedTask.creationDate
-        taskHistory.user = userService.getUserId(userEmail)!!
+        taskHistory.user = "O${userService.getUserId(userEmail)!!}"
         taskHistoryRepository.save(taskHistory)
         return "Task moved successfully"
     }
