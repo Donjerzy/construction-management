@@ -4,11 +4,17 @@ import com.construction.management.cm.dto.*
 import com.construction.management.cm.employee.Employee
 import com.construction.management.cm.employee.EmployeeRepository
 import com.construction.management.cm.exceptionhandler.CustomException
+import com.construction.management.cm.formatters.StringFormatter
 import com.construction.management.cm.project.ProjectRepository
+import com.construction.management.cm.taskcomment.TaskComment
+import com.construction.management.cm.taskcomment.TaskCommentRepository
 import com.construction.management.cm.taskhistory.TaskHistory
 import com.construction.management.cm.taskhistory.TaskHistoryRepository
+import com.construction.management.cm.user.User
 import com.construction.management.cm.user.UserService
 import jakarta.persistence.Column
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.ManyToOne
 import org.springframework.stereotype.Service
 import java.util.*
 
@@ -17,7 +23,9 @@ class TaskService(private val repository: TaskRepository,
                 private val userService: UserService,
                 private val projectRepository: ProjectRepository,
                 private val employeeRepository: EmployeeRepository,
-                private val taskHistoryRepository: TaskHistoryRepository) {
+                private val taskHistoryRepository: TaskHistoryRepository,
+                private val formatter: StringFormatter,
+                private val taskCommentRepository: TaskCommentRepository) {
 
     fun getProjectTaskStatus(project: Long): ProjectTaskStatus {
         return ProjectTaskStatus(
@@ -180,6 +188,139 @@ class TaskService(private val repository: TaskRepository,
         return "ok"
     }
 
+    fun getTask(userEmail: String, taskId: Long): ViewTask {
+        when(getTaskValidations(
+            projectOwner = userService.getUserId(userEmail)!!,
+            taskId = taskId
+        )) {
+            "task-doesn't-exist" -> throw CustomException("task-doesn't-exist", null)
+            "not-project-owner" -> throw CustomException("not-project-owner", null)
+        }
+        val fetchedTask = repository.findById(taskId).get()
+        return ViewTask (
+            taskId = taskId,
+            title = fetchedTask.name,
+            creationDate = formatter.timestampToString(fetchedTask.creationDate),
+            completionDate = when(fetchedTask.completionDate) {
+                null -> "n/a"
+                else -> formatter.timestampToString(fetchedTask.completionDate!!)
+            },
+            description = fetchedTask.description,
+            status = fetchedTask.status,
+            employees = employeesToViewTask(fetchedTask.employees),
+            taskHistory = taskHistoryToViewTask(taskHistoryRepository.getTaskHistory(taskId)),
+            taskComments = commentsToViewTask(taskCommentRepository.getTaskComments(taskId))
+        )
+    }
+
+    fun commentsToViewTask(taskComments: MutableList<TaskComment>): MutableList<GetTaskComments> {
+        val result = mutableListOf<GetTaskComments>()
+        for (comment in taskComments) {
+            result.add(
+                GetTaskComments(
+                    commenter = when(comment.commentUserId[0]) {
+                        'O' -> "You"
+                        else -> "${comment.authorFirstName.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }} ${comment.authorSurname.replaceFirstChar {
+                            if (it.isLowerCase()) it.titlecase(
+                                Locale.getDefault()
+                            ) else it.toString()
+                        }}"
+                    },
+                    date = formatter.timestampToString(comment.date),
+                    comment = comment.comment
+                )
+            )
+        }
+        return result
+    }
+
+    fun taskHistoryToViewTask(taskHistory: MutableList<TaskHistory>): MutableList<GetTaskHistory> {
+        val result = mutableListOf<GetTaskHistory>()
+        for (task in taskHistory) {
+            result.add(
+                GetTaskHistory (
+                    date = formatter.timestampToString(task.entryDate),
+                    status = task.status,
+                    user = when(task.user[0]) {
+                        'O' -> "You"
+                        else -> {
+                            val employeeId: String = task.user.slice(1 ..< task.user.length)
+                            val employee = employeeRepository.findById(employeeId.toLong()).get()
+                            "${employee.firstName.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }} ${employee.lastName.replaceFirstChar {
+                                if (it.isLowerCase()) it.titlecase(
+                                    Locale.getDefault()
+                                ) else it.toString()
+                            }}"
+                        }
+                    }
+                )
+            )
+        }
+        return result
+    }
+
+    fun employeesToViewTask(employees: MutableSet<Employee>): MutableMap<Long, String> {
+        val result = mutableMapOf<Long, String>()
+        for (employee in employees) {
+            result[employee.id] = "${employee.firstName.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }} ${employee.lastName.replaceFirstChar {
+                if (it.isLowerCase()) it.titlecase(
+                    Locale.getDefault()
+                ) else it.toString()
+            }} - ${employee.employeeType.name}"
+        }
+        return result
+    }
+
+    fun getTaskValidations(
+        projectOwner: Long,
+        taskId: Long
+    ): String {
+        if (!repository.findById(taskId).isPresent) {
+            return "task-doesn't-exist"
+        }
+        val task = repository.findById(taskId).get()
+        if (task.project.projectManager.id != projectOwner) {
+            return "not-project-owner"
+        }
+        return "ok"
+    }
+
+    fun addComment(userEmail: String, addComment: AddComment): String {
+        when (addCommentValidations(
+            projectOwner = userService.getUserId(userEmail)!!,
+            addComment = addComment
+        )) {
+            "task-doesn't-exist" -> throw CustomException("task-doesn't-exist", null)
+            "empty-comment" -> throw CustomException("empty-comment", null)
+            "not-project-owner" -> throw CustomException("not-project-owner", null)
+        }
+        val user: User = userService.getUser(userEmail)!!
+        val comment = TaskComment()
+        comment.comment = addComment.comment
+        comment.commentUserId = "O${user.id}"
+        comment.authorFirstName = user.firstName.lowercase()
+        comment.authorSurname = user.surname.lowercase()
+        comment.task = repository.findById(addComment.taskId).get()
+        taskCommentRepository.save(comment)
+        return "Comment added successfully"
+    }
+
+    fun addCommentValidations(
+        projectOwner: Long,
+        addComment: AddComment
+    ): String {
+        if (!repository.findById(addComment.taskId).isPresent) {
+            return "task-doesn't-exist"
+        }
+        if (addComment.comment.isBlank() || addComment.comment.isEmpty()) {
+            return "empty-comment"
+        }
+        val task = repository.findById(addComment.taskId).get()
+        if (task.project.projectManager.id != projectOwner) {
+            return "not-project-owner"
+        }
+        return "ok"
+    }
 
 
 }

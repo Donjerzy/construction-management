@@ -12,17 +12,17 @@ class TaskComment {
     @Column(name = "id")
     val id : Long = 0
 
-    @Column(name = "comment", length = 50, nullable = false)
-    val comment: String = "-"
+    @Column(name = "comment", length = 1000, nullable = false)
+    var comment: String = "-"
 
     @Column(name = "comment_owner", nullable = false)
-    val commentUserId: String = ""
+    var commentUserId: String = ""
 
     @Column(name = "author_first_name", length = 50, nullable = false)
-    val authorFirstName: String = "-"
+    var authorFirstName: String = "-"
 
     @Column(name = "author_surname", length = 50, nullable = false)
-    val authorSurname: String = "-"
+    var authorSurname: String = "-"
 
     @Column(name = "date")
     val date: Date = Date()

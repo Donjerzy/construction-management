@@ -249,6 +249,13 @@ class ExceptionHandler {
                 )
             )
 
+            "empty-comment" -> ResponseEntity.status(400).body(
+                ExceptionResponse(
+                    httpStatus = 400,
+                    message = "Comment cannot be empty"
+                )
+            )
+
             "project-exists" -> ResponseEntity.status(400).body(
                 ExceptionResponse(
                     httpStatus = 400,

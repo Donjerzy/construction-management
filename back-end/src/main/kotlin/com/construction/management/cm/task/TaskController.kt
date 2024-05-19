@@ -1,10 +1,12 @@
 package com.construction.management.cm.task
 
 import com.construction.management.cm.auth.TokenService
+import com.construction.management.cm.dto.AddComment
 import com.construction.management.cm.dto.AddTask
 import com.construction.management.cm.dto.MoveTask
 import com.construction.management.cm.response.DefaultNa
 import com.construction.management.cm.response.GetProjectTasksResponse
+import com.construction.management.cm.response.ViewTaskResponse
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
@@ -63,6 +65,31 @@ class TaskController(
             )
         )
 
+    }
+
+    @GetMapping("/view")
+    fun viewTask(@RequestHeader("Authorization") header:String,
+                 @RequestParam taskId: Long ): ResponseEntity<Any> {
+        val userEmail = tokenService.extractEmail(header.substringAfter("Bearer "))
+        val task = service.getTask(userEmail = userEmail!!, taskId = taskId)
+        return ResponseEntity.status(200).body(
+            ViewTaskResponse (
+                httpStatus = 200,
+                message = "Task retrieved successfully",
+                task = task
+            )
+        )
+    }
+
+    @PostMapping("/add-comment")
+    fun addComment(@RequestHeader("Authorization") header:String,
+                   @RequestBody addComment: AddComment) : ResponseEntity<Any> {
+        val userEmail = tokenService.extractEmail(header.substringAfter("Bearer "))
+        val message = service.addComment(userEmail = userEmail!!, addComment = addComment)
+        return ResponseEntity.status(200).body(DefaultNa (
+            httpStatus = 200,
+            message = message
+        ))
     }
 
 
