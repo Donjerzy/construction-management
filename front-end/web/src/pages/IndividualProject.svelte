@@ -523,7 +523,9 @@
                             <div class="flex border border-black flex-col justify-between bg-primary-50 text-white h-full  pt-4 pl-2 pr-4 pb-2 min-w-[160px] max-w-[200px] rounded-md   mr-20 text-ellipsis text-nowrap">
                                 <div class="overflow-hidden text-base">{task.title}</div>
                                 <div class="flex gap-3">
-                                    <p class="text-white underline hover:cursor-pointer hover:text-primary-200">View</p>
+                                    <a href={`/task/${task.taskId}`}>
+                                        <p class="text-white underline hover:cursor-pointer hover:text-primary-200">View</p>
+                                     </a>
                                     <!-- svelte-ignore a11y-click-events-have-key-events -->
                                     <!-- svelte-ignore a11y-no-static-element-interactions -->
                                     <svg on:click={()=> moveTask(task.taskId, "in_progress")} class="h-6 w-6 hover:fill-primary-200 hover:cursor-pointer" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11,4H13V16L18.5,10.5L19.92,11.92L12,19.84L4.08,11.92L5.5,10.5L11,16V4Z" /></svg>
@@ -540,7 +542,9 @@
                                 <div class="overflow-hidden text-base">{task.title}</div>
                                     <!-- svelte-ignore a11y-click-events-have-key-events -->
                                     <div class="flex gap-3">
-                                        <p class="text-white underline hover:cursor-pointer hover:text-primary-200">View</p>
+                                        <a href={`/task/${task.taskId}`}>
+                                            <p class="text-white underline hover:cursor-pointer hover:text-primary-200">View</p>
+                                         </a>
                                         <!-- svelte-ignore a11y-click-events-have-key-events -->
                                         <!-- svelte-ignore a11y-no-static-element-interactions -->
                                         <svg on:click={()=> moveTask(task.taskId, "done")} class="h-6 w-6 hover:fill-primary-200 hover:cursor-pointer" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11,4H13V16L18.5,10.5L19.92,11.92L12,19.84L4.08,11.92L5.5,10.5L11,16V4Z" /></svg>
@@ -559,7 +563,9 @@
                                 <div class="overflow-hidden text-base">{task.title}</div>
                                 <!-- svelte-ignore a11y-no-static-element-interactions -->
                                 <div class="flex gap-3">
-                                    <p class="text-white underline hover:cursor-pointer hover:text-primary-200">View</p>
+                                    <a href={`/task/${task.taskId}`}>
+                                        <p class="text-white underline hover:cursor-pointer hover:text-primary-200">View</p>
+                                     </a>
                                     <!-- svelte-ignore a11y-click-events-have-key-events -->
                                     <svg on:click={()=> moveTask(task.taskId, "in_progress")} class="h-6 w-6 hover:fill-primary-200 hover:cursor-pointer" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13,20H11V8L5.5,13.5L4.08,12.08L12,4.16L19.92,12.08L18.5,13.5L13,8V20Z" /></svg>
                                 </div> 
