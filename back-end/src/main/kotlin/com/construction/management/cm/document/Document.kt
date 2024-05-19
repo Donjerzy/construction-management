@@ -24,7 +24,4 @@ class Document {
     @JoinColumn(name = "type")
     val type = DocumentType()
 
-    @ManyToOne
-    @JoinColumn(name = "expense")
-    val expense = Expense()
 }

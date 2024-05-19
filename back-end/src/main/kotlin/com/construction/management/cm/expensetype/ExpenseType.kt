@@ -15,10 +15,10 @@ class ExpenseType {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
-    val id: Long = 0
+    var id: Long = 0
 
     @Column(name = "name", nullable = false, unique = true)
-    val name: String = "-"
+    var name: String = "-"
 
     // Table references
     @OneToMany(targetEntity = Expense::class, mappedBy = "expenseType", cascade = [CascadeType.ALL])
