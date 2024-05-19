@@ -155,9 +155,22 @@ class TaskService(private val repository: TaskRepository,
         }
         val fetchedTask = repository.findById(task.taskId).get()
         fetchedTask.status = when(task.action.lowercase()) {
-            "todo" -> TaskStatus.TODO.name
-            "in_progress" -> TaskStatus.IN_PROGRESS.name
-            else -> TaskStatus.DONE.name
+            "todo" -> {
+                if (fetchedTask.completionDate != null) {
+                    fetchedTask.completionDate = null
+                }
+                TaskStatus.TODO.name
+            }
+            "in_progress" -> {
+                if (fetchedTask.completionDate != null) {
+                    fetchedTask.completionDate = null
+                }
+                TaskStatus.IN_PROGRESS.name
+            }
+            else -> {
+                fetchedTask.completionDate = Date()
+                TaskStatus.DONE.name
+            }
         }
         val savedTask = repository.save(fetchedTask)
         val taskHistory = TaskHistory()
