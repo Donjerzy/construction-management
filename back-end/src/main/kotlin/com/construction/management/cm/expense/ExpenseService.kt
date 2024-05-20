@@ -27,6 +27,7 @@ class ExpenseService(
     private val validator: Validator,
     private val formatter: StringFormatter,
     private val runner: Runner) {
+
     fun addExpense(addExpense: AddExpense, userEmail: String): String {
         when (addExpenseValidations(
             projectOwner = userService.getUserId(userEmail)!!,
@@ -39,6 +40,10 @@ class ExpenseService(
             "invalid-date" -> throw CustomException("invalid-date",null)
             "invalid-title" -> throw CustomException("invalid-title", null)
         }
+        val project = projectRepository.findById(addExpense.projectId).get()
+        project.totalBudgetAmountSpent += addExpense.cost
+        projectRepository.save(project)
+
         val expense = Expense()
         expense.cost = addExpense.cost
         expense.note = addExpense.note
