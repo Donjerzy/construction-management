@@ -315,7 +315,6 @@
                 <label for="join_date">Join Date</label>
                 <input name="join_date" class="rounded border-primary-800" type="date" id="join_date" bind:value={userJoinDate}>
             </div>
-            
             <div class="flex flex-col gap-2 mt-2">
                 {#if contractChosen === false}
                     <label for="contract">Contract (Not required*)</label>
@@ -343,11 +342,7 @@
                     on:click={validateInput} />
                 {/if}  
             </div>
-            {/if}
-            
-
-
-            
+            {/if}    
         </form>
     </div>
 </AdminComponent>

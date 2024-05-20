@@ -20,6 +20,12 @@
     $: filteredReports = reports.filter((report) => report.name.toLowerCase().indexOf(reportSearchTerm.toLowerCase()) !== -1);
 
 
+    let expenseSearchTerm = '';
+    let expenses = [];
+
+    $: filteredExpenses = expenses.filter((expense) => expense.title.toLowerCase().indexOf(expenseSearchTerm.toLowerCase()) !== -1);
+
+
     let clients = [];
     let projectCode = "56TRT-SUGUFSO-SFGSVF";
     let employees = [];
@@ -158,7 +164,27 @@
             }
         });
 
-    
+        fetch(`http://localhost:8080/api/v1/expense/all?project=${projectId}`, {
+            headers: {
+                'Authorization': `Bearer ${get(accessToken)}`
+            }
+        })
+        .then(response => {
+            if(!response.ok) {
+                errorFetch = true;
+               firstName.set("");
+               accessToken.set("");
+               loggedIn.set("false");
+               window.location.replace('/'); 
+            } else {
+                return response.json();
+            }
+        }).then((result)=> {
+            if(!errorFetch) {
+                expenses = result.expenses;
+            }
+        });
+
     });
 
 
@@ -623,6 +649,73 @@
                              </TableBody>
                         </Table> 
                      </TableSearch>
+                </div>
+            </div>  
+        {:else if active === 'expenses'}
+            <div class="container">
+                <div class="flex justify-between h-8 align-middle text-base">
+                    <!-- svelte-ignore a11y-click-events-have-key-events -->
+                    <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200"  on:click={()=> navigate("overview")}>Overview</p>
+                    <!-- svelte-ignore a11y-click-events-have-key-events -->
+                    <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("clients")}>Clients</p>
+                    <!-- svelte-ignore a11y-click-events-have-key-events -->
+                    <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200"  on:click={()=> navigate("employees")}>Employees</p>
+                    <!-- svelte-ignore a11y-click-events-have-key-events -->
+                    <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("tasks")}>Tasks</p>
+                    <!-- svelte-ignore a11y-click-events-have-key-events -->
+                    <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" id="active-link" on:click={()=> navigate("expenses")}>Expenses</p>
+                    <!-- svelte-ignore a11y-click-events-have-key-events -->
+                    <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200"  on:click={()=> navigate("reports")}>Reports</p>
+                    <!-- svelte-ignore a11y-click-events-have-key-events -->
+                    <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200"  on:click={()=> navigate("actions")}>Actions</p>
+                </div>
+                <div class="mt-2 flex justify-end">
+                    <a href={`/project/${projectId}/add-expense`}><Button fontSize="base" height="10" label="Add Expense" padding="7" width="32" /> </a>
+                </div>
+                <div class="mt-4 pb-8 max-h-screen">
+                    <TableSearch placeholder="Search by title" hoverable={true} bind:inputValue={expenseSearchTerm}>
+                        <Table divClass="max-h-80 overflow-auto" shadow>
+                            <TableHead defaultRow={false} theadClass="border-black">
+                                <tr class="bg-primary-100">
+                                    <TableHeadCell class="text-white">Title</TableHeadCell>
+                                    <TableHeadCell class="text-white">Expense Type</TableHeadCell>
+                                    <TableHeadCell class="text-white">Cost</TableHeadCell>
+                                    <TableHeadCell class="text-white">Added By</TableHeadCell>
+                                    <TableHeadCell class="text-white">Date</TableHeadCell>
+                                    <TableHeadCell class="text-white">Document</TableHeadCell>
+                                    <TableHeadCell class="text-white">Note</TableHeadCell>
+                                </tr>
+                            </TableHead>
+                            <TableBody>
+                                {#each filteredExpenses as expense}
+                                    <TableBodyRow>
+                                        <TableBodyCell>{expense.title}</TableBodyCell>
+                                        <TableBodyCell>{expense.type}</TableBodyCell>
+                                        <TableBodyCell>{numberWithCommas(expense.cost)}</TableBodyCell>
+                                        <TableBodyCell>{expense.addedBy}</TableBodyCell>
+                                        <TableBodyCell>{expense.date}</TableBodyCell>
+                                        <TableBodyCell>
+                                            {#if expense.hasDocument === true}
+                                                <div class="flex gap-4 items-center">
+                                                    <a class="underline hover:cursor-pointer hover:text-primary-200" href={`/`}>View</a>
+                                                </div>
+                                            {:else}
+                                                <p>n/a</p>
+                                            {/if}     
+                                        </TableBodyCell>
+                                        <TableBodyCell>{expense.note}</TableBodyCell>
+                                    </TableBodyRow>
+                                {/each}
+                            </TableBody>
+                        </Table> 
+                    </TableSearch>
                 </div>
             </div>    
         {/if}
