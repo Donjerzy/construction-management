@@ -3,6 +3,7 @@ package com.construction.management.cm.expense
 import com.construction.management.cm.auth.TokenService
 import com.construction.management.cm.dto.AddExpense
 import com.construction.management.cm.response.DefaultNa
+import com.construction.management.cm.response.GetExpensesResponse
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
@@ -51,7 +52,6 @@ class ExpenseController(
             type = type,
             title = title
         )
-
         val message = service.addExpense(addExpense = addExpense, userEmail = userEmail!!)
         return ResponseEntity.status(200).body(
             DefaultNa (
@@ -61,6 +61,24 @@ class ExpenseController(
         )
 
     }
+
+
+    @GetMapping("/all")
+    fun getAllExpenses(
+        @RequestHeader("Authorization") header:String,
+                       @RequestParam("project") projectId: Long
+        ):ResponseEntity<Any> {
+        val userEmail = tokenService.extractEmail(header.substringAfter("Bearer "))
+        val expenses = service.getExpenses(userEmail = userEmail!!, projectId = projectId)
+        return ResponseEntity.status(200).body(
+            GetExpensesResponse(
+                httpStatus = 200,
+                message = "Expenses retrieved successfully",
+                expenses = expenses
+            )
+        )
+    }
+
 
 
 
