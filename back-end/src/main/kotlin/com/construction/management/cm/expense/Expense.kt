@@ -2,6 +2,7 @@ package com.construction.management.cm.expense
 
 
 import com.construction.management.cm.expensetype.ExpenseType
+import com.construction.management.cm.project.Project
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
@@ -22,20 +23,27 @@ class Expense {
     @Column(name = "cost", nullable = false)
     var cost: Double = 0.0
 
+    @Column(name = "title", nullable = false)
+    var title: String = ""
+
     @Column(name = "note", length = 500)
     var note: String? = null
 
     @Column(name = "date")
-    val date: Date = Date()
+    var date: Date = Date()
 
     @Column(name = "document", nullable = true)
-    val document: String? = null
+    var document: String? = null
 
     @Column(name = "expense_logger", nullable = false)
-    val expenseLogger: String = ""
+    var expenseLogger: String = ""
 
     @ManyToOne
     @JoinColumn(name = "expense_type")
     var expenseType = ExpenseType()
+
+    @ManyToOne
+    @JoinColumn(name = "project")
+    var project = Project()
 
 }

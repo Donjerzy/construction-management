@@ -88,6 +88,13 @@ class ExceptionHandler {
                 )
             )
 
+            "cost-lz" -> ResponseEntity.status(400).body(
+                ExceptionResponse(
+                    httpStatus = 400,
+                    message = "Cost cannot be less than or equal to zero"
+                )
+            )
+
             "invalid-first-name" -> ResponseEntity.status(400).body(
                 ExceptionResponse(
                     httpStatus = 400,
@@ -155,6 +162,13 @@ class ExceptionHandler {
                 ExceptionResponse(
                     httpStatus = 400,
                     message = "Employee type does not exist"
+                )
+            )
+
+            "invalid-expense-type" -> ResponseEntity.status(400).body(
+                ExceptionResponse(
+                    httpStatus = 400,
+                    message = "Invalid Expense Type"
                 )
             )
 
@@ -309,6 +323,12 @@ class ExceptionHandler {
                 httpStatus = 500,
                 message = "Internal Server Error"
             ))
+
+//              else -> ResponseEntity.status(500).body(
+//                  ExceptionResponse(
+//                      httpStatus = 500, message = "$exception"
+//                  )
+//              )
         }
     }
 
