@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface ExpenseRepository: JpaRepository<Expense, Long> {
-    @Query("select * from expense where project = :projectId", nativeQuery = true)
+    @Query("select * from expense where project = :projectId order by date desc", nativeQuery = true)
     fun getProjectExpenses(projectId: Long): MutableList<Expense>
 }
