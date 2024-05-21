@@ -18,6 +18,7 @@ import jakarta.persistence.ManyToOne
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import java.io.File
+import java.io.FileInputStream
 import java.util.*
 import kotlin.math.exp
 
@@ -50,7 +51,11 @@ class ExpenseService(
 
         val expense = Expense()
         expense.cost = addExpense.cost
-        expense.note = addExpense.note
+        expense.note = when{
+            addExpense.note.isNullOrEmpty() -> null
+            addExpense.note.isBlank() -> null
+            else -> addExpense.note
+        }
         expense.date = formatter.toDate(addExpense.date)
         expense.title = addExpense.title
         expense.document = when(addExpense.document) {
@@ -160,4 +165,38 @@ class ExpenseService(
         }
         return "ok"
     }
+
+    fun getDocument(userEmail: String, expenseId: Long): String {
+        when (getDocumentValidations(
+            expenseId = expenseId,
+            projectOwner = userService.getUserId(userEmail)!!
+        )) {
+            "invalid-expense" -> throw CustomException("invalid-expense", null)
+            "not-project-owner" -> throw CustomException("not-project-owner", null)
+            "no-document" -> throw CustomException("no-document", null)
+        }
+        val actualDocument = File(repository.findById(expenseId).get().document!!)
+        val inputStream = FileInputStream(actualDocument)
+        val byteArray = inputStream.readAllBytes()
+        return Base64.getEncoder().encodeToString(byteArray)
+    }
+
+
+    fun getDocumentValidations(expenseId: Long, projectOwner: Long): String {
+        /**
+         *  Expense present, is project owner, has Document
+         */
+        if (!repository.findById(expenseId).isPresent) {
+           return "invalid-expense"
+        }
+        val expense = repository.findById(expenseId).get()
+        if (expense.project.projectManager.id != projectOwner) {
+            return "not-project-owner"
+        }
+        if (expense.document == null) {
+            return "no-document"
+        }
+        return "ok"
+    }
+
 }

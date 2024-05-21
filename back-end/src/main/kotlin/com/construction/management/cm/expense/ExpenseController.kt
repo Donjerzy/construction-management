@@ -3,6 +3,7 @@ package com.construction.management.cm.expense
 import com.construction.management.cm.auth.TokenService
 import com.construction.management.cm.dto.AddExpense
 import com.construction.management.cm.response.DefaultNa
+import com.construction.management.cm.response.ExpenseDocumentResponse
 import com.construction.management.cm.response.GetExpensesResponse
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.multipart.MultipartFile
 import java.util.*
+import kotlin.math.exp
 
 @Controller
 @RequestMapping("api/v1/expense")
@@ -75,6 +77,22 @@ class ExpenseController(
                 httpStatus = 200,
                 message = "Expenses retrieved successfully",
                 expenses = expenses
+            )
+        )
+    }
+
+    @GetMapping("/document")
+    fun getExpenseDocument(
+        @RequestHeader("Authorization") header:String,
+        @RequestParam("expenseId") expenseId: Long
+    ): ResponseEntity<Any> {
+        val userEmail = tokenService.extractEmail(header.substringAfter("Bearer "))
+        val document = service.getDocument(userEmail = userEmail!!, expenseId = expenseId)
+        return ResponseEntity.status(200).body(
+            ExpenseDocumentResponse (
+                httpStatus = 200,
+                message = "Document retrieved successfully",
+                document = document
             )
         )
     }

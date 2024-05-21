@@ -45,3 +45,4 @@ application.properties
 ## Documents ##
 contracts/
 src/main/resources/static/
+expense_docs/

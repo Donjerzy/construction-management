@@ -235,6 +235,20 @@ class ExceptionHandler {
                 )
             )
 
+            "no-document" -> ResponseEntity.status(400).body(
+                ExceptionResponse(
+                    httpStatus = 400,
+                    message = "Document does not exist"
+                )
+            )
+
+            "invalid-expense" -> ResponseEntity.status(400).body(
+                ExceptionResponse(
+                    httpStatus = 400,
+                    message = "Invalid expense"
+                )
+            )
+
             "invalid-date-period" -> ResponseEntity.status(400).body(
                 ExceptionResponse(
                     httpStatus = 400,
