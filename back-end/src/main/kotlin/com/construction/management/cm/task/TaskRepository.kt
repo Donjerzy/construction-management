@@ -26,6 +26,8 @@ interface TaskRepository: JpaRepository<Task, Long> {
     fun getEmployeeDonePastTimeTasks(employeeId: Long): Int
     @Query("select * from task where project = :projectId", nativeQuery = true)
     fun getProjectTasks(projectId: Long): MutableList<Task>
+    @Query("select * from task where id in (select task from employee_task where employee = :employeeId)", nativeQuery = true)
+    fun getEmployeeTasks(employeeId: Long): MutableList<Task>
 
 
 }
