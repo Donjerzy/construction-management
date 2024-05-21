@@ -13,6 +13,12 @@ export const accessToken = writable( browser &&
 
 accessToken.subscribe((val) => browser && localStorage.setItem("access", val));
 
+export const projectUUID = writable( browser &&
+    (localStorage.getItem("projectId")|| "n/a")
+);
+
+projectUUID.subscribe((val) => browser && localStorage.setItem("projectId", val));
+
 
 export const firstName = writable( browser &&
     (localStorage.getItem("first-name")|| "n/a")

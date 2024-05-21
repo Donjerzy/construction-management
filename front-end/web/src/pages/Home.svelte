@@ -1,7 +1,7 @@
 <script>
     import Toast from "../components/toast.svelte";
     import { notifications } from "../lib/notification";
-    import {loggedIn, accessToken, firstName} from "../stores.js";
+    import {loggedIn, accessToken, firstName, projectUUID} from "../stores.js";
     export let appName;
 
     let emailError = false;
@@ -23,6 +23,13 @@
         loggedIn.set(true);
         accessToken.set(token);
         firstName.set(name);
+    }
+
+    function updateEmployeeLogIn(token, name, projectId) {
+        loggedIn.set(true);
+        accessToken.set(token);
+        firstName.set(name);
+        projectUUID.set(projectId)
     }
 
     function setEmailError() {
@@ -121,11 +128,12 @@
             }
         }).then(transformed=> {
             if(!error) {
-                updateLogIn(transformed.user.token, transformed.user.firstName);
+                updateEmployeeLogIn(transformed.user.token, transformed.user.firstName, transformed.user.project);
                 window.location.replace('/employee/home');
             } 
         }).catch(error=> {
             loading = false;
+            console.log(error);
             notifications.danger("Could make request to server", 1000)
         })
         return

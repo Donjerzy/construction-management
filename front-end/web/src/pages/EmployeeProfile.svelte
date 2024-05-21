@@ -1,6 +1,6 @@
 <script>
     import EmployeeComponent from "../components/employee-component.svelte";
-    import {firstName, accessToken, loggedIn} from '../stores.js' 
+    import {firstName, accessToken, loggedIn, projectUUID} from '../stores.js' 
     import Button from "../components/button.svelte";
     import Loader from "../components/loading-component.svelte";
     import { get } from "svelte/store";
@@ -10,10 +10,11 @@
 
     async function logout() {
         loading = true;
-        await fetch('http://localhost:8080/api/v1/employee/auth/logout', {
+        fetch('http://localhost:8080/api/v1/employee/auth/logout', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                "Cmt": `CMT ${get(accessToken)}`
             },
             body: JSON.stringify({
                 token: get(accessToken)
@@ -22,6 +23,7 @@
         loading = false;
         firstName.set("");
         accessToken.set("");
+        projectUUID.set("");
         loggedIn.set("false");
         window.location.replace('/');  
     }

@@ -546,7 +546,7 @@
                             <p class="-rotate-90 mr-3">TODO</p>
                         </div>
                         {#each toDoTasks as task }
-                            <div class="flex border border-black flex-col justify-between bg-primary-50 text-white h-full  pt-4 pl-2 pr-4 pb-2 min-w-[160px] max-w-[200px] rounded-md   mr-20 text-ellipsis text-nowrap">
+                            <div class="flex border border-black flex-col justify-between bg-primary-50 text-white h-full  pt-4 pl-2 pr-4 pb-2 min-w-[160px] max-w-[200px] rounded-md mr-20 text-ellipsis text-nowrap">
                                 <div class="overflow-hidden text-base">{task.title}</div>
                                 <div class="flex gap-3">
                                     <a href={`/task/${task.taskId}`}>
