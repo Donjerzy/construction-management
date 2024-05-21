@@ -1,6 +1,6 @@
 <script>
-    import AdminComponent from "../components/admin-component.svelte";
-    import Button from '../components/button.svelte';
+    import EmployeeComponent from "../components/employee-component.svelte";
+    let contentTitle = "Task";
     import {firstName, accessToken, loggedIn, projectClient} from '../stores.js'; 
     import { Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, Checkbox, TableSearch } from 'flowbite-svelte';    
     import { get } from "svelte/store";
@@ -9,9 +9,7 @@
     import { notifications } from "../lib/notification";
     import Loader from "../components/loading-component.svelte";
     import {page} from '$app/stores';
-    let appName = "Mjengo Bora Construction";
-    let contentTitle = "Task";
-    let current = "view" // view || comments || history
+    let current = "view" // view || comments ||
     let loading = false;
 
     const taskId = $page.params.taskId;
@@ -38,9 +36,9 @@
 
     onMount(()=> {
         let errorFetch = false;
-        fetch(`http://localhost:8080/api/v1/task/view?taskId=${taskId}`, {
+        fetch(`http://localhost:8080/api/v1/employee/task/view?taskId=${taskId}`, {
             headers: {
-                'Authorization': `Bearer ${get(accessToken)}`
+                'Cmt': `CMT ${get(accessToken)}`
             }
         })
         .then(response => {
@@ -63,9 +61,9 @@
 
     async function refetchTask() {
         let errorFetch = false;
-        fetch(`http://localhost:8080/api/v1/task/view?taskId=${taskId}`, {
+        fetch(`http://localhost:8080/api/v1/employee/task/view?taskId=${taskId}`, {
         headers: {
-            'Authorization': `Bearer ${get(accessToken)}`
+            'Cmt': `CMT ${get(accessToken)}`
         }
         })
         .then(response => {
@@ -93,11 +91,11 @@
         loading = true;
         let error = false;
         let existsError = false;
-        await fetch('http://localhost:8080/api/v1/task/add-comment', {
+        await fetch('http://localhost:8080/api/v1/employee/task/add-comment', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${get(accessToken)}`
+                'Cmt': `CMT ${get(accessToken)}`
             },
             body: JSON.stringify({
                 taskId: taskId,
@@ -134,8 +132,6 @@
         }
     }
 
-
-
 </script>
 
 
@@ -143,20 +139,17 @@
 
 
 
-<AdminComponent  appName={appName} contentTitle={contentTitle} userFirstName={get(firstName)}>
+<EmployeeComponent contentTitle={contentTitle}>
     <Toast />
     <div class="mt-5 h-[80%]">
         {#if current === "view"}
             <div class="flex gap-16 h-8 align-middle text-base w-fit ml-auto mr-auto">
                 <!-- svelte-ignore a11y-click-events-have-key-events -->
                 <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" id="active-link"  on:click={()=> navigate("view")}>View</p>
+                <p class="underline text-primary-200 text-lg hover:cursor-pointer hover:text-primary-200"  on:click={()=> navigate("view")}>View</p>
                 <!-- svelte-ignore a11y-click-events-have-key-events -->
                 <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
                 <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("comments")}>Comments</p>
-                <!-- svelte-ignore a11y-click-events-have-key-events -->
-                <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200"  on:click={()=> navigate("history")}>History</p>
             </div> 
 
             <div class="mt-6 flex gap-4  h-full">
@@ -208,10 +201,7 @@
                 <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("view")}>View</p>
                 <!-- svelte-ignore a11y-click-events-have-key-events -->
                 <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" id="active-link" on:click={()=> navigate("comments")}>Comments</p>
-                <!-- svelte-ignore a11y-click-events-have-key-events -->
-                <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200"  on:click={()=> navigate("history")}>History</p>
+                <p class="underline text-primary-200 text-lg  hover:cursor-pointer hover:text-primary-200" id="active-link" on:click={()=> navigate("comments")}>Comments</p>
             </div> 
             <div class="mt-6 h-4/5 border border-primary-100 rounded-md bg-white overflow-auto pt-4 pr-4 pl-4">
                 {#each task.taskComments as comment}
@@ -230,7 +220,7 @@
                 {/each}
             </div>
             <!-- svelte-ignore a11y-no-static-element-interactions -->
-            <div class="flex items-center h-20 justify-between mt-2 gap-4">
+            <div class="flex items-center h-20  justify-between mt-2 gap-4">
                 <input class="rounded h-14 w-full" type="text" bind:value={userComment}>
                 {#if loading}
                     <Loader />
@@ -239,48 +229,8 @@
                     <svg on:click={addComment} class="h-10 w-10 hover:cursor-pointer hover:fill-primary-200" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M2,21L23,12L2,3V10L17,12L2,14V21Z" /></svg>
                 {/if}
                  </div>
-        {:else}
-            <div class="flex gap-16 h-8 align-middle text-base w-fit ml-auto mr-auto">
-                <!-- svelte-ignore a11y-click-events-have-key-events -->
-                <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("view")}>View</p>
-                <!-- svelte-ignore a11y-click-events-have-key-events -->
-                <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200"  on:click={()=> navigate("comments")}>Comments</p>
-                <!-- svelte-ignore a11y-click-events-have-key-events -->
-                <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" id="active-link" on:click={()=> navigate("history")}>History</p>
-            </div>  
-            <div class="mt-8">
-                <Table divClass="max-h-80 overflow-auto" shadow hoverable={true}>
-                    <TableHead defaultRow={false} theadClass="border-black">
-                        <tr class="bg-primary-100">
-                            <TableHeadCell class="text-white hover:cursor-pointer">Date</TableHeadCell>
-                            <TableHeadCell class="text-white hover:cursor-pointer">Status</TableHeadCell>
-                            <TableHeadCell class="text-white hover:cursor-pointer">User</TableHeadCell>
-                        </tr>
-                    </TableHead>
-                    <TableBody>
-                        {#each task.taskHistory as history }
-                            <TableBodyRow>
-                                <TableBodyCell>{history.date}</TableBodyCell>
-                                <TableBodyCell>{history.status}</TableBodyCell>
-                                <TableBodyCell>{history.user}</TableBodyCell>
-                            </TableBodyRow>
-                        {/each}
-                    </TableBody>
-                </Table>
-            </div>
         {/if}
         
     </div>
+</EmployeeComponent>
 
-</AdminComponent>
-
-
-<style>
-    #active-link {
-        color: var(--tertiary-clr);
-        font-size: 1.2rem;
-    }
-</style>
