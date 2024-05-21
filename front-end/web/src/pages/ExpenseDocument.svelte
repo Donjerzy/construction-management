@@ -1,14 +1,16 @@
 <script>
     import {firstName, accessToken, loggedIn} from '../stores.js' 
-    import Loader from "../components/loading-component.svelte";
     import { get } from "svelte/store";
     import { onMount } from 'svelte';
+    import {page} from '$app/stores';
+    import Loader from '../components/loading-component.svelte';
+    const documentId = $page.params.documentId;
     let report = "";
     let fetched = false;
 
     onMount(()=> {
         let errorFetch = false;
-        fetch(`http://localhost:8080/api/v1/report/general`, {
+        fetch(`http://localhost:8080/api/v1/expense/document?expenseId=${documentId}`, {
             headers: {
                 'Authorization': `Bearer ${get(accessToken)}`
             }
@@ -25,7 +27,7 @@
             }
         }).then((result)=> {
             if(!errorFetch) {
-                report = `data:application/pdf;base64,${result.report}`;
+                report = `data:application/pdf;base64,${result.document}`;
                 fetched = true;
             }
         })

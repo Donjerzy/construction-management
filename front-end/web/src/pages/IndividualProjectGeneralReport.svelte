@@ -3,6 +3,7 @@
     import { get } from "svelte/store";
     import { onMount } from 'svelte';
     import {page} from '$app/stores';
+    import Loader from "../components/loading-component.svelte";
     let report = "";
     let fetched = false;
     const projectId = $page.params.projectId;
@@ -36,4 +37,8 @@
 
 {#if fetched}
     <embed src={report} type="application/pdf" style="width: 100vw; height: 100vh;">
+{:else}
+    <div class="flex justify-center items-center h-screen w-screen">
+        <Loader />
+    </div>
 {/if}

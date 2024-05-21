@@ -1,5 +1,5 @@
 <script>
-    import AdminComponent  from "../components/admin-component.svelte"
+    import AdminComponent  from "../components/admin-component.svelte";
     import {firstName, accessToken, loggedIn} from '../stores.js' 
     import { get } from "svelte/store";
     import { Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, Checkbox, TableSearch } from 'flowbite-svelte';  

@@ -704,7 +704,7 @@
                                         <TableBodyCell>
                                             {#if expense.hasDocument === true}
                                                 <div class="flex gap-4 items-center">
-                                                    <a class="underline hover:cursor-pointer hover:text-primary-200" href={`/`}>View</a>
+                                                    <a class="underline hover:cursor-pointer hover:text-primary-200" href={`/expense/document/${expense.expenseId}`}>View</a>
                                                 </div>
                                             {:else}
                                                 <p>n/a</p>
