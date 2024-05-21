@@ -4,6 +4,7 @@ import com.construction.management.cm.dto.EmployeeLogIn
 import com.construction.management.cm.dto.EmployeeLogOut
 import com.construction.management.cm.dto.TestAuth
 import com.construction.management.cm.response.DefaultNa
+import com.construction.management.cm.response.LogInEmployeeResponse
 import com.construction.management.cm.response.LoginResponse
 import org.springframework.http.RequestEntity
 import org.springframework.http.ResponseEntity
@@ -24,7 +25,7 @@ class EmployeeAuthController(
     fun logIn (@RequestBody employeeLogIn: EmployeeLogIn): ResponseEntity<Any> {
         val user = service.logIn(employeeLogIn)
         return ResponseEntity.status(200).body(
-            LoginResponse(
+            LogInEmployeeResponse(
                 httpStatus = 200,
                 message = "Employee authenticated successfully",
                 user = user
@@ -33,9 +34,9 @@ class EmployeeAuthController(
     }
 
     @PostMapping("/logout")
-    fun logout (@RequestBody employeeLogOut: EmployeeLogOut): ResponseEntity<Any> {
-        val user = service.validateRequestToken(employeeLogOut.token)
-        val message = service.logOut(user = user, token = employeeLogOut.token)
+    fun logout (@RequestHeader(name = "Cmt") token: String): ResponseEntity<Any> {
+        val user = service.validateRequestToken(token)
+        val message = service.logOut(user = user)
         return ResponseEntity.status(200).body(
             DefaultNa (
                 httpStatus = 200,

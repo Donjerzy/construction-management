@@ -65,5 +65,7 @@ interface ProjectRepository: JpaRepository<Project, Long> {
 
     @Query("select count(*) from project where lower(status) = 'abandoned' and project_manager = :projectManager", nativeQuery = true)
     fun getAbandonedCount(projectManager: Long): Int
+    @Query("select * from project where project_id = :projectId", nativeQuery = true)
+    fun getProjectByUuid(projectId: UUID): Project
 
 }

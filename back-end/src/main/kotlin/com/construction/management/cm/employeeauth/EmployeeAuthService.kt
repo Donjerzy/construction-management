@@ -3,6 +3,7 @@ package com.construction.management.cm.employeeauth
 import com.construction.management.cm.config.JwtProperties
 import com.construction.management.cm.dto.EmployeeLogIn
 import com.construction.management.cm.dto.LoggedIn
+import com.construction.management.cm.dto.LoggedInEmployee
 import com.construction.management.cm.employee.EmployeeRepository
 import com.construction.management.cm.exceptionhandler.CustomException
 import io.jsonwebtoken.Claims
@@ -25,7 +26,7 @@ class EmployeeAuthService(
 
     @Autowired
     private lateinit var encoder: PasswordEncoder
-    fun logIn(employeeLogIn: EmployeeLogIn): LoggedIn {
+    fun logIn(employeeLogIn: EmployeeLogIn): LoggedInEmployee {
         when(logInValidations(employeeLogIn = employeeLogIn)) {
             "invalid-credentials" -> throw CustomException("invalid-credentials", null)
         }
@@ -48,9 +49,10 @@ class EmployeeAuthService(
         record.id = employee.id
         record.token = jwt
         repository.save(record)
-        return LoggedIn(
+        return LoggedInEmployee(
             token = jwt,
-            firstName = employee.firstName.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
+            firstName = employee.firstName.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() },
+            project = employeeLogIn.project
         )
     }
 
@@ -80,7 +82,7 @@ class EmployeeAuthService(
         if (token == null) {
             throw CustomException("auth-user-na", null)
         }
-        val actualToken = token.substringAfter("Bearer ")
+        val actualToken = token.substringAfter("CMT ")
         val parser = Jwts.parser()
             .verifyWith(secretKey)
             .build()
@@ -103,7 +105,7 @@ class EmployeeAuthService(
         return userId
     }
 
-    fun logOut(user: Long, token: String): String {
+    fun logOut(user: Long): String {
         repository.deleteById(user)
         return "User logged out successfully"
     }

@@ -5,10 +5,7 @@ import com.construction.management.cm.employeeauth.EmployeeAuthService
 import com.construction.management.cm.response.GetEmployeeTasksResponse
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.*
 
 @Controller
 @RequestMapping("api/v1/employee/task")
@@ -19,10 +16,11 @@ class EmployeeTaskController (
 
     @GetMapping("/all")
     fun getAllEmployeeTasks(
-        @RequestParam(name = "projectId") projectId: Long,
-        @RequestBody token: GetEmployeeTaskReq
+        @RequestHeader(name = "Cmt") header: String,
+        @RequestParam(name = "projectId") projectId: String,
+        //@RequestBody token: GetEmployeeTaskReq
     ): ResponseEntity<Any> {
-        val userId = authService.validateRequestToken(token = token.token)
+        val userId = authService.validateRequestToken(token = header)
         val tasks = service.getEmployeeTasks(userId = userId, projectId = projectId)
         return ResponseEntity.status(200).body(GetEmployeeTasksResponse(
             httpStatus = 200,
