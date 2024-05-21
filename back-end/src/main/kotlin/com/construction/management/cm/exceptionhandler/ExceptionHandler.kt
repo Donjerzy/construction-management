@@ -158,6 +158,13 @@ class ExceptionHandler {
                 )
             )
 
+            "invalid-employee" -> ResponseEntity.status(400).body(
+                ExceptionResponse(
+                    httpStatus = 400,
+                    message = "Employee cannot perform action"
+                )
+            )
+
             "invalid-employee-type" -> ResponseEntity.status(400).body(
                 ExceptionResponse(
                     httpStatus = 400,

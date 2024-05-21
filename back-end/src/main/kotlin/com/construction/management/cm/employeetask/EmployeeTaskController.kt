@@ -1,7 +1,9 @@
 package com.construction.management.cm.employeetask
 
 import com.construction.management.cm.dto.GetEmployeeTaskReq
+import com.construction.management.cm.dto.MoveTask
 import com.construction.management.cm.employeeauth.EmployeeAuthService
+import com.construction.management.cm.response.DefaultNa
 import com.construction.management.cm.response.GetEmployeeTasksResponse
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
@@ -28,6 +30,19 @@ class EmployeeTaskController (
             tasks = tasks
         ))
 
+    }
+
+    @PostMapping("/move")
+    fun moveTask(
+        @RequestHeader(name = "Cmt") header: String,
+        @RequestBody task: MoveTask
+    ): ResponseEntity<Any> {
+        val userId = authService.validateRequestToken(token = header)
+        val message = service.moveTask(task = task, userId = userId)
+        return ResponseEntity.status(200).body(DefaultNa(
+            httpStatus = 200,
+            message = message
+        ))
     }
 
 
