@@ -6,6 +6,7 @@ import com.construction.management.cm.dto.MoveTask
 import com.construction.management.cm.employeeauth.EmployeeAuthService
 import com.construction.management.cm.response.DefaultNa
 import com.construction.management.cm.response.GetEmployeeTasksResponse
+import com.construction.management.cm.response.GetIncompleteTasksResponse
 import com.construction.management.cm.response.ViewTaskEmployeeResponse
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
@@ -77,6 +78,22 @@ class EmployeeTaskController (
             )
         )
     }
+
+    @GetMapping("/incomplete")
+    fun getIncompleteTasks(
+        @RequestHeader(name = "Cmt") header: String
+    ): ResponseEntity<Any> {
+        val userId = authService.validateRequestToken(token = header)
+        val count = service.getIncompleteTasks(userId = userId)
+        return ResponseEntity.status(200).body(
+            GetIncompleteTasksResponse(
+                httpStatus = 200,
+                message = "Count retrieved successfully",
+                count = count
+            )
+        )
+    }
+
 
 
 

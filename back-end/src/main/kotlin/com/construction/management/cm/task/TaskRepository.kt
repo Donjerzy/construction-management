@@ -31,5 +31,8 @@ interface TaskRepository: JpaRepository<Task, Long> {
     @Query("select count(*) from employee_task where task = :taskId and employee = :employeeId", nativeQuery = true)
     fun employeeAssignedTask(taskId: Long, employeeId: Long): Int
 
+    @Query("select count(*) from task inner join employee_task et on et.task = task.id where lower(status) in ('todo', 'in_progress') and et.employee = :userId", nativeQuery = true)
+    abstract fun getUserIncompleteTasks(userId: Long): Int
+
 
 }

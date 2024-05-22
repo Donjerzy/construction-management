@@ -230,4 +230,8 @@ class EmployeeTaskService(
         return "ok"
     }
 
+    fun getIncompleteTasks(userId: Long): Int {
+        return taskRepository.getUserIncompleteTasks(userId = userId)
+    }
+
 }
