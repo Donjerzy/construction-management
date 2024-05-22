@@ -18,6 +18,7 @@
         <div class="flex gap-5">
             <a href="/employee/home" class="text-white hover:text-primary-200">Home</a>
             <a href="/employee/task" class="text-white hover:text-primary-200">Tasks</a>
+            <a href="/employee/expense" class="text-white hover:text-primary-200">Expenses</a>
             <a href="/" class="text-white hover:text-primary-200">Reports</a>
         </div>
 
