@@ -5,7 +5,6 @@
     import Button from "../components/button.svelte";
     let appName = "Mjengo Bora Construction";
     let contentTitle = "Profile";
-    
 
     function logOutUser() {
         firstName.set("");
