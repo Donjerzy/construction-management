@@ -319,5 +319,40 @@ class ProjectService(private val clientService: ClientService ,
         return "ok"
     }
 
+    fun changeProjectStatus(userEmail: String, changeStatus: ChangeStatus): String {
+        when(changeStatusValidations(
+            projectManager = userService.getUserId(userEmail)!!,
+            changeStatus = changeStatus
+        )) {
+            "not-project-owner" -> throw CustomException("not-project-owner", null)
+            "invalid-status" -> throw CustomException("invalid-status", null)
+        }
+        val project = repository.findById(changeStatus.projectId).get()
+        if (changeStatus.status.uppercase() == ProjectStatusEnum.ONGOING.name) {
+            project.completionDate = null
+            project.status = ProjectStatusEnum.ONGOING.name
+            repository.save(project)
+        } else if (changeStatus.status.uppercase() == ProjectStatusEnum.COMPLETE.name) {
+            project.completionDate = Date()
+            project.status = ProjectStatusEnum.COMPLETE.name
+            repository.save(project)
+        }
+        return "Status change successfully"
+    }
+
+    fun changeStatusValidations(projectManager: Long, changeStatus: ChangeStatus): String {
+        if (repository.isProjectManager(projectManager = projectManager, project = changeStatus.projectId) <=0) {
+            return "not-project-owner"
+        }
+        if (changeStatus.status.uppercase() !in listOf(ProjectStatusEnum.ONGOING.name, ProjectStatusEnum.COMPLETE.name)) {
+            return "invalid-status"
+        }
+        if (repository.findById(changeStatus.projectId).get().status == changeStatus.status.uppercase()) {
+            return "invalid-status"
+        }
+        return "ok"
+    }
+
+
 
 }

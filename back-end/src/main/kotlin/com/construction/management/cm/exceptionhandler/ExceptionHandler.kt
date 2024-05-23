@@ -186,10 +186,10 @@ class ExceptionHandler {
                 )
             )
 
-            "invalid-employee" -> ResponseEntity.status(400).body(
+            "invalid-status" -> ResponseEntity.status(400).body(
                 ExceptionResponse(
                     httpStatus = 400,
-                    message = "Invalid employee id provided"
+                    message = "Invalid status provided"
                 )
             )
 

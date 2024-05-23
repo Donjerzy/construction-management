@@ -135,6 +135,21 @@ class ProjectController {
         )
     }
 
+    @PostMapping("/change-status")
+    fun changeStatus(
+        @RequestHeader("Authorization") header:String,
+        @RequestBody changeStatus: ChangeStatus
+    ): ResponseEntity<Any> {
+        val userEmail = tokenService.extractEmail(header.substringAfter("Bearer "))
+        val message  = service.changeProjectStatus(userEmail = userEmail!!, changeStatus = changeStatus)
+        return ResponseEntity.status(200).body(
+            DefaultNa (
+                httpStatus = 200,
+                message = message
+            )
+        )
+    }
+
 
 
 
