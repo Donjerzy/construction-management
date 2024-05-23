@@ -372,8 +372,8 @@
             </div>
             <div class="mt-5">
                 <div>
-                    <label for="payment-type" class="block">Payment Type</label>
-                    <select class="mt-2 w-full"  id="payment-type" bind:value={paymentType}>
+                    <label for="payment-type" class="block font-serif">Payment Type</label>
+                    <select class="font-sans mt-2 w-full"  id="payment-type" bind:value={paymentType}>
                         <option value="gen">Generated</option>
                         <option value="custom">Custom</option>
                     </select>
@@ -381,15 +381,15 @@
                 {#if paymentType === 'gen'}
                     <div class="mt-3">
                         <div class="flex-col gap-40 mt-1">
-                            <p>Wage Type</p>
+                            <p class="font-serif">Wage Type</p>
                             <p  class="italic border mt-1 border-primary-100 p-2 bg-primary-100">{employeeWageType}</p>
                         </div>
                         <div class="flex-col gap-40 mt-2">
-                            <label for="number_of_periods" class="block">Number of Period (Months/days/weeks)</label>
-                            <input class="mt-1 w-full" type="number" id="number_of_periods" bind:value={noOfPeriod} on:input={calculateWage}>
+                            <label  for="number_of_periods" class="block font-serif">Number of Period (Months/days/weeks)</label>
+                            <input class="font-sans mt-1 w-full" type="number" id="number_of_periods" bind:value={noOfPeriod} on:input={calculateWage}>
                         </div>
                         <div class="flex-col gap-40 mt-1">
-                            <p>Amount</p>
+                            <p class="font-serif">Amount</p>
                             <p  class="italic border mt-1 border-primary-100 p-2 bg-primary-100">{isNaN(generatedAmount) ? 0 : numberWithCommas(generatedAmount)}</p>
                         </div>
                         <div class="flex-col gap-40 mt-4">
@@ -405,20 +405,20 @@
                 {:else}
                     <div class="mt-3">
                         <div class="flex-col gap-40 mt-2">
-                            <label for="custom_start_date" class="block">Start Date</label>
-                            <input class="mt-1 w-full" type="date" id="custom_start_date" min={nextValidPaymentDate}  bind:value={customStartDate}>
+                            <label for="custom_start_date" class="block font-serif">Start Date</label>
+                            <input class="font-sans mt-1 w-full" type="date" id="custom_start_date" min={nextValidPaymentDate}  bind:value={customStartDate}>
                         </div>
                         <div class="flex-col gap-40 mt-2">
-                            <label for="custom_end_date" class="block">End Date</label>
-                            <input class="mt-1 w-full" type="date" id="custom_start_date" min={customStartDate}  bind:value={customEndDate}>
+                            <label  for="custom_end_date" class="block font-serif ">End Date</label>
+                            <input class="font-sans mt-1 w-full" type="date" id="custom_start_date" min={customStartDate}  bind:value={customEndDate}>
                         </div>
                         <div class="flex-col gap-40 mt-2">
-                            <label for="custom_amount" class="block">Amount</label>
-                            <input class="mt-1 w-full" type="text" id="custom_amount" bind:value={customAmountDisplay} on:input={customAmountChange}>
+                            <label for="custom_amount" class="block font-serif">Amount</label>
+                            <input class="font-sans mt-1 w-full" type="text" id="custom_amount" bind:value={customAmountDisplay} on:input={customAmountChange}>
                         </div>
                         <div class="mt-2 w-full">
                             <label class="block" for="note">Note</label>
-                            <textarea class="w-full" bind:value={wageNote}  id="note"></textarea>
+                            <textarea class="font-sans w-full" bind:value={wageNote}  id="note"></textarea>
                         </div>
                     </div>
                     <div class="flex-col gap-40 mt-4">

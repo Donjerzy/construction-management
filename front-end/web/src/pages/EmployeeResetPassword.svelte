@@ -106,8 +106,8 @@
 <AdminComponent appName={appName} contentTitle={contentTitle} userFirstName={get(firstName)}>
     <Toast />
     	<div class="mt-8">
-            <label for="password" class="block text-base">New Password</label>
-            <input class="mt-3 w-full" type="password" id="password" bind:value={newPassword}>
+            <label for="password" class="block text-base font-serif">New Password</label>
+            <input class="font-sans mt-3 w-full" type="password" id="password" bind:value={newPassword}>
             <div class="mt-4 flex justify-center">
                 {#if loading}
                     <Loader />

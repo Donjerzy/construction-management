@@ -375,6 +375,7 @@
     }
     #log-in {
         font-size: 1.4rem;
+        font-family: 'Times New Roman', Times, serif;
     }
     #log-in:hover {
         color: #38aa3b;
@@ -404,7 +405,7 @@
         /* border: solid black 1px; */
     }
     .app-name {
-        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        font-family: 'Times New Roman', Times, serif;
         font-size: 1.5rem;
     }
     .app-name:hover {
@@ -421,6 +422,7 @@
     #title {
         margin-bottom: 20px;
         font-size: 1.4rem;
+        font-family: 'Times New Roman', Times, serif;
     }
     #verif-code-label-div{
         display: flex;
@@ -446,10 +448,11 @@
     .verif-input {
         border: 1px solid;
         margin-bottom: 20px;
-        height: 20px;
+        height: 40px;
         width: 20px;
         padding: 4px;
         padding-left: 8px;
+        border-radius: 4px;
     }
     #login-btn {
         padding: 12px;

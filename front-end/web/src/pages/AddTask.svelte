@@ -144,21 +144,21 @@
     <div class="mt-4">
         <form>
             <div class="flex flex-col gap-2 mt-1">
-                <label for="title">Title</label>
-                <input name="name" class="rounded border-primary-800" type="text" id="title" bind:value={title}>
+                <label class="font-serif" for="title">Title</label>
+                <input name="name" class="font-sans rounded border-primary-800" type="text" id="title" bind:value={title}>
             </div>
             <div class="flex flex-col gap-2 mt-1">
-                <label for="description">Description</label>
-                <textarea bind:value={description} id="description"></textarea>
+                <label class="font-serif" for="description">Description</label>
+                <textarea class="font-sans" bind:value={description} id="description"></textarea>
             </div>
 
             <div class="flex gap-4 mt-2">
                 <div class="flex flex-col">
-                    <p>Chosen Employees</p>
+                    <p class="font-serif">Chosen Employees</p>
                     <div class="border border-primary-100 min-w-[600px] mt-2 min-h-[200px] rounded flex felx-wrap p-3">
                         {#each chosenEmployeeNamesDisplay as employee}
                            <div class="flex items-center h-12 p-3 gap-2 mr-4 rounded shadow-md bg-white">
-                               <p>{employee}</p>
+                               <p class="font-sans">{employee}</p>
                                <!-- svelte-ignore a11y-click-events-have-key-events -->
                                <!-- svelte-ignore a11y-no-static-element-interactions -->
                                <svg on:click={()=> removeChosenEmployee(employee)} class="h-5 w-5 hover:fill-primary-200 hover:cursor-pointer" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" /></svg>
@@ -167,9 +167,9 @@
                     </div>
                 </div>
                 <div class="flex flex-col">
-                    <p>Choose employee</p>
+                    <p class="font-serif">Choose employee</p>
                     <div class="mt-2">
-                        <select class="hover:cursor-pointer" on:change={(e)=> addToChosenEmployees(e.target.value)}>
+                        <select class="hover:cursor-pointer font-sans" on:change={(e)=> addToChosenEmployees(e.target.value)}>
                             <option value="0">--Select--</option>
                             {#each employeeList as employee }
                                 <option value={employee.id}>{employee.name}</option>

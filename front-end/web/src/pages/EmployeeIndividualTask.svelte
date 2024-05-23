@@ -221,7 +221,7 @@
             </div>
             <!-- svelte-ignore a11y-no-static-element-interactions -->
             <div class="flex items-center h-20  justify-between mt-2 gap-4">
-                <input class="rounded h-14 w-full" type="text" bind:value={userComment}>
+                <input  class="font-sans rounded h-14 w-full" type="text" bind:value={userComment}>
                 {#if loading}
                     <Loader />
                 {:else}

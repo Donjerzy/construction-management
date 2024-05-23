@@ -3,7 +3,8 @@
     import Toast from '../components/toast.svelte'
     export let appName;
     // stages = mail, enter-verification-code, change-password
-    let stage = 'mail';
+    //let stage = 'mail';
+    let stage = 'mail'
     let emailError = false;
     let loading = false;
     let verificationCode = undefined;
@@ -227,7 +228,9 @@
             <p class="error">Invalid Email Address</p>
             {/if}
             {#if !loading}
-            <button type="submit" id="login-btn">Next</button>
+            <div style="display: flex; justify-content: center; align-items: center;">
+                <button type="submit" id="login-btn">Next</button>
+            </div>
             {:else}
             <div id="loader-div">
                 <span class="loader"></span>
@@ -249,7 +252,7 @@
         </div>
         <form on:submit={handleCodeSubmit} on:change={clearVerificationCodeError}>
             <div id="verif-code-label-div">
-                <label for="verif-code">Verification Code</label>
+                <label for="verif-code" style="font-family: 'Times New Roman', Times, serif; font-size: 20px;">Verification Code</label>
             </div>
             <div id="verification-code-div">
                 <input name="num1" type="text" maxlength="1" class="verif-input" />
@@ -268,7 +271,9 @@
                     <p on:click={resendVerificationCode} id="forgot">Re-send Verification Code</p>
                 </div>
             {#if !loading}
+            <div style="display: flex; justify-content: center; align-items: center;">
                 <button type="submit" id="login-btn">Next</button>
+            </div>
             {:else}
                 <div id="loader-div">
                     <span class="loader"></span>
@@ -300,7 +305,10 @@
             <p class="error">The passwords do not match</p>
             {/if}
             {#if !loading}
-            <button type="submit" id="login-btn">Sign Up</button>
+            <div style="display: flex; justify-content: center; align-items: center;">
+                <button type="submit" id="login-btn">Sign Up</button>
+            </div>
+            
             {:else}
             <div id="loader-div">
                 <span class="loader"></span>
@@ -330,6 +338,7 @@
     }
     #log-in {
         font-size: 1.4rem;
+        font-family: 'Times New Roman', Times, serif;
     }
     #log-in:hover {
         color: #38aa3b;
@@ -359,7 +368,7 @@
         /* border: solid black 1px; */
     }
     .app-name {
-        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        font-family: 'Times New Roman', Times, serif;
         font-size: 1.5rem;
     }
     .app-name:hover {
@@ -376,16 +385,19 @@
     #title {
         margin-bottom: 20px;
         font-size: 1.4rem;
+        font-family: 'Times New Roman', Times, serif;
     }
     input {
         display: block;
-        border: 1px solid;
         margin-bottom: 20px;
-        height: 20px;
-        width: 184px;
         padding: 4px;
         border-color: #ccc;
         margin-top: 4px;
+        font-family: sans-serif; 
+        border: 1px #ccc solid; 
+        width: 240px; 
+        margin-top: 8px;
+        height: 40px;
     }
     #verif-code-label-div{
         display: flex;
@@ -393,7 +405,7 @@
     }
     #verification-code-div{
         display: flex;
-        gap: 4px;
+        gap: 8px;
         justify-content: center;
     }
     #forgot {
@@ -410,10 +422,11 @@
     .verif-input {
         border: 1px solid;
         margin-bottom: 20px;
-        height: 20px;
-        width: 20px;
+        height: 28px;
+        width: 28px;
         padding: 4px;
         padding-left: 8px;
+        border-radius: 4px;
     }
     #login-btn {
         padding: 12px;

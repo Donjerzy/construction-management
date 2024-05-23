@@ -10,16 +10,16 @@
     <nav class="flex bg-primary-50 h-12 pl-5 w-full items-center justify-between pr-5">
         <div class="flex items-center gap-3">
             <svg class="fill-white h-7 w-7"  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 15.5C18.83 15.5 19.5 16.17 19.5 17S18.83 18.5 18 18.5 16.5 17.83 16.5 17 17.17 15.5 18 15.5M18 14C16.34 14 15 15.34 15 17S16.34 20 18 20C19.66 20 21 18.66 21 17S19.66 14 18 14M7 8L5 5H2V7H5.13L8 11.3V20H10L12.57 15H14.55C15.25 13.81 16.5 13 18 13C18.88 13 19.69 13.29 20.35 13.78L22 8H7M9.39 19H9V12.8L9.87 14.11C10.23 14.64 10.82 14.96 11.45 15L9.39 19Z" /></svg>
-            <p class="text-white text-base">{appName}</p>
+            <p class="text-white text-base font-serif">{appName}</p>
         </div>
 
 
 
         <div class="flex gap-5">
-            <a href="/employee/home" class="text-white hover:text-primary-200">Home</a>
-            <a href="/employee/task" class="text-white hover:text-primary-200">Tasks</a>
-            <a href="/employee/expense" class="text-white hover:text-primary-200">Expenses</a>
-            <a href="/" class="text-white hover:text-primary-200">Reports</a>
+            <a href="/employee/home" class="text-white hover:text-primary-200 font-serif">Home</a>
+            <a href="/employee/task" class="text-white hover:text-primary-200 font-serif">Tasks</a>
+            <a href="/employee/expense" class="text-white hover:text-primary-200 font-serif">Expenses</a>
+            <a href="/" class="text-white hover:text-primary-200 font-serif">Reports</a>
         </div>
 
         <div>
@@ -30,7 +30,7 @@
     </nav>
     <div class="w-full h-full p-5">
         <div>
-            <h1 class="text-lg">{contentTitle}</h1>
+            <h1 class="text-lg font-serif">{contentTitle}</h1>
         </div>
         <slot class="pt-5" />
     </div>

@@ -126,24 +126,24 @@
     <Toast />
     <div class="mt-10">
         <div class="flex-col gap-40 mt-1">
-            <p>Client</p>
-            <p  class="italic border mt-1 border-primary-100 p-2 bg-primary-100">{client}</p>
+            <p class="font-serif">Client</p>
+            <p class="font-sans italic border mt-1 border-primary-100 p-2 bg-primary-100">{client}</p>
         </div>
         <div class="flex-col gap-40 mt-2">
-            <p>Committed Amount</p>
-            <p  class="italic border mt-1 border-primary-100 p-2 bg-primary-100">{isNaN(totalCommitted) ? 0 : numberWithCommas(totalCommitted)}</p>
+            <p class="font-serif">Committed Amount</p>
+            <p class="font-sans italic border mt-1 border-primary-100 p-2 bg-primary-100">{isNaN(totalCommitted) ? 0 : numberWithCommas(totalCommitted)}</p>
         </div>
         <div class="flex-col gap-40 mt-2">
-            <p>Invested Amount</p>
-            <p  class="italic border mt-1 border-primary-100 p-2 bg-primary-100">{isNaN(totalInvested) ? 0 : numberWithCommas(totalInvested)}</p>
+            <p class="font-serif">Invested Amount</p>
+            <p class="font-sans italic border mt-1 border-primary-100 p-2 bg-primary-100">{isNaN(totalInvested) ? 0 : numberWithCommas(totalInvested)}</p>
         </div>
         <div class="flex-col gap-40 mt-2">
-            <p>Remaining Amount</p>
-            <p  class="italic border mt-1 border-primary-100 p-2 bg-primary-100">{isNaN(remainingAmount) ? 0 : numberWithCommas(remainingAmount)}</p>
+            <p class="font-serif">Remaining Amount</p>
+            <p class="font-sans italic border mt-1 border-primary-100 p-2 bg-primary-100">{isNaN(remainingAmount) ? 0 : numberWithCommas(remainingAmount)}</p>
         </div>
         <div class="flex flex-col gap-2 mt-2">
-            <label for="wage">Amount Received</label>
-            <input name="wage" class="rounded border-primary-800" type="text" id="wage" bind:value={amountReceivedDisplay} on:input={updateAmountReceived}  >
+            <label class="font-serif" for="wage">Amount Received</label>
+            <input name="wage" class="font-sans rounded border-primary-800" type="text" id="wage" bind:value={amountReceivedDisplay} on:input={updateAmountReceived}  >
         </div> 
         <div class="mt-4">
             {#if loading}

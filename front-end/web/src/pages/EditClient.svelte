@@ -156,24 +156,24 @@
     <div class="container">
         <form class="mt-7">
             <div class="flex flex-col gap-2 mt-1">
-                <label for="client_name">Client Name</label>
-                <input name="name" class="rounded border-primary-800" type="text" id="client_name" bind:value={name}>
+                <label class="font-serif" for="client_name">Client Name</label>
+                <input name="name" class="font-sans rounded border-primary-800" type="text" id="client_name" bind:value={name}>
             </div>
             <div class="flex flex-col gap-2 mt-2">
-                <label for="client_type">Client Type</label>
-                <select name="client_type" class="rounded border-primary-800" bind:value={typeOfClient} id="client_type">
+                <label class="font-serif" for="client_type">Client Type</label>
+                <select name="client_type" class="font-sans rounded border-primary-800" bind:value={typeOfClient} id="client_type">
                     <option class="h-4" value="individual">Individual</option>
                     <option class="h-4" value="group">Group</option>
                     <option class="h-4" value="organisation">Organisation</option>
                 </select>
             </div>
             <div class="flex flex-col gap-2 mt-2">
-                <label for="commited_amount">Committed Amount</label>
-                <input name="commited_amount" class="rounded border-primary-800" type="text" id="commited_amount" bind:value={committedAmountDisplay} on:input={updateCommitedAmount}>
+                <label class="font-serif" for="commited_amount">Committed Amount</label>
+                <input name="commited_amount" class="font-sans rounded border-primary-800" type="text" id="commited_amount" bind:value={committedAmountDisplay} on:input={updateCommitedAmount}>
             </div>
             <div class="flex flex-col gap-2 mt-2">
-                <label for="invested_amount">Invested Amount</label>
-                <input name="invested_amount" class="rounded border-primary-800" type="text" id="invested_amount" bind:value={investedAmountDisplay} on:input={updateInvestedAmount}>
+                <label class="font-serif" for="invested_amount">Invested Amount</label>
+                <input name="invested_amount" class="font-sans rounded border-primary-800" type="text" id="invested_amount" bind:value={investedAmountDisplay} on:input={updateInvestedAmount}>
             </div>
             <div class="mt-4">
                 {#if loading}

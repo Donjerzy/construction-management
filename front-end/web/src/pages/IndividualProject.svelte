@@ -388,55 +388,55 @@
         <div class="flex justify-between h-8 align-middle text-base">
             <!-- svelte-ignore a11y-click-events-have-key-events -->
             <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-            <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" id="active-link" on:click={()=> navigate("overview")}>Overview</p>
+            <p class="underline text-primary-900 font-serif hover:cursor-pointer hover:text-primary-200" id="active-link" on:click={()=> navigate("overview")}>Overview</p>
             <!-- svelte-ignore a11y-click-events-have-key-events -->
             <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-            <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("clients")}>Clients</p>
+            <p class="underline text-primary-900 font-serif hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("clients")}>Clients</p>
             <!-- svelte-ignore a11y-click-events-have-key-events -->
             <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-            <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("employees")}>Employees</p>
+            <p class="underline text-primary-900 font-serif hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("employees")}>Employees</p>
             <!-- svelte-ignore a11y-click-events-have-key-events -->
             <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-            <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("tasks")}>Tasks</p>
+            <p class="underline text-primary-900 font-serif hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("tasks")}>Tasks</p>
             <!-- svelte-ignore a11y-click-events-have-key-events -->
             <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-            <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("expenses")}>Expenses</p>
+            <p class="underline text-primary-900 font-serif hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("expenses")}>Expenses</p>
             <!-- svelte-ignore a11y-click-events-have-key-events -->
             <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-            <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("reports")}>Reports</p>
+            <p class="underline text-primary-900 font-serif hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("reports")}>Reports</p>
             <!-- svelte-ignore a11y-click-events-have-key-events -->
             <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-            <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("actions")}>Actions</p>
+            <p class="underline text-primary-900 font-serif hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("actions")}>Actions</p>
         </div>
 
         <div class="overview-table">
             <Table shadow>
                 <TableHead defaultRow={false} theadClass="border-black">
                     <tr class="border-black bg-primary-50">
-                        <TableHeadCell class="border-black border-collapse border text-white">Clients</TableHeadCell>
-                        <TableHeadCell class="border-black border-collapse border text-white">Employees</TableHeadCell>
-                        <TableHeadCell class="border-black border-collapse border text-white text-center " colspan="2">Tasks</TableHeadCell>
-                        <TableHeadCell class="border-black border-collapse border text-white text-center" colspan="3">Budget</TableHeadCell>
+                        <TableHeadCell class="border-black border-collapse border text-white font-serif">Clients</TableHeadCell>
+                        <TableHeadCell class="border-black border-collapse border text-white font-serif">Employees</TableHeadCell>
+                        <TableHeadCell class="border-black border-collapse border text-white text-center font-serif" colspan="2">Tasks</TableHeadCell>
+                        <TableHeadCell class="border-black border-collapse border text-white text-center font-serif" colspan="3">Budget</TableHeadCell>
                     </tr>
                     <tr class="bg-primary-100">
-                        <TableHeadCell class="border-black border-collapse border">No</TableHeadCell>
-                        <TableHeadCell class="border-black border-collapse border">No</TableHeadCell>
-                        <TableHeadCell class="border-black border-collapse border">Done</TableHeadCell>
-                        <TableHeadCell class="border-black border-collapse border">Open</TableHeadCell>
-                        <TableHeadCell class="border-black border-collapse border">Received</TableHeadCell>
-                        <TableHeadCell class="border-black border-collapse border">Available</TableHeadCell>
-                        <TableHeadCell class="border-black border-collapse border">Spent</TableHeadCell>
+                        <TableHeadCell class="border-black border-collapse border font-serif">No</TableHeadCell>
+                        <TableHeadCell class="border-black border-collapse border font-serif">No</TableHeadCell>
+                        <TableHeadCell class="border-black border-collapse border font-serif">Done</TableHeadCell>
+                        <TableHeadCell class="border-black border-collapse border font-serif">Open</TableHeadCell>
+                        <TableHeadCell class="border-black border-collapse border font-serif">Received</TableHeadCell>
+                        <TableHeadCell class="border-black border-collapse border font-serif">Available</TableHeadCell>
+                        <TableHeadCell class="border-black border-collapse border font-serif">Spent</TableHeadCell>
                     </tr>
                 </TableHead>
                 <TableBody tableBodyClass="divide-y">
                     <TableBodyRow>
-                        <TableBodyCell class="border-black border-collapse border">{projectOverview.numberOfClients}</TableBodyCell>
-                        <TableBodyCell class="border-black border-collapse border">{projectOverview.numberOfEmployees}</TableBodyCell>
-                        <TableBodyCell class="border-black border-collapse border">{projectOverview.numberOfTasksDone}</TableBodyCell>
-                        <TableBodyCell class="border-black border-collapse border">{projectOverview.numberOfTasksOngoing}</TableBodyCell>
-                        <TableBodyCell class="border-black border-collapse border">{numberWithCommas(projectOverview.projectBudgetReceived)}</TableBodyCell>
-                        <TableBodyCell class="border-black border-collapse border">{numberWithCommas(projectOverview.budgetAvailable)}</TableBodyCell>
-                        <TableBodyCell class="border-black border-collapse border">{numberWithCommas(projectOverview.budgetSpent)}</TableBodyCell>
+                        <TableBodyCell class="border-black border-collapse border font-sans">{projectOverview.numberOfClients}</TableBodyCell>
+                        <TableBodyCell class="border-black border-collapse border font-sans">{projectOverview.numberOfEmployees}</TableBodyCell>
+                        <TableBodyCell class="border-black border-collapse border font-sans">{projectOverview.numberOfTasksDone}</TableBodyCell>
+                        <TableBodyCell class="border-black border-collapse border font-sans">{projectOverview.numberOfTasksOngoing}</TableBodyCell>
+                        <TableBodyCell class="border-black border-collapse border font-sans">{numberWithCommas(projectOverview.projectBudgetReceived)}</TableBodyCell>
+                        <TableBodyCell class="border-black border-collapse border font-sans">{numberWithCommas(projectOverview.budgetAvailable)}</TableBodyCell>
+                        <TableBodyCell class="border-black border-collapse border font-sans">{numberWithCommas(projectOverview.budgetSpent)}</TableBodyCell>
                     </TableBodyRow>
                 </TableBody>
             </Table>
@@ -448,49 +448,49 @@
             <div class="flex justify-between h-8 align-middle text-base">
                 <!-- svelte-ignore a11y-click-events-have-key-events -->
                 <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200"  on:click={()=> navigate("overview")}>Overview</p>
+                <p class="font-serif underline text-primary-900 hover:cursor-pointer hover:text-primary-200"  on:click={()=> navigate("overview")}>Overview</p>
                 <!-- svelte-ignore a11y-click-events-have-key-events -->
                 <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" id="active-link" on:click={()=> navigate("clients")}>Clients</p>
+                <p class="font-serif underline text-primary-900 hover:cursor-pointer hover:text-primary-200" id="active-link" on:click={()=> navigate("clients")}>Clients</p>
                 <!-- svelte-ignore a11y-click-events-have-key-events -->
                 <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("employees")}>Employees</p>
+                <p class="font-serif underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("employees")}>Employees</p>
                 <!-- svelte-ignore a11y-click-events-have-key-events -->
                 <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("tasks")}>Tasks</p>
+                <p class="font-serif underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("tasks")}>Tasks</p>
                 <!-- svelte-ignore a11y-click-events-have-key-events -->
                 <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("expenses")}>Expenses</p>
+                <p class="font-serif underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("expenses")}>Expenses</p>
                 <!-- svelte-ignore a11y-click-events-have-key-events -->
                 <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("reports")}>Reports</p>
+                <p class="font-serif underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("reports")}>Reports</p>
                 <!-- svelte-ignore a11y-click-events-have-key-events -->
                 <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("actions")}>Actions</p>
+                <p class="font-serif underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("actions")}>Actions</p>
             </div>
             <div class="flex mt-5 justify-end">
                <a href={`/project/${projectId}/add-client`}><Button fontSize="base" height="10" label="Add Client" padding="7" width="32" /> </a>
             </div>
             <div class="mt-4 pb-8 max-h-screen">
-                <TableSearch placeholder="Search by client name" hoverable={true} bind:inputValue={searchTerm}>
+                <TableSearch divClass="font-sans" placeholder="Search by client name" hoverable={true} bind:inputValue={searchTerm}>
                    <Table divClass="max-h-80 overflow-auto" shadow>
                         <TableHead defaultRow={false} theadClass="border-black">
                             <tr class="bg-primary-100">
-                                <TableHeadCell class="text-white">Name</TableHeadCell>
-                                <TableHeadCell class="text-white">Type</TableHeadCell>
-                                <TableHeadCell class="text-white">Committed Amount</TableHeadCell>
-                                <TableHeadCell class="text-white">Invested Amount</TableHeadCell>
-                                <TableHeadCell class="text-white">Action</TableHeadCell>
+                                <TableHeadCell class="text-white font-serif">Name</TableHeadCell>
+                                <TableHeadCell class="text-white font-serif">Type</TableHeadCell>
+                                <TableHeadCell class="text-white font-serif">Committed Amount</TableHeadCell>
+                                <TableHeadCell class="text-white font-serif">Invested Amount</TableHeadCell>
+                                <TableHeadCell class="text-white font-serif">Action</TableHeadCell>
                             </tr>
                         </TableHead>
                         <TableBody>
                             {#each filteredItems as client}
                                 <TableBodyRow>
-                                    <TableBodyCell>{client.name}</TableBodyCell>
-                                    <TableBodyCell>{client.type}</TableBodyCell>
-                                    <TableBodyCell>{numberWithCommas(client.committedAmount)}</TableBodyCell>
-                                    <TableBodyCell>{numberWithCommas(client.investedAmount)}</TableBodyCell>
-                                    <TableBodyCell class="flex gap-8"><a on:click={()=> {
+                                    <TableBodyCell class="font-sans">{client.name}</TableBodyCell>
+                                    <TableBodyCell class="font-sans">{client.type}</TableBodyCell>
+                                    <TableBodyCell class="font-sans">{numberWithCommas(client.committedAmount)}</TableBodyCell>
+                                    <TableBodyCell class="font-sans">{numberWithCommas(client.investedAmount)}</TableBodyCell>
+                                    <TableBodyCell class="flex gap-8 font-sans"><a on:click={()=> {
                                         projectClient.set({
                                             id: client.id,
                                             name: client.name,
@@ -514,25 +514,25 @@
                 <div class="flex justify-between h-8 align-middle text-base">
                     <!-- svelte-ignore a11y-click-events-have-key-events -->
                     <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200"  on:click={()=> navigate("overview")}>Overview</p>
+                    <p class="font-serif underline text-primary-900 hover:cursor-pointer hover:text-primary-200"  on:click={()=> navigate("overview")}>Overview</p>
                     <!-- svelte-ignore a11y-click-events-have-key-events -->
                     <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("clients")}>Clients</p>
+                    <p class="font-serif underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("clients")}>Clients</p>
                     <!-- svelte-ignore a11y-click-events-have-key-events -->
                     <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" id="active-link" on:click={()=> navigate("employees")}>Employees</p>
+                    <p class="font-serif underline text-primary-900 hover:cursor-pointer hover:text-primary-200" id="active-link" on:click={()=> navigate("employees")}>Employees</p>
                     <!-- svelte-ignore a11y-click-events-have-key-events -->
                     <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("tasks")}>Tasks</p>
+                    <p class="font-serif underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("tasks")}>Tasks</p>
                     <!-- svelte-ignore a11y-click-events-have-key-events -->
                     <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("expenses")}>Expenses</p>
+                    <p class="font-serif underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("expenses")}>Expenses</p>
                     <!-- svelte-ignore a11y-click-events-have-key-events -->
                     <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("reports")}>Reports</p>
+                    <p class="font-serif underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("reports")}>Reports</p>
                     <!-- svelte-ignore a11y-click-events-have-key-events -->
                     <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("actions")}>Actions</p>
+                    <p class="font-serif underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("actions")}>Actions</p>
                 </div>
                 <div class="flex mt-5 justify-end">
                 <a href={`/project/${projectId}/add-employee`}><Button fontSize="base" height="10" label="Add Employee" padding="7" width="32" /> </a>
@@ -574,25 +574,25 @@
                 <div class="flex justify-between h-8 align-middle text-base">
                     <!-- svelte-ignore a11y-click-events-have-key-events -->
                     <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200"  on:click={()=> navigate("overview")}>Overview</p>
+                    <p class="font-serif underline text-primary-900 hover:cursor-pointer hover:text-primary-200"  on:click={()=> navigate("overview")}>Overview</p>
                     <!-- svelte-ignore a11y-click-events-have-key-events -->
                     <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("clients")}>Clients</p>
+                    <p class="font-serif underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("clients")}>Clients</p>
                     <!-- svelte-ignore a11y-click-events-have-key-events -->
                     <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200"  on:click={()=> navigate("employees")}>Employees</p>
+                    <p class="font-serif underline text-primary-900 hover:cursor-pointer hover:text-primary-200"  on:click={()=> navigate("employees")}>Employees</p>
                     <!-- svelte-ignore a11y-click-events-have-key-events -->
                     <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("tasks")}>Tasks</p>
+                    <p class="font-serif underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("tasks")}>Tasks</p>
                     <!-- svelte-ignore a11y-click-events-have-key-events -->
                     <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("expenses")}>Expenses</p>
+                    <p class="font-serif underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("expenses")}>Expenses</p>
                     <!-- svelte-ignore a11y-click-events-have-key-events -->
                     <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("reports")}>Reports</p>
+                    <p class="font-serif underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("reports")}>Reports</p>
                     <!-- svelte-ignore a11y-click-events-have-key-events -->
                     <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" id="active-link" on:click={()=> navigate("actions")}>Actions</p>
+                    <p class="font-serif underline text-primary-900 hover:cursor-pointer hover:text-primary-200" id="active-link" on:click={()=> navigate("actions")}>Actions</p>
                 </div>
                 <div class="mt-5">
                     <p class="text-sm font-serif">Project Code</p>
@@ -639,25 +639,25 @@
                 <div class="flex justify-between h-8 align-middle text-base">
                     <!-- svelte-ignore a11y-click-events-have-key-events -->
                     <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200"  on:click={()=> navigate("overview")}>Overview</p>
+                    <p class="font-serif underline text-primary-900 hover:cursor-pointer hover:text-primary-200"  on:click={()=> navigate("overview")}>Overview</p>
                     <!-- svelte-ignore a11y-click-events-have-key-events -->
                     <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("clients")}>Clients</p>
+                    <p class="font-serif underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("clients")}>Clients</p>
                     <!-- svelte-ignore a11y-click-events-have-key-events -->
                     <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200"  on:click={()=> navigate("employees")}>Employees</p>
+                    <p class="font-serif underline text-primary-900 hover:cursor-pointer hover:text-primary-200"  on:click={()=> navigate("employees")}>Employees</p>
                     <!-- svelte-ignore a11y-click-events-have-key-events -->
                     <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" id="active-link" on:click={()=> navigate("tasks")}>Tasks</p>
+                    <p class="font-serif underline text-primary-900 hover:cursor-pointer hover:text-primary-200" id="active-link" on:click={()=> navigate("tasks")}>Tasks</p>
                     <!-- svelte-ignore a11y-click-events-have-key-events -->
                     <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("expenses")}>Expenses</p>
+                    <p class="font-serif underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("expenses")}>Expenses</p>
                     <!-- svelte-ignore a11y-click-events-have-key-events -->
                     <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("reports")}>Reports</p>
+                    <p class="font-serif underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("reports")}>Reports</p>
                     <!-- svelte-ignore a11y-click-events-have-key-events -->
                     <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200"  on:click={()=> navigate("actions")}>Actions</p>
+                    <p class="font-serif underline text-primary-900 hover:cursor-pointer hover:text-primary-200"  on:click={()=> navigate("actions")}>Actions</p>
                 </div>
                 <div class="mt-2 flex justify-end">
                     <a href={`/project/${projectId}/add-task`}><Button fontSize="base" height="10" label="Add Task" padding="7" width="32" /> </a>
@@ -733,25 +733,25 @@
                 <div class="flex justify-between h-8 align-middle text-base">
                     <!-- svelte-ignore a11y-click-events-have-key-events -->
                     <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200"  on:click={()=> navigate("overview")}>Overview</p>
+                    <p class="font-serif underline text-primary-900 hover:cursor-pointer hover:text-primary-200"  on:click={()=> navigate("overview")}>Overview</p>
                     <!-- svelte-ignore a11y-click-events-have-key-events -->
                     <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("clients")}>Clients</p>
+                    <p class="font-serif underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("clients")}>Clients</p>
                     <!-- svelte-ignore a11y-click-events-have-key-events -->
                     <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200"  on:click={()=> navigate("employees")}>Employees</p>
+                    <p class="font-serif underline text-primary-900 hover:cursor-pointer hover:text-primary-200"  on:click={()=> navigate("employees")}>Employees</p>
                     <!-- svelte-ignore a11y-click-events-have-key-events -->
                     <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("tasks")}>Tasks</p>
+                    <p class="font-serif underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("tasks")}>Tasks</p>
                     <!-- svelte-ignore a11y-click-events-have-key-events -->
                     <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("expenses")}>Expenses</p>
+                    <p class="font-serif underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("expenses")}>Expenses</p>
                     <!-- svelte-ignore a11y-click-events-have-key-events -->
                     <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" id="active-link" on:click={()=> navigate("reports")}>Reports</p>
+                    <p class="font-serif underline text-primary-900 hover:cursor-pointer hover:text-primary-200" id="active-link" on:click={()=> navigate("reports")}>Reports</p>
                     <!-- svelte-ignore a11y-click-events-have-key-events -->
                     <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200"  on:click={()=> navigate("actions")}>Actions</p>
+                    <p class="font-serif underline text-primary-900 hover:cursor-pointer hover:text-primary-200"  on:click={()=> navigate("actions")}>Actions</p>
                 </div>
                 <div class="mt-5">
                     <TableSearch placeholder="Search by report name" hoverable={true} bind:inputValue={reportSearchTerm}>
@@ -783,25 +783,25 @@
                 <div class="flex justify-between h-8 align-middle text-base">
                     <!-- svelte-ignore a11y-click-events-have-key-events -->
                     <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200"  on:click={()=> navigate("overview")}>Overview</p>
+                    <p class="font-serif underline text-primary-900 hover:cursor-pointer hover:text-primary-200"  on:click={()=> navigate("overview")}>Overview</p>
                     <!-- svelte-ignore a11y-click-events-have-key-events -->
                     <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("clients")}>Clients</p>
+                    <p class="font-serif underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("clients")}>Clients</p>
                     <!-- svelte-ignore a11y-click-events-have-key-events -->
                     <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200"  on:click={()=> navigate("employees")}>Employees</p>
+                    <p class="font-serif underline text-primary-900 hover:cursor-pointer hover:text-primary-200"  on:click={()=> navigate("employees")}>Employees</p>
                     <!-- svelte-ignore a11y-click-events-have-key-events -->
                     <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("tasks")}>Tasks</p>
+                    <p class="font-serif underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("tasks")}>Tasks</p>
                     <!-- svelte-ignore a11y-click-events-have-key-events -->
                     <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" id="active-link" on:click={()=> navigate("expenses")}>Expenses</p>
+                    <p class="font-serif underline text-primary-900 hover:cursor-pointer hover:text-primary-200" id="active-link" on:click={()=> navigate("expenses")}>Expenses</p>
                     <!-- svelte-ignore a11y-click-events-have-key-events -->
                     <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200"  on:click={()=> navigate("reports")}>Reports</p>
+                    <p class="font-serif underline text-primary-900 hover:cursor-pointer hover:text-primary-200"  on:click={()=> navigate("reports")}>Reports</p>
                     <!-- svelte-ignore a11y-click-events-have-key-events -->
                     <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                    <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200"  on:click={()=> navigate("actions")}>Actions</p>
+                    <p class="font-serif underline text-primary-900 hover:cursor-pointer hover:text-primary-200"  on:click={()=> navigate("actions")}>Actions</p>
                 </div>
                 <div class="mt-2 flex justify-end">
                     <a href={`/project/${projectId}/add-expense`}><Button fontSize="base" height="10" label="Add Expense" padding="7" width="32" /> </a>

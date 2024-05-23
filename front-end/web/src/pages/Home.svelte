@@ -189,26 +189,26 @@
         <form on:submit={validateLogInDetails}>
             <label style="font-family: 'Times New Roman', Times, serif; font-size: 1rem;" for="module">Module</label>
             <!--  class="block appearance-none border w-32 border-primary-100"-->
-            <select bind:value={chosenModule} name="module" style=" cursor: pointer; border: 1px #ccc solid; display:block; width: 240px; margin-top: 8px;" id="module">
+            <select bind:value={chosenModule} name="module" style="font-family: sans-serif; cursor: pointer; border: 1px #ccc solid; display:block; width: 240px; margin-top: 8px;" id="module">
                 <option style="height: 80px;" value="admin">Admin</option>
                 <option style="height: 80px;" value="employee">Employee</option>
             </select>
 
             {#if chosenModule === "employee"}
                 <label for="project_id" style="display:block; font-family: 'Times New Roman', Times, serif; font-size: 1rem; margin-top: 8px;">Project</label>
-                <input bind:value={projectCode} name="project_id" style="border: 1px #ccc solid; display:block; width: 240px; margin-top: 8px;" type="text" id="project_id" on:change={clearProjectError}>
+                <input bind:value={projectCode} name="project_id" style="font-family: sans-serif; border: 1px #ccc solid; display:block; width: 240px; margin-top: 8px;" type="text" id="project_id" on:change={clearProjectError}>
                 {#if projectError}
                     <p class="text-primary-700 text-base mb-3 font-serif mt-1">Invalid Project</p>
                 {/if}
             {/if}
             
             <label style="display:block; font-family: 'Times New Roman', Times, serif; font-size: 1rem; margin-top: 8px;" for="email">Email</label>
-            <input style="border: 1px #ccc solid; display:block; width: 240px; margin-top: 8px;" type="email" name="email" id="email" on:change={clearEmailError}  >
+            <input style="font-family: sans-serif; border: 1px #ccc solid; display:block; width: 240px; margin-top: 8px;" type="email" name="email" id="email" on:change={clearEmailError}  >
             {#if emailError}
             <p class="text-primary-700 text-base mb-3 font-serif mt-1">Invalid Email Address</p>
             {/if}
             <label style="display:block; font-family: 'Times New Roman', Times, serif; font-size: 1rem; margin-top: 8px;" for="pass">Password</label>
-            <input style="border: 1px #ccc solid; display:block; width: 240px; margin-top: 8px;" type="password" name="pass" id="pass" on:change={clearPasswordError}>
+            <input style="font-family: sans-serif; border: 1px #ccc solid; display:block; width: 240px; margin-top: 8px;" type="password" name="pass" id="pass" on:change={clearPasswordError}>
             {#if passwordError}
             <p class="text-primary-700 text-base mb-3 font-serif mt-1">Password field cannot be empty</p>
             {/if}
@@ -248,6 +248,7 @@
     }
     #sign-up {
         font-size: 1.4rem;
+        font-family: sans-serif;
     }
     #sign-up:hover {
         color: #38aa3b;
@@ -266,7 +267,7 @@
         /* border: solid black 1px; */
     }
     .app-name {
-        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        font-family: 'Times New Roman', Times, serif;
         font-size: 1.5rem;
     }
     .app-name:hover {
@@ -293,6 +294,7 @@
         border-radius: 20px;
         color:#ffffff;
         margin-top: 8px;
+        font-family: sans-serif;
     }
     #login-btn:hover {
         cursor: pointer;
@@ -300,6 +302,10 @@
     }
     h2 {
         font-family: Georgia, 'Times New Roman', Times, serif;
+    }
+
+    #forgot {
+        font-family: 'Times New Roman', Times, serif;
     }
 
     #forgot:hover {

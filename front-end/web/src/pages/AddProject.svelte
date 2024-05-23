@@ -87,8 +87,8 @@
     <div class="container">
         <form>
             <div class="form-row">
-                <label for="project_name">Project Name</label>
-                <input class="rounded border-primary-800" type="text" id="project_name" bind:value={projectName}>
+                <label class="font-serif" for="project_name">Project Name</label>
+                <input class="rounded font-sans border-primary-800" type="text" id="project_name" bind:value={projectName}>
             </div>
             <div class="form-row">
                 {#if loading}

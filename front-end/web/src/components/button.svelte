@@ -6,7 +6,7 @@
     export let padding;
 </script>
 
-<button on:click  class="h-{height} bg-primary-50  w-{width} text-{fontSize} p-{padding} rounded-lg text-white hover:bg-primary-200 cursor-pointer">
+<button on:click  class="font-serif h-{height} bg-primary-50  w-{width} text-{fontSize} p-{padding} rounded-lg text-white hover:bg-primary-200 cursor-pointer">
     {label}
 </button>
 
