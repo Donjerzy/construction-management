@@ -29,6 +29,7 @@
     let clients = [];
     let projectCode = "56TRT-SUGUFSO-SFGSVF";
     let employees = [];
+    let chosenStatus = '';
     let active = 'overview';
     let appName = 'Mjengo Bora Construction'; //  overview | 
     let projectOverview = {
@@ -46,6 +47,7 @@
     let doneTasks = [];
     let searchTerm = '';
     let bigLoading = false;
+    let projectStatus = '';
     
     $: filteredItems = clients.filter((client) => client.name.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1);
 
@@ -185,6 +187,28 @@
             }
         });
 
+        fetch(`http://localhost:8080/api/v1/project/status?projectId=${projectId}`, {
+            headers: {
+                'Authorization': `Bearer ${get(accessToken)}`
+            }
+        })
+        .then(response => {
+            if(!response.ok) {
+                errorFetch = true;
+               firstName.set("");
+               accessToken.set("");
+               loggedIn.set("false");
+               window.location.replace('/'); 
+            } else {
+                return response.json();
+            }
+        }).then((result)=> {
+            if(!errorFetch) {
+                projectStatus = result.status;
+                chosenStatus = result.status.toLowerCase();
+            }
+        });
+
     });
 
 
@@ -229,6 +253,80 @@
         navigator.clipboard.writeText(projectCode);
         notifications.success('Project code copied', 1000);
     }
+
+    async function changeStatus() {
+        if (chosenStatus.toUpperCase != projectStatus) {
+            let error = false;
+            let existsError = false;
+            await fetch('http://localhost:8080/api/v1/project/change-status', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${get(accessToken)}`
+                },
+                body: JSON.stringify({
+                    projectId: projectId ,
+                    status: chosenStatus
+                })
+            }).then(response=> {
+                if(response.status === 400) {
+                    existsError = true;
+                    return
+                }
+                if(!response.ok) {
+                    error = true;
+                    return
+                } else {
+                    error = false;
+                    existsError = false;
+                    refetchStatus();
+                    return;
+                }
+            }).catch(error=> {
+                notifications.danger("Could make request to server", 1000)
+            })
+            if(existsError) {
+                notifications.danger("Error encountered", 1000); 
+            }
+            if(error) {
+                firstName.set("");
+                accessToken.set("");
+                loggedIn.set("false");
+                window.location.replace('/'); 
+            }
+        }
+    }
+
+
+    async function refetchStatus() {
+        let errorFetch = false;
+        fetch(`http://localhost:8080/api/v1/project/status?projectId=${projectId}`, {
+            headers: {
+                'Authorization': `Bearer ${get(accessToken)}`
+            }
+        })
+        .then(response => {
+            if(!response.ok) {
+                errorFetch = true;
+               firstName.set("");
+               accessToken.set("");
+               loggedIn.set("false");
+               window.location.replace('/'); 
+            } else {
+                return response.json();
+            }
+        }).then((result)=> {
+            if(!errorFetch) {
+                projectStatus = result.status;
+                chosenStatus = result.status.toLowerCase();
+                notifications.success("Status changed", 1000);
+            }
+        });
+
+    }
+    
+
+
 
     async function moveTask(taskId,to) {
         bigLoading = true;
@@ -496,14 +594,43 @@
                     <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
                     <p class="underline text-primary-900 hover:cursor-pointer hover:text-primary-200" id="active-link" on:click={()=> navigate("actions")}>Actions</p>
                 </div>
-
                 <div class="mt-5">
-                    <p class="text-sm">Project Code</p>
+                    <p class="text-sm font-serif">Project Code</p>
                     <div class="mt-2 border-black bg-white h-16 rounded p-4 flex justify-between items-center">
-                        <p>{projectCode}</p>
+                        <p class="font-sans text-base">{projectCode}</p>
                         <!-- svelte-ignore a11y-click-events-have-key-events -->
                         <!-- svelte-ignore a11y-no-static-element-interactions -->
                         <svg on:click={copyProjectCode} class="w-5 h-5 hover:fill-primary-200 hover:cursor-pointer" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z" /></svg>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <p class="text-sm font-serif">Change status</p>
+                    <div class="mt-2 border-black bg-white h-16 rounded p-4 flex justify-between items-center shadow-md shadow-primary-600">
+                        <p class="font-sans text-base">{projectStatus}</p>
+                        {#if chosenStatus.toUpperCase() !== projectStatus}
+                            <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+                            <div class="flex gap-5 items-center">
+                                <select bind:value={chosenStatus} class="rounded w-60 font-sans">
+                                    {#if projectStatus === "ONGOING"}
+                                        <option value="complete">Complete</option>
+                                    {:else}
+                                        <option value="ongoing">Ongoing</option>
+                                    {/if}
+                                </select>
+                                <!-- svelte-ignore a11y-click-events-have-key-events -->
+                                <!-- svelte-ignore missing-declaration -->
+                                <p on:click={changeStatus} class="text-lg font-sans hover:cursor-pointer hover:text-primary-200">save</p>
+                            </div>
+                        {:else}
+                            <select bind:value={chosenStatus} class="rounded w-60 font-sans">
+                                {#if projectStatus === "ONGOING"}
+                                    <option value="complete">Complete</option>
+                                {:else}
+                                    <option value="ongoing">Ongoing</option>
+                                {/if}
+                            </select>
+                        {/if}
+                        
                     </div>
                 </div>
             </div>    
