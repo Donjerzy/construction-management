@@ -353,6 +353,22 @@ class ProjectService(private val clientService: ClientService ,
         return "ok"
     }
 
+    fun getStatus(userEmail: String, projectId: Long): String {
+        when (getStatusValidations(
+            projectManager = userService.getUserId(userEmail)!!,
+            projectId = projectId
+        )) {
+            "not-project-owner" -> throw CustomException("not-project-owner", null)
+        }
+        return repository.findById(projectId).get().status
+    }
+
+    fun getStatusValidations(projectManager: Long, projectId: Long): String {
+        if (repository.isProjectManager(projectManager = projectManager, project = projectId) <=0) {
+            return "not-project-owner"
+        }
+        return "ok"
+    }
 
 
 }

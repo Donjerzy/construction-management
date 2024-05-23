@@ -150,6 +150,22 @@ class ProjectController {
         )
     }
 
+    @GetMapping("/status")
+    fun getStatus(
+        @RequestHeader("Authorization") header:String,
+        @RequestParam("projectId") projectId: Long
+    ): ResponseEntity<Any> {
+        val userEmail = tokenService.extractEmail(header.substringAfter("Bearer "))
+        val status = service.getStatus(userEmail = userEmail!!, projectId = projectId)
+        return ResponseEntity.status(200).body(
+            GetStatusResponse(
+                httpStatus = 200,
+                message = "Status retrieved successfully",
+                status = status
+            )
+        )
+    }
+
 
 
 
