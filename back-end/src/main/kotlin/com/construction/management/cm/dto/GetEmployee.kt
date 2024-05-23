@@ -12,7 +12,7 @@ data class GetEmployee(
     val tasksOngoing: Int,
     val wage: String,
     val wageType: String,
-    val archetype: String,
+    val morale: String,
     val totalTasks: Int,
     val joinDate: String,
     val hasContract: String,

@@ -1,15 +1,18 @@
 package com.construction.management.cm.project
 
 import com.construction.management.cm.Runner.Runner
+import com.construction.management.cm.ai.SentimentAnalysis
 import com.construction.management.cm.client.Client
 import com.construction.management.cm.client.ClientService
 import com.construction.management.cm.dto.*
 import com.construction.management.cm.employee.Employee
+import com.construction.management.cm.employee.EmployeeMorale
 import com.construction.management.cm.employee.EmployeeService
 import com.construction.management.cm.employeetype.EmployeeTypeRepository
 import com.construction.management.cm.exceptionhandler.CustomException
 import com.construction.management.cm.formatters.StringFormatter
 import com.construction.management.cm.task.TaskService
+import com.construction.management.cm.taskcomment.TaskCommentRepository
 import com.construction.management.cm.user.UserService
 import com.construction.management.cm.wagetype.WageTypeRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -22,7 +25,9 @@ class ProjectService(private val clientService: ClientService ,
                      private val taskService: TaskService,
                      val stringFormatter: StringFormatter,
                      private val employeeTypeRepository: EmployeeTypeRepository,
-                     private val wageTypeRepository: WageTypeRepository) {
+                     private val wageTypeRepository: WageTypeRepository,
+                     private val taskCommentRepository: TaskCommentRepository,
+                     private val sentimentAnalysis: SentimentAnalysis) {
 
     @Autowired
     lateinit var repository: ProjectRepository
@@ -267,7 +272,23 @@ class ProjectService(private val clientService: ClientService ,
                 val employeeTaskBreakdown = taskService.getEmployeeTasksBreakDown(employee = employee)
                 return GetEmployee (
                     id = fetchedEmployee.id,
-                    archetype = "n/a",
+                    morale = when(
+                        taskCommentRepository.getEmployeeComments("e$employee"
+                        ).size) {
+                        0 -> EmployeeMorale.UNKNOWN.value
+                        else -> {
+                            val employeeComments = taskCommentRepository.getEmployeeComments("e$employee")
+                            val comments = mutableListOf<String>()
+                            for (comment in employeeComments) {
+                                comments.add(comment.comment)
+                            }
+                            try {
+                                sentimentAnalysis.generateMorale(comments)
+                            } catch(e: Exception) {
+                                EmployeeMorale.UNKNOWN.value
+                            }
+                        }
+                    },
                     email = fetchedEmployee.email,
                     employeeType = fetchedEmployee.employeeType.name,
                     firstName = fetchedEmployee.firstName.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() },
