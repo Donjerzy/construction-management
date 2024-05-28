@@ -159,7 +159,7 @@ def updateHistory(score):
     today_formatted = today.strftime("%b-%d-%Y")
     
     with open('./model-history/history.txt', 'a') as f:
-        f.write(f'{today_formatted} - {score}')
+        f.write(f'\n{today_formatted} - {score}')
 
 
 
