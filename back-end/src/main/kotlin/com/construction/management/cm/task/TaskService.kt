@@ -1,5 +1,6 @@
 package com.construction.management.cm.task
 
+import com.construction.management.cm.ai.TaskAssignmentRepository
 import com.construction.management.cm.dto.*
 import com.construction.management.cm.employee.Employee
 import com.construction.management.cm.employee.EmployeeRepository
@@ -25,7 +26,8 @@ class TaskService(private val repository: TaskRepository,
                 private val employeeRepository: EmployeeRepository,
                 private val taskHistoryRepository: TaskHistoryRepository,
                 private val formatter: StringFormatter,
-                private val taskCommentRepository: TaskCommentRepository) {
+                private val taskCommentRepository: TaskCommentRepository,
+                private val taskAssignmentRepository: TaskAssignmentRepository) {
 
     fun getProjectTaskStatus(project: Long): ProjectTaskStatus {
         return ProjectTaskStatus(
