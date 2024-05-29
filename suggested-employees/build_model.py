@@ -161,17 +161,6 @@ def updateHistory(score):
     with open('./model-history/history.txt', 'a') as f:
         f.write(f'\n{today_formatted} - {score}')
 
-
-
-def predict():
-    # Load the trained model
-    model = joblib.load("task_completion_model.pkl")
-    input_features = [[2, 50]]  # Active tasks and average completion time
-    # Make predictions
-    predicted_completion_times = model.predict(input_features)
-
-    for predicted_completion_time in enumerate(predicted_completion_times):
-        print(f"Predicted completion time is {round(predicted_completion_time[1], 2)} minutes")
     
 
 if __name__ == '__main__':
