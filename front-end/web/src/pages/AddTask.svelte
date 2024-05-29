@@ -8,6 +8,7 @@
     import Toast from '../components/toast.svelte';
     import {page} from '$app/stores';
     import { onMount } from "svelte";
+    import { Modal } from 'flowbite-svelte';
     
 
 
@@ -21,7 +22,11 @@
     let chosenEmployees = new Set();
     let chosenEmployeeNames = new Set();
     let chosenEmployeeNamesDisplay = [];
-
+    let defaultModal = false;
+    let employeeTypes = [];
+    let chosenType;
+    let suggestedLoading = false;
+    let suggestedEmployees = [];
 
     onMount(()=> {
         let errorFetch = false;
@@ -51,6 +56,30 @@
                 );
             }
         })
+
+
+        fetch(`http://localhost:8080/api/v1/employee-type/all`, {
+            headers: {
+                'Authorization': `Bearer ${get(accessToken)}`
+            }
+        })
+        .then(response => {
+            if(!response.ok) {
+                errorFetch = true;
+               firstName.set("");
+               accessToken.set("");
+               loggedIn.set("false");
+               window.location.replace('/'); 
+            } else {
+                return response.json();
+            }
+        }).then((result)=> {
+            if(!errorFetch) {
+                employeeTypes = result.employeeTypes;
+                chosenType = result.employeeTypes[0].id
+            }
+        })
+
     });
 
 
@@ -82,6 +111,47 @@
             }
         }
         chosenEmployees.delete(nameIndex);
+    }
+
+    async function generateSuggestedList () {
+        suggestedLoading = true;
+        let error = false;
+        let existsError = false;
+        await fetch(`http://localhost:8080/api/v1/employee/suggested?empType=${chosenType}&project=${projectId}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${get(accessToken)}`
+            }
+        }).then(response=> {
+            suggestedLoading = false;
+            if(response.status === 400) {
+                existsError = true;
+                suggestedEmployees = ["n/a"];
+                return
+            }
+            if(!response.ok) {
+                error = true;
+                suggestedEmployees = ["n/a"];
+                return
+            } else {
+                error = false;
+                existsError = false;
+                return response.json();;
+            }
+        }).then((result)=> {
+            if(result.employees.length <= 0) {
+                suggestedEmployees = ["n/a"];
+            } else {
+                suggestedEmployees = result.employees;
+            }
+        })
+        .catch(error=> {
+            loading = false;
+            notifications.danger("Could make request to server", 1000)
+        })
+        if(existsError) {
+            notifications.danger("Error encountered", 1000); 
+        }
     }
 
     async function addTask() {
@@ -179,17 +249,47 @@
                 </div>
             </div>
 
-            <div class="mt-4">
+            <div class="mt-4 flex justify-between items-center">
                 {#if loading}
                     <Loader />
                 {:else}
                     <Button 
                     height=12 width=36 label="Add Task" fontSize="sm" padding="8px"
                     on:click={addTask} />
+                    <button on:click={()=> defaultModal = true} class="bg-primary-50 h-10 w-10 flex justify-center items-center rounded-3xl hover:bg-primary-200 hover:cursor-pointer">
+                        <svg class="w-5 h-5 fill-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12,2A7,7 0 0,0 5,9C5,11.38 6.19,13.47 8,14.74V17A1,1 0 0,0 9,18H15A1,1 0 0,0 16,17V14.74C17.81,13.47 19,11.38 19,9A7,7 0 0,0 12,2M9,21A1,1 0 0,0 10,22H14A1,1 0 0,0 15,21V20H9V21Z" /></svg>
+                    </button>
                 {/if} 
             </div>
-
         </form>
+
+        <Modal title="Suggested employees" bind:open={defaultModal}>
+            <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400 font-serif">Generate a list of suitable task employees based on their active tasks and their average task completion time. The generated list is ordered from most suitable to least suitable.</p>
+            <label for="et" class="mr-5">Employee Type</label>
+            <select id="et" bind:value={chosenType}>
+                {#each employeeTypes as type }
+                        <option value={type.id}>{type.name}</option>
+                    {/each}
+            </select>
+            <div class="border bg-primary-800 border-primary-100 min-w-[600px] mt-2 min-h-[200px] rounded flex felx-wrap p-3">
+                {#if suggestedLoading}
+                    <div class="flex w-full justify-center items-center">
+                        <Loader />
+                    </div>
+                {:else}  
+                    {#each suggestedEmployees as employee}
+                       <div class="flex items-center h-12 p-3 gap-2 mr-4 rounded shadow-md bg-white">
+                        <p class="font-sans">{employee}</p> 
+                       </div> 
+                    {/each}          
+                {/if}
+            </div>
+            <svelte:fragment slot="footer">
+                <div class="flex justify-center w-full">
+                    <button on:click={generateSuggestedList} class="w-28 h-10 bg-primary-50 p-2 rounded text-white hover:bg-primary-200 font-serif">Generate</button>
+                </div>
+            </svelte:fragment>
+          </Modal>
 
     </div>
 </AdminComponent>
