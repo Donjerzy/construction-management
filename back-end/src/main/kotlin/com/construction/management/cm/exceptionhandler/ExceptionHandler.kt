@@ -165,6 +165,13 @@ class ExceptionHandler {
                 )
             )
 
+            "prediction-api-error" -> ResponseEntity.status(400).body(
+                ExceptionResponse(
+                    httpStatus = 400,
+                    message = "An error occurred while calling prediction api"
+                )
+            )
+
             "invalid-employee-type" -> ResponseEntity.status(400).body(
                 ExceptionResponse(
                     httpStatus = 400,

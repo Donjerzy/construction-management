@@ -14,5 +14,7 @@ interface EmployeeTypeRepository: JpaRepository<EmployeeType, Long> {
     @Query("select * from employee_type where project_manager = :user", nativeQuery = true)
     fun getUserEmployeeTypes(user: Long): MutableList<EmployeeType>
 
+    @Query("select count(*) from employee_type where project_manager = :projectManager and id = :id", nativeQuery = true)
+    fun validEmployeeType(projectManager: Long, id: Long): Int
 
 }

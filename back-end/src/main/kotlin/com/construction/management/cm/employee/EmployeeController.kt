@@ -2,10 +2,7 @@ package com.construction.management.cm.employee
 
 import com.construction.management.cm.auth.TokenService
 import com.construction.management.cm.dto.*
-import com.construction.management.cm.response.DefaultNa
-import com.construction.management.cm.response.GetContractResponse
-import com.construction.management.cm.response.GetWageHistoryResponse
-import com.construction.management.cm.response.GetWageInfoResponse
+import com.construction.management.cm.response.*
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
@@ -169,6 +166,22 @@ class EmployeeController(private val service: EmployeeService,
             DefaultNa(
                 httpStatus = 200,
                 message = message
+            )
+        )
+    }
+
+    @GetMapping("/suggested")
+    fun getSuggestedEmployees(
+        @RequestHeader("Authorization") header:String,
+        @RequestParam(name = "empType") employeeType: Long,
+        @RequestParam(name = "project") project: Long): ResponseEntity<Any> {
+        val userEmail = tokenService.extractEmail(header.substringAfter("Bearer "))
+        val employees = service.getSuggestedEmployees(employeeType = employeeType, userEmail = userEmail!!, project = project)
+        return ResponseEntity.status(200).body(
+            GetSuggestedEmployeesResponse (
+                httpStatus = 200,
+                message = "Employees retrieved successfully",
+                employees = employees
             )
         )
     }

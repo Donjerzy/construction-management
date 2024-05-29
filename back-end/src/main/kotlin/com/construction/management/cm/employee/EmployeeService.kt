@@ -9,17 +9,23 @@ import com.construction.management.cm.employeewagepayment.EmployeeWagePaymentSer
 import com.construction.management.cm.exceptionhandler.CustomException
 import com.construction.management.cm.formatters.StringFormatter
 import com.construction.management.cm.project.ProjectRepository
+import com.construction.management.cm.response.PredictionResponse
 import com.construction.management.cm.user.UserService
 import com.construction.management.cm.validator.Validator
 import com.construction.management.cm.wagetype.WageTypeRepository
-import jakarta.persistence.Column
-import jakarta.persistence.JoinColumn
-import jakarta.persistence.ManyToOne
+import org.springframework.http.HttpEntity
+import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpMethod
+import org.springframework.http.MediaType
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
+import org.springframework.web.client.RestTemplate
+import org.springframework.web.client.exchange
+import org.springframework.web.client.postForObject
 import org.springframework.web.multipart.MultipartFile
+import java.awt.PageAttributes
 import java.io.File
 import java.io.FileInputStream
-import java.time.ZoneId
 import java.util.*
 
 @Service
@@ -33,6 +39,8 @@ class EmployeeService(private val repository: EmployeeRepository,
                       private val runner: Runner,
                       private val employeeWagePaymentService: EmployeeWagePaymentService,
                       private val employeeWagePaymentRepository: EmployeeWagePaymentRepository  ) {
+
+    private val predictionApi = "http://127.0.0.1:8000/prediction-api/predict"
 
     fun getNumberOfEmployeesInProject(projectId:Long):Int {
         return repository.numberOfEmployeesInProject(projectId)
@@ -414,9 +422,100 @@ class EmployeeService(private val repository: EmployeeRepository,
         if (!repository.findById(employee).isPresent) {
             return "employee-doesn't-exist"
         }
-        val employee = repository.findById(employee).get()
-        if (projectManager != employee.project.projectManager.id) {
+        val fetchedEmployee = repository.findById(employee).get()
+        if (projectManager != fetchedEmployee.project.projectManager.id) {
             return "not-project-owner"
+        }
+        return "ok"
+    }
+
+    fun getSuggestedEmployees(employeeType: Long, userEmail: String, project: Long): MutableSet<String> {
+        when (getSuggestedEmployeesValidation(
+            projectManager = userService.getUserId(userEmail)!!,
+            project = project,
+            employeeType = employeeType
+        )) {
+            "not-project-owner" -> throw CustomException("not-project-owner", null)
+            "invalid-employee-type" -> throw CustomException("invalid-employee-type", null)
+        }
+        val employees = repository.getProjectEmployeesByType(project = project, type = employeeType)
+        if (employees.size == 0) {
+            return mutableSetOf()
+        }
+        /**
+         * Prediction logic
+         * For each employee compute input features.
+         *      Hit API. Get the minutes and add them to map
+         * Sort map, add map to list O(n^2)
+         * return list
+         */
+        val restTemplate = RestTemplate()
+        val employeePredictedMinutes = mutableMapOf<String, Double>()
+        val rankedEmployees = mutableSetOf<String>()
+        var predictionError = false
+        for (employee in employees) {
+            if (repository.getEmployeeDoneTasks(employee.id) <= 0) {
+                continue
+            }
+            val features = mutableListOf<MutableList<Any>>()
+            features.add(
+                mutableListOf(
+                    repository.getEmployeeActiveTasks(employee.id),
+                    repository.getAverageTasksCompletionTime(employee.id)
+                )
+            )
+
+            val requestBody  = "{\"features\": [${features[0]}]}"
+
+            //var response = PredictionResponse(httpStatus = 200, "", 0.0)
+            var response: ResponseEntity<PredictionResponse> = ResponseEntity.status(200).body(
+                PredictionResponse(
+                httpStatus = 200,
+                message = "",
+                minutes = 0.0
+                )
+            )
+            try {
+                val headers = HttpHeaders()
+                headers.contentType = MediaType.APPLICATION_JSON
+                val request = HttpEntity(requestBody, headers)
+                response = restTemplate.exchange(predictionApi, HttpMethod.POST, request, PredictionResponse::class.java)
+            } catch (e: Exception) {
+                predictionError = true
+            }
+            if (predictionError) {
+                throw CustomException("prediction-api-error", null)
+            }
+            employeePredictedMinutes["${employee.firstName.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }} ${employee.lastName.replaceFirstChar {
+                if (it.isLowerCase()) it.titlecase(
+                    Locale.getDefault()
+                ) else it.toString()
+            }}"] = response.body!!.minutes
+        }
+        if (employeePredictedMinutes.keys.size < 1) {
+            return mutableSetOf()
+        }
+        val sortedValues = employeePredictedMinutes.values.sorted()
+        for (value in sortedValues) {
+            for (x in employeePredictedMinutes.keys) {
+                if (employeePredictedMinutes[x] == value) {
+                    rankedEmployees.add(x)
+                }
+            }
+        }
+        return rankedEmployees
+    }
+
+    fun getSuggestedEmployeesValidation(
+        projectManager: Long,
+        project: Long,
+        employeeType: Long
+    ): String {
+        if (projectRepository.isProjectManager(project = project, projectManager = projectManager) <= 0) {
+            return "not-project-owner"
+        }
+        if (employeeTypeRepository.validEmployeeType(projectManager = projectManager, id = employeeType) <= 0) {
+            return "invalid-employee-type"
         }
         return "ok"
     }
