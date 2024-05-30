@@ -165,34 +165,38 @@
                        <svg class="w-10 h-10 mx-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14,10H19.5L14,4.5V10M5,3H15L21,9V19A2,2 0 0,1 19,21H5C3.89,21 3,20.1 3,19V5C3,3.89 3.89,3 5,3M5,5V19H19V12H12V5H5Z" /></svg>
                     </div>
                     <div class="flex flex-col gap-1 overflow-auto w-full h-full">
-                        <p class="underline text-lg">Task Information</p>
+                        <p class="underline text-lg font-serif">Task Information</p>
                         <div class="mt-2">
                             <div class="flex items-center justify-between pr-4 border-b pb-2">
-                                <p class="text-base">Title:</p>
-                                <p class="italic text-sm">{task.title}</p>
+                                <p class="text-base font-serif">Title:</p>
+                                <p class="italic text-sm font-sans">{task.title}</p>
                             </div>
                             <div class="flex items-center justify-between pr-4 border-b pb-2 pt-2">
-                                <p class="text-base">Description:</p>
-                                <p class="italic text-sm">{task.description}</p>
+                                <p class="text-base font-serif">Description:</p>
+                                <p class="italic text-sm font-sans">{task.description}</p>
                             </div>
                             <div class="flex items-center justify-between pr-4 border-b pb-2 pt-2">
-                                <p class="text-base">Status:</p>
-                                <p class="italic text-sm">{task.status}</p>
+                                <p class="text-base font-serif">Status:</p>
+                                <p class="italic text-sm font-sans">{task.status}</p>
                             </div>
                             <div class="flex items-center justify-between pr-4 border-b pb-2 pt-2">
-                                <p class="text-base">Creation Date:</p>
-                                <p class="italic text-sm">{task.creationDate}</p>
+                                <p class="text-base font-serif">Creation Date:</p>
+                                <p class="italic text-sm font-sans">{task.creationDate}</p>
                             </div>
                             <div class="flex items-center justify-between pr-4 border-b pb-2 pt-2">
-                                <p class="text-base">Completion Date:</p>
-                                <p class="italic text-sm">{task.completionDate}</p>
+                                <p class="text-base font-serif">Completion Date:</p>
+                                <p class="italic text-sm font-sans">{task.completionDate}</p>
+                            </div>
+                            <div class="flex items-center justify-between pr-4 border-b pb-2 pt-2">
+                                <p class="text-base font-serif">Priority:</p>
+                                <p class="italic text-sm font-sans">{task.priority}</p>
                             </div>
                             <div class="pb-2 pt-2">
-                                <p class="text-base ml-auto mr-auto w-fit">Assigned Employees</p>
+                                <p class="text-base ml-auto mr-auto w-fit font-serif">Assigned Employees</p>
                                 <div class="border border-primary-100 min-w-[600px] mt-2 min-h-[100px] rounded flex felx-wrap p-3 bg-purple-50">
                                     {#each Object.values(task.employees) as employee}
                                        <div class="flex items-center h-12 p-3 gap-2 mr-4 rounded shadow-md bg-white">
-                                           <p>{employee}</p>
+                                           <p class="font-sans">{employee}</p>
                                        </div> 
                                     {/each}
                                 </div>
@@ -255,17 +259,17 @@
                 <Table divClass="max-h-80 overflow-auto" shadow hoverable={true}>
                     <TableHead defaultRow={false} theadClass="border-black">
                         <tr class="bg-primary-100">
-                            <TableHeadCell class="text-white hover:cursor-pointer">Date</TableHeadCell>
-                            <TableHeadCell class="text-white hover:cursor-pointer">Status</TableHeadCell>
-                            <TableHeadCell class="text-white hover:cursor-pointer">User</TableHeadCell>
+                            <TableHeadCell class="text-white hover:cursor-pointer font-serif">Date</TableHeadCell>
+                            <TableHeadCell class="text-white hover:cursor-pointer font-serif">Status</TableHeadCell>
+                            <TableHeadCell class="text-white hover:cursor-pointer font-serif">User</TableHeadCell>
                         </tr>
                     </TableHead>
                     <TableBody>
                         {#each task.taskHistory as history }
                             <TableBodyRow>
-                                <TableBodyCell>{history.date}</TableBodyCell>
-                                <TableBodyCell>{history.status}</TableBodyCell>
-                                <TableBodyCell>{history.user}</TableBodyCell>
+                                <TableBodyCell class="font-sans">{history.date}</TableBodyCell>
+                                <TableBodyCell class="font-sans">{history.status}</TableBodyCell>
+                                <TableBodyCell class="font-sans">{history.user}</TableBodyCell>
                             </TableBodyRow>
                         {/each}
                     </TableBody>

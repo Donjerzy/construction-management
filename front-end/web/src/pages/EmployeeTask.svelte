@@ -118,6 +118,13 @@
             {#each toDoTasks as task }
                 <div class="w-full h-48 rounded-md shadow flex border flex-col justify-between bg-primary-50 pt-4 pl-4 pb-4 pr-4 mb-4">
                         <p class="text-white text-base overflow-hidden">{task.title}</p>
+                        {#if task.priority === "medium"}
+                                    <svg class="fill-white w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19,13H5V11H19V13Z" /></svg>
+                                {:else if task.priority === "low"}
+                                    <svg class="fill-white w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z" /></svg>
+                                {:else}
+                                    <svg class="fill-white w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.41,15.41L12,10.83L16.59,15.41L18,14L12,8L6,14L7.41,15.41Z" /></svg>
+                        {/if}
                         <div class="flex justify-between items-center">
                             <a href={`/employee/task/${task.taskId}`}>
                                 <p class="underline text-white hover:cursor-pointer hover:text-primary-200">View</p> 
@@ -135,6 +142,13 @@
             {#each inProgressTasks as task }
                 <div class="w-full h-48 rounded-md shadow flex border flex-col justify-between bg-primary-50 pt-4 pl-4 pb-4 pr-4 mb-4">
                         <p class="text-white text-base overflow-hidden">{task.title}</p>
+                        {#if task.priority === "medium"}
+                                    <svg class="fill-white w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19,13H5V11H19V13Z" /></svg>
+                                {:else if task.priority === "low"}
+                                    <svg class="fill-white w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z" /></svg>
+                                {:else}
+                                    <svg class="fill-white w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.41,15.41L12,10.83L16.59,15.41L18,14L12,8L6,14L7.41,15.41Z" /></svg>
+                                {/if}
                         <div class="flex justify-between items-center">
                             <a href={`/employee/task/${task.taskId}`}>
                                 <p class="underline text-white hover:cursor-pointer hover:text-primary-200">View</p> 
@@ -157,6 +171,13 @@
             {#each doneTasks as task }
                 <div class="w-full h-48 rounded-md shadow flex border flex-col justify-between bg-primary-50 pt-4 pl-4 pb-4 pr-4 mb-4">
                         <p class="text-white text-base overflow-hidden">{task.title}</p>
+                        {#if task.priority === "medium"}
+                                    <svg class="fill-white w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19,13H5V11H19V13Z" /></svg>
+                                {:else if task.priority === "low"}
+                                    <svg class="fill-white w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z" /></svg>
+                                {:else}
+                                    <svg class="fill-white w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.41,15.41L12,10.83L16.59,15.41L18,14L12,8L6,14L7.41,15.41Z" /></svg>
+                                {/if}
                         <div class="flex justify-between items-center">
                             <a href={`/employee/task/${task.taskId}`}>
                                 <p class="underline text-white hover:cursor-pointer hover:text-primary-200">View</p> 

@@ -180,6 +180,10 @@
                                 <p class="text-base">Completion Date:</p>
                                 <p class="italic text-sm">{task.completionDate}</p>
                             </div>
+                            <div class="flex items-center justify-between pr-4 border-b pb-2 pt-2">
+                                <p class="text-base">Priority:</p>
+                                <p class="italic text-sm">{task.priority}</p>
+                            </div>
                             <div class="pb-2 pt-2">
                                 <p class="text-base ml-auto mr-auto w-fit">Assigned Employees</p>
                                 <div class="border border-primary-100 min-w-[600px] mt-2 min-h-[100px] rounded flex felx-wrap p-3 bg-purple-50">
@@ -203,7 +207,7 @@
                 <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
                 <p class="underline text-primary-200 text-lg  hover:cursor-pointer hover:text-primary-200" id="active-link" on:click={()=> navigate("comments")}>Comments</p>
             </div> 
-            <div class="mt-6 h-4/5 border border-primary-100 rounded-md bg-white overflow-auto pt-4 pr-4 pl-4">
+            <div class="mt-6 min-h-48 h-4/5 border border-primary-100 rounded-md bg-white overflow-auto pt-4 pr-4 pl-4">
                 {#each task.taskComments as comment}
                     {#if comment.commenter.toLowerCase() === 'you'}
                         <div class="flex flex-col gap-1 items-end ml-1 mb-4">

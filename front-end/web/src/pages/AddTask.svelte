@@ -27,6 +27,7 @@
     let chosenType;
     let suggestedLoading = false;
     let suggestedEmployees = [];
+    let priority;
 
     onMount(()=> {
         let errorFetch = false;
@@ -158,6 +159,9 @@
         if(title === undefined || title.length === 0) {
            return notifications.danger("Invalid title", 1000);
         }
+        if (priority === undefined || priority === "0") {
+            return notifications.danger("Priority is a required field", 1000);
+        }
 
         loading = true;
         let error = false;
@@ -172,7 +176,8 @@
                 title: title,
                 description: description,
                 project: projectId,
-                employees: Array.from(chosenEmployees)
+                employees: Array.from(chosenEmployees),
+                priority: priority
             })
         }).then(response=> {
             loading = false;
@@ -247,6 +252,16 @@
                         </select>
                     </div>
                 </div>
+            </div>
+
+            <div class="flex flex-col gap-2 mt-1">
+                <label class="font-serif" for="title">Priority</label>
+                <select class="font-serif" id="priority" bind:value={priority}>
+                    <option value="0">--Select--</option>
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                </select>
             </div>
 
             <div class="mt-4 flex justify-between items-center">
