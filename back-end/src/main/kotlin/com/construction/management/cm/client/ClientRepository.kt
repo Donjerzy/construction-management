@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository
 @Repository
 interface ClientRepository: JpaRepository<Client, Long> {
 
-
     @Query("select count(*) from client where project = :projectId", nativeQuery = true)
     fun numberOfClientsInProject(projectId: Long): Int
 
@@ -27,6 +26,9 @@ interface ClientRepository: JpaRepository<Client, Long> {
 
     @Query("select coalesce(sum(coalesce(invested_amount,0)),0) from client where project = :projectId", nativeQuery = true)
     fun getTotalProjectReceivedAmount(projectId: Long): Double
+
+    @Query("select * from client where project = :projectId", nativeQuery = true)
+    fun getProjectClients(projectId: Long): MutableList<Client>
 
 
 }

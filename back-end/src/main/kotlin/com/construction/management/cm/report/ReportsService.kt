@@ -206,5 +206,53 @@ class ReportsService (
         return "ok"
     }
 
+    fun getProjectClientReport(userEmail: String, project: Long): String {
+        when (getProjectGeneralReportValidations(
+            project = project,
+            projectManager = userService.getUserId(userEmail)!!
+        )) {
+            "not-project-owner" -> throw CustomException("not-project-owner", null)
+        }
+
+        val clientInfoTable = mutableSetOf<ClientInfoTable>()
+        clientInfoTable.add(
+            ClientInfoTable(
+                numberOfClients = clientRepository.numberOfClientsInProject(project).toString(),
+                totalAmountExpected = formatter.doubleToStringCommaSeparated(clientRepository.getTotalProjectCommittedAmount(project)),
+                totalAmountReceived = formatter.doubleToStringCommaSeparated(clientRepository.getTotalProjectReceivedAmount(project))
+            )
+        )
+        val clientInfoDataset = JRBeanCollectionDataSource(clientInfoTable)
+
+        val clientAmountBreakDown = mutableSetOf<ClientAmountBreakdownTable>()
+        val clients = clientRepository.getProjectClients(project)
+        for (client in clients) {
+            clientAmountBreakDown.add(
+                ClientAmountBreakdownTable(
+                    clientName = client.name,
+                    totalExpected = formatter.doubleToStringCommaSeparated(client.committedAmount),
+                    totalReceived = formatter.doubleToStringCommaSeparated(client.investedAmount)
+                )
+            )
+        }
+        val clientAmountDataset = JRBeanCollectionDataSource(clientAmountBreakDown)
+
+        val parameters = mutableMapOf<String, Any>()
+        parameters["reportYear"] = currentYear.toString()
+        parameters["clientInfoDataset"] = clientInfoDataset
+        parameters["clientAmountsDataset"] = clientAmountDataset
+
+
+        generateJasperReportPdf (
+            templatePath = "${reportTemplatesDir}client_report.jrxml",
+            outputFilePath = "${reportsOutputDir}client-report.pdf",
+            parameters = parameters
+        )
+        return pdfToString("${reportsOutputDir}client-report.pdf")
+
+
+
+    }
+
 
 }

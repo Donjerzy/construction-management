@@ -61,6 +61,20 @@ class ReportsController(
     }
 
 
+    @GetMapping("/project-client")
+    fun getProjectClientReport(@RequestHeader("Authorization") header:String,
+                                @RequestParam(name = "project") project: Long): ResponseEntity<Any> {
+        val userEmail = tokenService.extractEmail(header.substringAfter("Bearer "))
+        val report = service.getProjectClientReport(userEmail = userEmail!!, project = project)
+        return ResponseEntity.status(200).body(GeneralReportResponse (
+            httpStatus = 200,
+            message = "Client report retrieved successfully",
+            report = report
+        )
+        )
+    }
+
+
 
 
 
