@@ -7,6 +7,7 @@ data class ViewTask (
     val completionDate: String,
     val description: String,
     val status: String,
+    val priority: String,
     val employees: MutableMap<Long, String>,
     val taskHistory: MutableList<GetTaskHistory>,
     val taskComments: MutableList<GetTaskComments>

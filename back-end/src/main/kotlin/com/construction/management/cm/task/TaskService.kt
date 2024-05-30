@@ -55,12 +55,15 @@ class TaskService(private val repository: TaskRepository,
             "not-project-owner" -> throw CustomException("not-project-owner", null)
             "invalid-employee" -> throw CustomException("invalid-employee", null)
             "invalid-title" -> throw CustomException("invalid-title", null)
+            "invalid-priority" -> throw CustomException("invalid-priority", null)
         }
         val task = Task()
         task.name = addTask.title.trim().lowercase()
             .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
         task.description = addTask.description.trim()
         task.status = TaskStatus.TODO.name
+        task.priority = addTask.priority.lowercase()
+            .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
         task.creationDate = Date()
         task.completionDate = null
         task.project = projectRepository.findById(addTask.project).get()
@@ -108,6 +111,10 @@ class TaskService(private val repository: TaskRepository,
                 return "invalid-employee"
             }
         }
+        val validPriorities = listOf("low", "medium", "high")
+        if (addTask.priority.lowercase() !in validPriorities) {
+            return "invalid-priority"
+        }
         return "ok"
     }
 
@@ -126,7 +133,8 @@ class TaskService(private val repository: TaskRepository,
                 GetProjectTasks (
                     taskId = task.id,
                     title = task.name,
-                    status = task.status.lowercase()
+                    status = task.status.lowercase(),
+                    priority = task.priority.lowercase()
                 )
             )
         }
@@ -253,7 +261,8 @@ class TaskService(private val repository: TaskRepository,
             status = fetchedTask.status,
             employees = employeesToViewTask(fetchedTask.employees),
             taskHistory = taskHistoryToViewTask(taskHistoryRepository.getTaskHistory(taskId)),
-            taskComments = commentsToViewTask(taskCommentRepository.getTaskComments(taskId))
+            taskComments = commentsToViewTask(taskCommentRepository.getTaskComments(taskId)),
+            priority = fetchedTask.priority
         )
     }
 

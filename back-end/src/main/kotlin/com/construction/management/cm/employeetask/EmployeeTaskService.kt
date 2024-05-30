@@ -44,7 +44,8 @@ class EmployeeTaskService(
                 GetEmployeeTasks(
                     taskId = task.id,
                     title = task.name,
-                    status = task.status
+                    status = task.status,
+                    priority = task.priority.lowercase()
                 )
             )
         }
@@ -143,7 +144,8 @@ class EmployeeTaskService(
             status = fetchedTask.status,
             title = fetchedTask.name,
             taskComments = commentsToViewTask(taskCommentRepository.getTaskComments(taskId)),
-            employees = employeesToViewTask(fetchedTask.employees, userId = userId)
+            employees = employeesToViewTask(fetchedTask.employees, userId = userId),
+            priority = fetchedTask.priority
         )
     }
 

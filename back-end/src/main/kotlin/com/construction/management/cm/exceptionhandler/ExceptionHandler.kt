@@ -165,6 +165,13 @@ class ExceptionHandler {
                 )
             )
 
+            "invalid-priority" -> ResponseEntity.status(400).body(
+                ExceptionResponse(
+                    httpStatus = 400,
+                    message = "Priority provided is invalid"
+                )
+            )
+
             "prediction-api-error" -> ResponseEntity.status(400).body(
                 ExceptionResponse(
                     httpStatus = 400,

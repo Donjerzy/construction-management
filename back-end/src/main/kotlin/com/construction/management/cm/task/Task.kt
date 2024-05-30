@@ -28,6 +28,9 @@ class Task {
     @Column(name = "creation_date")
     var creationDate: Date = Date()
 
+    @Column(name = "priority", nullable = false)
+    var priority: String = ""
+
     @Column(name = "completion_date")
     var completionDate: Date? = null
 

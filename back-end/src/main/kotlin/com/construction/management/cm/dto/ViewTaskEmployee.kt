@@ -8,5 +8,6 @@ data class ViewTaskEmployee (
     val description: String,
     val status: String,
     val employees: MutableMap<Long, String>,
-    val taskComments: MutableList<GetTaskComments>
+    val taskComments: MutableList<GetTaskComments>,
+    val priority: String
 )
