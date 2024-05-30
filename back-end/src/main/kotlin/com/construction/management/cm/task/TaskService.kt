@@ -1,5 +1,6 @@
 package com.construction.management.cm.task
 
+import com.construction.management.cm.ai.TaskAssignment
 import com.construction.management.cm.ai.TaskAssignmentRepository
 import com.construction.management.cm.dto.*
 import com.construction.management.cm.employee.Employee
@@ -160,12 +161,14 @@ class TaskService(private val repository: TaskRepository,
             "todo" -> {
                 if (fetchedTask.completionDate != null) {
                     fetchedTask.completionDate = null
+                    taskAssignmentRepository.deleteTaskData(fetchedTask.id)
                 }
                 TaskStatus.TODO.name
             }
             "in_progress" -> {
                 if (fetchedTask.completionDate != null) {
                     fetchedTask.completionDate = null
+                    taskAssignmentRepository.deleteTaskData(fetchedTask.id)
                 }
                 TaskStatus.IN_PROGRESS.name
             }
@@ -181,6 +184,32 @@ class TaskService(private val repository: TaskRepository,
         taskHistory.entryDate = savedTask.creationDate
         taskHistory.user = "O${userService.getUserId(userEmail)!!}"
         taskHistoryRepository.save(taskHistory)
+        if (task.action.lowercase() == "done") {
+            val employees = fetchedTask.employees
+            if (employees.size > 0) {
+                for (employee in employees) {
+                    val taskAssignment = TaskAssignment()
+                    taskAssignment.employee = employee.id
+                    taskAssignment.taskId = fetchedTask.id
+                    taskAssignment.activeTasks = employeeRepository.getEmployeeActiveTasks(employee.id).toLong()
+                    taskAssignment.averageCompletion = employeeRepository.getAverageTasksCompletionTime(employee.id)
+                    taskAssignment.timeTaken = repository.getTaskCompletionTime(fetchedTask.id)
+                    taskAssignment.dataSet = when(taskAssignmentRepository.getTrainDataSetCount()) {
+                        0 -> "train"
+                        else -> {
+                            val trainCount = taskAssignmentRepository.getTrainDataSetCount()
+                            val totalCount = taskAssignmentRepository.getTotalDataSetCount()
+                            if (((trainCount/totalCount)*100) < 80) {
+                                "train"
+                            } else {
+                                "test"
+                            }
+                        }
+                    }
+                    taskAssignmentRepository.save(taskAssignment)
+                }
+            }
+        }
         return "Task moved successfully"
     }
 

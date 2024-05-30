@@ -30,9 +30,11 @@ interface TaskRepository: JpaRepository<Task, Long> {
     fun getEmployeeTasks(employeeId: Long): MutableList<Task>
     @Query("select count(*) from employee_task where task = :taskId and employee = :employeeId", nativeQuery = true)
     fun employeeAssignedTask(taskId: Long, employeeId: Long): Int
-
     @Query("select count(*) from task inner join employee_task et on et.task = task.id where lower(status) in ('todo', 'in_progress') and et.employee = :userId", nativeQuery = true)
-    abstract fun getUserIncompleteTasks(userId: Long): Int
+    fun getUserIncompleteTasks(userId: Long): Int
+
+    @Query("select round(EXTRACT(EPOCH FROM (completion_date - creation_date)) / 60, 2) as minutes from task where id = :taskId", nativeQuery = true)
+    fun getTaskCompletionTime(taskId: Long): Double
 
 
 }
