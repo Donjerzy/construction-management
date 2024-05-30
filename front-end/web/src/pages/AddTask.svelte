@@ -147,10 +147,10 @@
         })
         .catch(error=> {
             loading = false;
-            notifications.danger("Could make request to server", 1000)
+            // notifications.danger("Could make request to server", 1000)
         })
         if(existsError) {
-            notifications.danger("Error encountered", 1000); 
+            // notifications.danger("Error encountered", 1000); 
         }
     }
 
