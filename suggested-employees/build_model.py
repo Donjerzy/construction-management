@@ -56,15 +56,21 @@ def main():
     actual_completion = []
     engine = create_engine(connection_string)
 
+    count = 0
+
     with engine.connect() as conn:
         # select target table
         stmt = select(TaskAssignment.active_tasks, TaskAssignment.average_completion, TaskAssignment.time_taken).where(TaskAssignment.dataset == 'train')
         for row in conn.execute(stmt):
+            count += 1
             active_tasks_avg_completion.append([row[0],row[1]])
             actual_completion.append(row[2])
     x = np.array(active_tasks_avg_completion)
     y = np.array(actual_completion)    
 
+    if count < 1:
+        print("Inadequate training data")
+        quit()
 
     # Train the model
     model = LinearRegression()
