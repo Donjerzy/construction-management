@@ -15,6 +15,7 @@ import com.construction.management.cm.task.TaskService
 import com.construction.management.cm.taskcomment.TaskCommentRepository
 import com.construction.management.cm.user.UserService
 import com.construction.management.cm.wagetype.WageTypeRepository
+import org.apache.commons.collections4.Get
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.*
@@ -387,6 +388,35 @@ class ProjectService(private val clientService: ClientService ,
     fun getStatusValidations(projectManager: Long, projectId: Long): String {
         if (repository.isProjectManager(projectManager = projectManager, project = projectId) <=0) {
             return "not-project-owner"
+        }
+        return "ok"
+    }
+
+    fun getEnrolledProjects(userEmail: String): MutableList<GetEnrolledProjects> {
+        when (getEnrolledProject(
+            projectManager = userEmail
+        )) {
+            "auth-user-na" -> throw CustomException("auth-user-na", null)
+        }
+        val projects: MutableList<Project> = repository.getEnrolledProjects(userEmail.lowercase())
+        val result = mutableListOf<GetEnrolledProjects>()
+        for (project in projects) {
+            result.add (
+                GetEnrolledProjects(
+                    projectName = project.name,
+                    projectUUID = project.projectId.toString()
+                )
+            )
+        }
+        return result
+    }
+
+    fun getEnrolledProject (
+        projectManager: String
+    ): String {
+        val userLoggedIn = userService.getUser(projectManager)?.loggedIn ?: false
+        if (!userLoggedIn) {
+            return "auth-user-na"
         }
         return "ok"
     }

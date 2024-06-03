@@ -121,6 +121,7 @@ class AuthService(private val wageTypeRepository: WageTypeRepository,
                     Locale.getDefault()) else it.toString() }
                 user.password = encoder.encode(signUpForm.password)
                 user.userRole = UserRole.BASE.name
+                user.loggedIn = true
                 while (true) {
                     val identifier = UUID.randomUUID()
                     if (userRepository.findUserCountByUniqueIdentifier(identifier) <= 0) {
