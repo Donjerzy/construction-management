@@ -236,4 +236,13 @@ class AuthService(private val wageTypeRepository: WageTypeRepository,
         )
     }
 
+    fun logOut(userEmail: String): String {
+        val user = userRepository.findByEmail(userEmail.lowercase())
+        user?.loggedIn = false
+        if (user != null) {
+            userRepository.save(user)
+        }
+        return "Logged out successfully"
+    }
+
 }

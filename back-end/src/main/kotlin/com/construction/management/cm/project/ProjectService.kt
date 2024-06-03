@@ -403,8 +403,8 @@ class ProjectService(private val clientService: ClientService ,
         for (project in projects) {
             result.add (
                 GetEnrolledProjects(
-                    projectName = project.name,
-                    projectUUID = project.projectId.toString()
+                    name = project.name,
+                    id = project.projectId.toString()
                 )
             )
         }
