@@ -144,7 +144,7 @@
     function validateLogInDetails(e) {
         clearErrors();
         e.preventDefault();
-        let chosenModule = e.target.elements.module.value;
+        // let chosenModule = e.target.elements.module.value;
         if (!validateEmail(e.target.elements.email.value)) {
              setEmailError();
              return
@@ -153,20 +153,21 @@
              setPasswordError();
              return
         }
-        if(chosenModule === "employee" && projectCode === undefined) {
-            setProjectError();
-            return
-        }
-        if(chosenModule === "employee" && projectCode.length === 0) {
-            setProjectError();
-            return
-        }
+        // if(chosenModule === "employee" && projectCode === undefined) {
+        //     setProjectError();
+        //     return
+        // }
+        // if(chosenModule === "employee" && projectCode.length === 0) {
+        //     setProjectError();
+        //     return
+        // }
         loading = true;
-        if (chosenModule === 'admin') {
-            authenticateAdmin(e.target.elements.email.value.toLowerCase(), e.target.elements.pass.value);
-        } else {
-            authenticateEmployee(projectCode, e.target.elements.email.value.toLowerCase(), e.target.elements.pass.value);
-        }        
+        // if (chosenModule === 'admin') {
+        //     authenticateAdmin(e.target.elements.email.value.toLowerCase(), e.target.elements.pass.value);
+        // } else {
+        //     authenticateEmployee(projectCode, e.target.elements.email.value.toLowerCase(), e.target.elements.pass.value);
+        // }       
+        authenticateAdmin(e.target.elements.email.value.toLowerCase(), e.target.elements.pass.value);
     }
 </script>
 
@@ -187,20 +188,20 @@
             <h2>Login</h2>
         </div>
         <form on:submit={validateLogInDetails}>
-            <label style="font-family: 'Times New Roman', Times, serif; font-size: 1rem;" for="module">Module</label>
+            <!-- <label style="font-family: 'Times New Roman', Times, serif; font-size: 1rem;" for="module">Module</label> -->
             <!--  class="block appearance-none border w-32 border-primary-100"-->
-            <select bind:value={chosenModule} name="module" style="font-family: sans-serif; cursor: pointer; border: 1px #ccc solid; display:block; width: 240px; margin-top: 8px;" id="module">
+            <!-- <select bind:value={chosenModule} name="module" style="font-family: sans-serif; cursor: pointer; border: 1px #ccc solid; display:block; width: 240px; margin-top: 8px;" id="module">
                 <option style="height: 80px;" value="admin">Admin</option>
                 <option style="height: 80px;" value="employee">Employee</option>
-            </select>
+            </select> -->
 
-            {#if chosenModule === "employee"}
+            <!-- {#if chosenModule === "employee"}
                 <label for="project_id" style="display:block; font-family: 'Times New Roman', Times, serif; font-size: 1rem; margin-top: 8px;">Project</label>
                 <input bind:value={projectCode} name="project_id" style="font-family: sans-serif; border: 1px #ccc solid; display:block; width: 240px; margin-top: 8px;" type="text" id="project_id" on:change={clearProjectError}>
                 {#if projectError}
                     <p class="text-primary-700 text-base mb-3 font-serif mt-1">Invalid Project</p>
                 {/if}
-            {/if}
+            {/if} -->
             
             <label style="display:block; font-family: 'Times New Roman', Times, serif; font-size: 1rem; margin-top: 8px;" for="email">Email</label>
             <input style="font-family: sans-serif; border: 1px #ccc solid; display:block; width: 240px; margin-top: 8px;" type="email" name="email" id="email" on:change={clearEmailError}  >

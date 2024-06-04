@@ -121,6 +121,7 @@ class AuthService(private val wageTypeRepository: WageTypeRepository,
                     Locale.getDefault()) else it.toString() }
                 user.password = encoder.encode(signUpForm.password)
                 user.userRole = UserRole.BASE.name
+                user.loggedIn = true
                 while (true) {
                     val identifier = UUID.randomUUID()
                     if (userRepository.findUserCountByUniqueIdentifier(identifier) <= 0) {
@@ -229,10 +230,24 @@ class AuthService(private val wageTypeRepository: WageTypeRepository,
             userDetails = user,
             expirationDate = Date(System.currentTimeMillis() + jwtProperties.accessTokenExpiration)
         )
+        val fetchedUser = userRepository.findByEmail(authRequest.email.lowercase())
+        fetchedUser?.loggedIn = true
+        if (fetchedUser != null) {
+            userRepository.save(fetchedUser)
+        }
         return LoggedIn(
             token = token,
             firstName = userService.getUserFirstName(user.username)
         )
+    }
+
+    fun logOut(userEmail: String): String {
+        val user = userRepository.findByEmail(userEmail.lowercase())
+        user?.loggedIn = false
+        if (user != null) {
+            userRepository.save(user)
+        }
+        return "Logged out successfully"
     }
 
 }

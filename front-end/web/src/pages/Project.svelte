@@ -101,8 +101,8 @@
                         <a class="a-project-card" href={`/project/${project.id}`}>
                         <div class="strip"></div>
                         <div class="project-items">
-                            <p class="card-text">{project.name}</p>
-                            <p class="card-text">{project.status}</p>
+                            <p class="card-text font-sans text-base">{project.name}</p>
+                            <p class="card-text font-sans text-base">{project.status}</p>
                         </div>
                         </a>
                     </div>

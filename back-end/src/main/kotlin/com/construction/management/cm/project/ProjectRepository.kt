@@ -67,4 +67,7 @@ interface ProjectRepository: JpaRepository<Project, Long> {
     fun getAbandonedCount(projectManager: Long): Int
     @Query("select * from project where project_id = :projectId", nativeQuery = true)
     fun getProjectByUuid(projectId: UUID): Project
+
+    @Query("select * from project where id in (select project from employee where lower(email) = :projectManagerEmail)", nativeQuery = true)
+    fun getEnrolledProjects(projectManagerEmail: String): MutableList<Project>
 }

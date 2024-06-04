@@ -38,6 +38,9 @@ class User {
     @Column(name = "user_role", nullable = false)
     var userRole:String = "-"
 
+    @Column(name = "logged_in")
+    var loggedIn: Boolean = false
+
     // Table references
     @OneToMany(mappedBy = "projectManager", targetEntity = Project::class, cascade = [CascadeType.ALL])
     var projects = mutableSetOf<Project>()

@@ -1,8 +1,6 @@
 package com.construction.management.cm.employeeauth
 
-import com.construction.management.cm.dto.EmployeeLogIn
-import com.construction.management.cm.dto.EmployeeLogOut
-import com.construction.management.cm.dto.TestAuth
+import com.construction.management.cm.dto.*
 import com.construction.management.cm.response.DefaultNa
 import com.construction.management.cm.response.LogInEmployeeResponse
 import com.construction.management.cm.response.LoginResponse
@@ -21,9 +19,24 @@ class EmployeeAuthController(
     private val service: EmployeeAuthService
 ) {
 
+//    @PostMapping("/login")
+//    fun logIn (@RequestBody employeeLogIn: EmployeeLogIn): ResponseEntity<Any> {
+//        val user = service.logIn(employeeLogIn)
+//        return ResponseEntity.status(200).body(
+//            LogInEmployeeResponse(
+//                httpStatus = 200,
+//                message = "Employee authenticated successfully",
+//                user = user
+//            )
+//        )
+//    }
+
+
     @PostMapping("/login")
-    fun logIn (@RequestBody employeeLogIn: EmployeeLogIn): ResponseEntity<Any> {
-        val user = service.logIn(employeeLogIn)
+    fun logInV2(
+        @RequestBody employeeLogIn: EmployeeLogIn2
+    ): ResponseEntity<Any> {
+        val user = service.logInV2(employeeLogIn = employeeLogIn)
         return ResponseEntity.status(200).body(
             LogInEmployeeResponse(
                 httpStatus = 200,
@@ -33,6 +46,7 @@ class EmployeeAuthController(
         )
     }
 
+
     @PostMapping("/logout")
     fun logout (@RequestHeader(name = "Cmt") token: String): ResponseEntity<Any> {
         val user = service.validateRequestToken(token)
@@ -41,6 +55,20 @@ class EmployeeAuthController(
             DefaultNa (
                 httpStatus = 200,
                 message = message
+            )
+        )
+    }
+
+
+    @PostMapping("/admin")
+    fun switchToAdmin(@RequestHeader(name = "Cmt") token: String): ResponseEntity<Any> {
+        val user = service.validateRequestToken(token)
+        val loggedIn = service.switchToAdmin(user = user)
+        return ResponseEntity.status(200).body(
+            LoginResponse(
+                httpStatus = 200,
+                message = "Switched to admin successfully",
+                user = loggedIn
             )
         )
     }

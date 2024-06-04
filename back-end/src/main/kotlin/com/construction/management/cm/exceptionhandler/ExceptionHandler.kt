@@ -200,6 +200,13 @@ class ExceptionHandler {
                 )
             )
 
+            "invalid-token" -> ResponseEntity.status(400).body(
+                ExceptionResponse(
+                    httpStatus = 400,
+                    message = "Invalid Token"
+                )
+            )
+
             "invalid-status" -> ResponseEntity.status(400).body(
                 ExceptionResponse(
                     httpStatus = 400,
@@ -316,6 +323,13 @@ class ExceptionHandler {
                 ExceptionResponse(
                     httpStatus = 401,
                     message = "Unauthorized"
+                )
+            )
+
+            "invalid-source" -> ResponseEntity.status(401).body(
+                ExceptionResponse(
+                    httpStatus = 401,
+                    message = "Invalid from field"
                 )
             )
 

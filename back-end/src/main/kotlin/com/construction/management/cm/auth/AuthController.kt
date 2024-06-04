@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.*
 
 @Controller
 @RequestMapping("api/v1/auth")
-class AuthController {
+class AuthController(
+    private val tokenService: TokenService
+) {
 
     @Autowired
     private lateinit var service: AuthService
@@ -25,6 +27,18 @@ class AuthController {
                 httpStatus = 200,
                 message = "User Authenticated Successfully",
                 user = accessToken
+            )
+        )
+    }
+
+    @PostMapping("logout")
+    fun logOut(@RequestHeader("Authorization") header:String): ResponseEntity<Any> {
+        val userEmail = tokenService.extractEmail(header.substringAfter("Bearer "))
+        val message = service.logOut(userEmail = userEmail!!)
+        return ResponseEntity.status(200).body(
+            DefaultNa(
+                httpStatus = 200,
+                message = message
             )
         )
     }

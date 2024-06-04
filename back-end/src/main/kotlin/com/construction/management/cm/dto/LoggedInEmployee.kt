@@ -5,3 +5,8 @@ data class LoggedInEmployee(
     val firstName: String,
     val project: String
 )
+
+/**
+ * Employee log in.
+ *
+ */

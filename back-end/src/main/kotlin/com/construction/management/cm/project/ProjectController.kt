@@ -166,6 +166,21 @@ class ProjectController {
         )
     }
 
+    @GetMapping("/auth/list")
+    fun getEnrolledProjects(
+        @RequestHeader("Authorization") header:String,
+    ): ResponseEntity<Any> {
+        val userEmail = tokenService.extractEmail(header.substringAfter("Bearer "))
+        val projects = service.getEnrolledProjects(userEmail = userEmail!!)
+        return ResponseEntity.status(200).body(
+            GetEnrolledProjectsResponse (
+                httpStatus = 200,
+                message = "Enrolled projects retrieved successfully",
+                projects = projects
+            )
+        )
+    }
+
 
 
 
