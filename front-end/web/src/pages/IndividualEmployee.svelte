@@ -274,11 +274,11 @@
 <AdminComponent appName={appName} contentTitle={contentTitle} userFirstName={get(firstName)}>
     <Toast />
     <div class="mt-4 min-h-4 rounded-md flex gap-8 items-center">
-        <a href={`/project/${projectId}/${employeeId}/reset-password`}>
+        <!-- <a href={`/project/${projectId}/${employeeId}/reset-password`}>
             <Button 
             height=10 width=36 label="Reset Password" fontSize="sm" padding="8px"
             />
-        </a>
+        </a> -->
         <a href={`/project/${projectId}/${employeeId}/wage`}>
             <Button 
             height=10 width=36 label="Wages" fontSize="sm" padding="8px"

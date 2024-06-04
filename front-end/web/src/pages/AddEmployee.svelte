@@ -196,34 +196,7 @@
             notifications.danger("Invalid email address", 1000);
             return;
         }
-        if(userPassword.length < 6) {
-            notifications.danger('Password should have atleast 6 characters', 1000);
-            return;
-        }
-        for (let i=0; i < userPassword.length; i++) {
-            if (/[A-Z]/.test(userPassword[i])) {
-                hasNoUpper = false;
-            } else if (/[a-z]/.test(userPassword[i])) {
-                hasNoLower = false;
-            } else if (/\d/.test(userPassword[i])) {
-                hasNoDigit = false;
-            }
-            if (hasNoLower === false && hasNoUpper === false && hasNoDigit === false) {
-                break;
-            }
-        }
-        if (hasNoUpper) {
-            notifications.danger('Password should have atleast 1 uppercase character', 1000);
-            return;
-        }
-        if (hasNoLower) {
-            notifications.danger('Password should have atleast 1 lowercase character', 1000);
-            return;
-        }
-        if (hasNoDigit) {
-            notifications.danger('Password should have atleast 1 digit', 1000);
-            return;
-        }
+        
         if(isNaN(parseFloat(userWage))) {
             notifications.danger('Invalid wage value', 1000);
             return;
@@ -248,7 +221,6 @@
             firstName: userFirstName,
             lastName: userLastName,
             email: userEmail,
-            password: userPassword,
             wage: parseFloat(userWage),
             joinDate: userJoinDate,
             employeeType: chosenEmployeeType,
@@ -283,25 +255,25 @@
                     <label class="font-serif" for="email">Email</label>
                     <input name="email" class="rounded font-sans border-primary-800" type="email" id="email" bind:value={userEmail}>
                 </div>
-                <div class="flex flex-col gap-2 mt-2">
+                <!-- <div class="flex flex-col gap-2 mt-2">
                     <label class="font-serif" for="password">Password</label>
                     <input name="password" class="rounded font-sans border-primary-800" type="password" id="password" bind:value={userPassword}>
-                </div>
+                </div> -->
                 <div class="flex flex-col gap-2 mt-2">
-                    <label class="font-serif" for="wage">Wage</label>
-                    <input name="wage" class="rounded font-sans border-primary-800" type="text" id="wage" bind:value={userWageDisplay} on:input={updateUserWage}  >
+                    <label class="font-serif" for="wage_type">Wage Type</label>
+                    <select name="wage_type" class="rounded font-sans border-primary-800" id="wage_type" bind:value={chosenWageType}>
+                        {#each wageTypes as type }
+                            <option value={type.id}>{type.name}</option>
+                        {/each}
+                    </select>
                 </div>
                 <div class="flex flex-col gap-2 mt-3">
                     <Button height=12 width=36 label="Next" fontSize="sm" padding="8px" on:click={() => { currentPage = "two"}}   />
                 </div>
             {:else}
             <div class="flex flex-col gap-2 mt-2">
-                <label class="font-serif" for="wage_type">Wage Type</label>
-                <select name="wage_type" class="rounded font-sans border-primary-800" id="wage_type" bind:value={chosenWageType}>
-                    {#each wageTypes as type }
-                        <option value={type.id}>{type.name}</option>
-                    {/each}
-                </select>
+                <label class="font-serif" for="wage">Wage</label>
+                <input name="wage" class="rounded font-sans border-primary-800" type="text" id="wage" bind:value={userWageDisplay} on:input={updateUserWage}  >
             </div>
             <div class="flex flex-col gap-2 mt-2">
                 <label class="font-serif" for="employee_type">Employee Type</label>
