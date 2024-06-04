@@ -87,7 +87,6 @@ class EmployeeService(private val repository: EmployeeRepository,
         newEmployee.lastName = stringFormatter.formatNames(employee.lastName).lowercase()
         newEmployee.email = employee.email.lowercase()
         newEmployee.joinDate = stringFormatter.toDate(employee.joinDate)
-        newEmployee.password = stringFormatter.toPassword(employee.password)
         newEmployee.wage = employee.wage
         newEmployee.employeeType = employeeTypeRepository.findById(employee.employeeType).get()
         newEmployee.project = projectRepository.findById(employee.project).get()
@@ -131,9 +130,6 @@ class EmployeeService(private val repository: EmployeeRepository,
         }
         if (!validator.isValidEmail(employee.email)) {
             return "invalid-email"
-        }
-        if (!validator.isValidPassword(employee.password)) {
-            return "invalid-password"
         }
         if (employee.wage < 0) {
             return "wage-lz"
@@ -284,17 +280,17 @@ class EmployeeService(private val repository: EmployeeRepository,
         return "ok"
     }
 
-    fun modifyPassword(userEmail: String, modifyBody: ModifyPassword): String {
-        when (modifyPasswordValidations(projectManager = userService.getUserId(userEmail)!!, modifyBody = modifyBody) )  {
-            "employee-doesn't-exist" -> throw CustomException("employee-doesn't-exist", null)
-            "not-project-owner" -> throw CustomException("not-project-owner", null)
-            "invalid-password" -> throw CustomException("invalid-password", null)
-        }
-        val employee = repository.findById(modifyBody.employeeId).get()
-        employee.password = stringFormatter.toPassword(modifyBody.newPassword)
-        repository.save(employee)
-        return "Password reset successfully"
-    }
+//    fun modifyPassword(userEmail: String, modifyBody: ModifyPassword): String {
+//        when (modifyPasswordValidations(projectManager = userService.getUserId(userEmail)!!, modifyBody = modifyBody) )  {
+//            "employee-doesn't-exist" -> throw CustomException("employee-doesn't-exist", null)
+//            "not-project-owner" -> throw CustomException("not-project-owner", null)
+//            "invalid-password" -> throw CustomException("invalid-password", null)
+//        }
+//        val employee = repository.findById(modifyBody.employeeId).get()
+//        employee.password = stringFormatter.toPassword(modifyBody.newPassword)
+//        repository.save(employee)
+//        return "Password reset successfully"
+//    }
 
     private fun modifyPasswordValidations(projectManager: Long, modifyBody: ModifyPassword): String {
         if (!repository.findById(modifyBody.employeeId).isPresent) {

@@ -20,7 +20,6 @@ class EmployeeController(private val service: EmployeeService,
                     @RequestParam(name = "firstName") firstName: String,
                     @RequestParam(name = "lastName") lastName: String,
                     @RequestParam(name = "email") email: String,
-                    @RequestParam(name = "password") password: String,
                     @RequestParam(name = "wage") wage: Double,
                     @RequestParam(name = "joinDate") joinDate: String,
                     @RequestParam(name = "employeeType") employeeType: Long,
@@ -38,7 +37,6 @@ class EmployeeController(private val service: EmployeeService,
             wageType = wageType,
             joinDate = joinDate,
             lastName = lastName,
-            password = password,
             project = project
         )
         val message: String = service.addEmployee(employee = employee, userEmail = userEmail!!)
@@ -108,19 +106,19 @@ class EmployeeController(private val service: EmployeeService,
         )
     }
 
-    @PostMapping("/modify-password")
-    fun modifyPassword(@RequestHeader("Authorization") header:String,
-                       @RequestBody modifyBody: ModifyPassword
-    ): ResponseEntity<Any> {
-        val userEmail = tokenService.extractEmail(header.substringAfter("Bearer "))
-        val message: String = service.modifyPassword(userEmail = userEmail!!, modifyBody = modifyBody)
-        return ResponseEntity.status(200).body(
-            DefaultNa(
-                httpStatus = 200,
-                message = message
-            )
-        )
-    }
+//    @PostMapping("/modify-password")
+//    fun modifyPassword(@RequestHeader("Authorization") header:String,
+//                       @RequestBody modifyBody: ModifyPassword
+//    ): ResponseEntity<Any> {
+//        val userEmail = tokenService.extractEmail(header.substringAfter("Bearer "))
+//        val message: String = service.modifyPassword(userEmail = userEmail!!, modifyBody = modifyBody)
+//        return ResponseEntity.status(200).body(
+//            DefaultNa(
+//                httpStatus = 200,
+//                message = message
+//            )
+//        )
+//    }
 
     @GetMapping("/wage-info")
     fun getWageInfo(
