@@ -1,5 +1,6 @@
 package com.construction.management.cm.employeeauth
 
+import com.construction.management.cm.auth.CustomUserDetailsService
 import com.construction.management.cm.auth.TokenService
 import com.construction.management.cm.config.JwtProperties
 import com.construction.management.cm.dto.EmployeeLogIn
@@ -10,6 +11,7 @@ import com.construction.management.cm.employee.Employee
 import com.construction.management.cm.employee.EmployeeRepository
 import com.construction.management.cm.exceptionhandler.CustomException
 import com.construction.management.cm.user.UserRepository
+import com.construction.management.cm.user.UserService
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
@@ -29,6 +31,12 @@ class EmployeeAuthService(
 
     @Autowired
     lateinit var tokenService: TokenService
+
+    @Autowired
+    private lateinit var userDetailsService: CustomUserDetailsService
+
+    @Autowired
+    private lateinit var userService: UserService
 
 
     private val secretKey = Keys.hmacShaKeyFor(jwtProperties.key.toByteArray())
@@ -209,6 +217,38 @@ class EmployeeAuthService(
         repository.deleteById(user)
         return "User logged out successfully"
     }
+
+    fun switchToAdmin(user: Long): LoggedIn {
+        when (switchToAdminValidations(user)) {
+            "auth-user-na" -> throw CustomException("auth-user-na", null)
+        }
+        repository.deleteById(user)
+        val user = userDetailsService.loadUserByUsername(employeeRepository.findById(user).get().email.lowercase())
+        val token = tokenService.generate(
+            userDetails = user,
+            expirationDate = Date(System.currentTimeMillis() + jwtProperties.accessTokenExpiration)
+        )
+        return LoggedIn(
+            token = token,
+            firstName = userService.getUserFirstName(user.username)
+        )
+
+    }
+
+    fun switchToAdminValidations(user: Long): String {
+        if (!employeeRepository.findById(user).isPresent) {
+            return "auth-user-na"
+        }
+        val userEmail = employeeRepository.findById(user).get().email.lowercase()
+        if (userRepository.findByEmail(userEmail) == null) {
+            return "auth-user-na"
+        }
+        if (!userRepository.findByEmail(userEmail)!!.loggedIn) {
+            return "auth-user-na"
+        }
+        return "ok"
+    }
+
 
 
 }

@@ -230,6 +230,11 @@ class AuthService(private val wageTypeRepository: WageTypeRepository,
             userDetails = user,
             expirationDate = Date(System.currentTimeMillis() + jwtProperties.accessTokenExpiration)
         )
+        val fetchedUser = userRepository.findByEmail(authRequest.email.lowercase())
+        fetchedUser?.loggedIn = true
+        if (fetchedUser != null) {
+            userRepository.save(fetchedUser)
+        }
         return LoggedIn(
             token = token,
             firstName = userService.getUserFirstName(user.username)
