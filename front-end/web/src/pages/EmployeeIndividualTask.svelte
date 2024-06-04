@@ -207,7 +207,7 @@
                 <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
                 <p class="underline text-primary-200 text-lg  hover:cursor-pointer hover:text-primary-200" id="active-link" on:click={()=> navigate("comments")}>Comments</p>
             </div> 
-            <div class="mt-6 min-h-48 h-4/5 border border-primary-100 rounded-md bg-white overflow-auto pt-4 pr-4 pl-4">
+            <div class="mt-6 min-h-48 h-4/5  max-h-[400px] border border-primary-100 rounded-md bg-white overflow-auto pt-4 pr-4 pl-4">
                 {#each task.taskComments as comment}
                     {#if comment.commenter.toLowerCase() === 'you'}
                         <div class="flex flex-col gap-1 items-end ml-1 mb-4">

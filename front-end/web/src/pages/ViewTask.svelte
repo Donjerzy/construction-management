@@ -221,13 +221,13 @@
                 {#each task.taskComments as comment}
                     {#if comment.commenter.toLowerCase() === 'you'}
                         <div class="flex flex-col gap-1 items-end ml-1 mb-4">
-                            <p class="text-sm">{comment.commenter}</p>
-                            <p class="border bg-purple-200 border-purple-400 rounded-br-md rounded-tl-md p-4 text-base">{comment.comment}</p>
+                            <p class="text-sm font-sans">{comment.commenter}</p>
+                            <p class="border bg-purple-200 border-purple-400 rounded-br-md rounded-tl-md p-4 text-base font-sans">{comment.comment}</p>
                         </div>
                     {:else}
                         <div class="flex flex-col gap-1 items-start ml-1 mb-4">
-                            <p class="text-sm">{comment.commenter}</p>
-                            <p class="border bg-purple-200 border-purple-400 rounded-bl-md rounded-tr-md p-4 text-base">{comment.comment}</p>
+                            <p class="text-sm font-sans">{comment.commenter}</p>
+                            <p class="border bg-purple-200 border-purple-400 rounded-bl-md rounded-tr-md p-4 text-base font-sans">{comment.comment}</p>
                         </div>
                     {/if}
                     
