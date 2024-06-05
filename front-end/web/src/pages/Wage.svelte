@@ -372,52 +372,57 @@
             </div>
             <div class="mt-5">
                 <div>
-                    <label for="payment-type" class="block font-serif">Payment Type</label>
-                    <select class="font-sans mt-2 w-full"  id="payment-type" bind:value={paymentType}>
+                    <label for="payment-type" class="block font-serif text-sm">Payment Type</label>
+                    <select class="font-sans mt-2 w-[560px]"  id="payment-type" bind:value={paymentType}>
                         <option value="gen">Generated</option>
                         <option value="custom">Custom</option>
                     </select>
                 </div>
                 {#if paymentType === 'gen'}
                     <div class="mt-3">
-                        <div class="flex-col gap-40 mt-1">
-                            <p class="font-serif">Wage Type</p>
-                            <p  class="italic border mt-1 border-primary-100 p-2 bg-primary-100">{employeeWageType}</p>
+                        <div class="flex gap-20 items-center w-full mt-5">
+                            <div class="flex-col gap-40 w-full">
+                                <p class="font-serif text-sm">Wage Type</p>
+                                <p  class="italic border rounded w-full h-10 font-sans mt-1 border-primary-100 p-2 bg-primary-100">{employeeWageType}</p>
+                            </div>
+                            <div class="flex-col gap-40 w-full">
+                                <label  for="number_of_periods" class="block font-serif text-sm">Number of Period (Months/days/weeks)</label>
+                                <input class="font-sans mt-1 w-full h-10" type="number" id="number_of_periods" bind:value={noOfPeriod} on:input={calculateWage}>
+                            </div>
                         </div>
-                        <div class="flex-col gap-40 mt-2">
-                            <label  for="number_of_periods" class="block font-serif">Number of Period (Months/days/weeks)</label>
-                            <input class="font-sans mt-1 w-full" type="number" id="number_of_periods" bind:value={noOfPeriod} on:input={calculateWage}>
+
+                        <div class="flex-col gap-40 mt-5">
+                            <p class="font-serif text-sm">Amount</p>
+                            <p  class="italic border mt-1 w-[560px] rounded h-10 font-sans border-primary-100 p-2 bg-primary-100">{isNaN(generatedAmount) ? 0 : numberWithCommas(generatedAmount)}</p>
                         </div>
-                        <div class="flex-col gap-40 mt-1">
-                            <p class="font-serif">Amount</p>
-                            <p  class="italic border mt-1 border-primary-100 p-2 bg-primary-100">{isNaN(generatedAmount) ? 0 : numberWithCommas(generatedAmount)}</p>
-                        </div>
-                        <div class="flex-col gap-40 mt-4">
+                        <div class="flex-col gap-40 mt-5">
                             {#if loading}
                                 <Loader />
                             {:else}
                                 <Button 
-                                    height=12 width=36 label="Pay Wage" fontSize="sm" padding="8px"
+                                    height=10 width=36 label="Pay Wage" fontSize="sm" padding="8px"
                                     on:click={automaticPay} />
                                 {/if} 
                         </div>
                     </div>
                 {:else}
                     <div class="mt-3">
-                        <div class="flex-col gap-40 mt-2">
-                            <label for="custom_start_date" class="block font-serif">Start Date</label>
-                            <input class="font-sans mt-1 w-full" type="date" id="custom_start_date" min={nextValidPaymentDate}  bind:value={customStartDate}>
+                        <div class="flex gap-20 items-center w-full mt-5">
+                            <div class="flex-col gap-40 w-full">
+                                <label for="custom_start_date" class="block font-serif text-sm">Start Date</label>
+                                <input class="font-sans mt-1 w-full h-10" type="date" id="custom_start_date" min={nextValidPaymentDate}  bind:value={customStartDate}>
+                            </div>
+                            <div class="flex-col gap-40 mt-2 w-full">
+                                <label  for="custom_end_date" class="block font-serif text-sm">End Date</label>
+                                <input class="font-sans mt-1 w-full h-10" type="date" id="custom_start_date" min={customStartDate}  bind:value={customEndDate}>
+                            </div>
                         </div>
-                        <div class="flex-col gap-40 mt-2">
-                            <label  for="custom_end_date" class="block font-serif ">End Date</label>
-                            <input class="font-sans mt-1 w-full" type="date" id="custom_start_date" min={customStartDate}  bind:value={customEndDate}>
+                        <div class="flex-col gap-40 mt-5">
+                            <label for="custom_amount" class="block font-serif text-sm">Amount</label>
+                            <input class="font-sans mt-1 w-[560px]" type="text" id="custom_amount" bind:value={customAmountDisplay} on:input={customAmountChange}>
                         </div>
-                        <div class="flex-col gap-40 mt-2">
-                            <label for="custom_amount" class="block font-serif">Amount</label>
-                            <input class="font-sans mt-1 w-full" type="text" id="custom_amount" bind:value={customAmountDisplay} on:input={customAmountChange}>
-                        </div>
-                        <div class="mt-2 w-full">
-                            <label class="block" for="note">Note</label>
+                        <div class="mt-5 w-full">
+                            <label class="block text-sm font-serif" for="note">Note</label>
                             <textarea class="font-sans w-full" bind:value={wageNote}  id="note"></textarea>
                         </div>
                     </div>
@@ -426,7 +431,7 @@
                             <Loader />
                         {:else}
                             <Button 
-                                height=12 width=36 label="Pay Wage" fontSize="sm" padding="8px"
+                                height=10 width=36 label="Pay Wage" fontSize="sm" padding="8px"
                                 on:click={customPay} />
                             {/if} 
                     </div>    
@@ -449,21 +454,21 @@
             <Table divClass="max-h-80 overflow-auto" shadow hoverable={true}>
                 <TableHead defaultRow={false} theadClass="border-black">
                     <tr class="bg-primary-100">
-                        <TableHeadCell on:click={() => sortTable('periodStart')} class="text-white hover:cursor-pointer">Period Start</TableHeadCell>
-                        <TableHeadCell on:click={() => sortTable('periodEnd')} class="text-white hover:cursor-pointer">Period End</TableHeadCell>
-                        <TableHeadCell on:click={() => sortTable('amount')} class="text-white hover:cursor-pointer">Amount</TableHeadCell>
-                        <TableHeadCell on:click={() => sortTable('transactionDate')} class="text-white hover:cursor-pointer">Transaction Date</TableHeadCell>
+                        <TableHeadCell on:click={() => sortTable('periodStart')} class="text-white hover:cursor-pointer font-serif">Period Start</TableHeadCell>
+                        <TableHeadCell on:click={() => sortTable('periodEnd')} class="text-white hover:cursor-pointer font-serif">Period End</TableHeadCell>
+                        <TableHeadCell on:click={() => sortTable('amount')} class="text-white hover:cursor-pointer font-serif">Amount</TableHeadCell>
+                        <TableHeadCell on:click={() => sortTable('transactionDate')} class="text-white hover:cursor-pointer font-serif">Transaction Date</TableHeadCell>
                         <TableHeadCell  class="text-white">Note</TableHeadCell>
                     </tr>
                 </TableHead>
                 <TableBody>
                     {#each $sortItems as history }
                         <TableBodyRow>
-                            <TableBodyCell>{history.periodStart}</TableBodyCell>
-                            <TableBodyCell>{history.periodEnd}</TableBodyCell>
-                            <TableBodyCell>{numberWithCommas(history.amount)}</TableBodyCell>
-                            <TableBodyCell>{history.transactionDate}</TableBodyCell>
-                            <TableBodyCell>{history.note}</TableBodyCell>
+                            <TableBodyCell class="font-sans">{history.periodStart}</TableBodyCell>
+                            <TableBodyCell class="font-sans">{history.periodEnd}</TableBodyCell>
+                            <TableBodyCell class="font-sans">{numberWithCommas(history.amount)}</TableBodyCell>
+                            <TableBodyCell class="font-sans">{history.transactionDate}</TableBodyCell>
+                            <TableBodyCell class="font-sans">{history.note}</TableBodyCell>
                         </TableBodyRow>
                     {/each}
                 </TableBody>

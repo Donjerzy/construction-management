@@ -141,8 +141,7 @@
             document: expenseDocument
         })
     }
-
-
+9
    
 
 </script>
@@ -152,30 +151,68 @@
     <Toast />
     <form class="mt-7">
         {#if currPage === "one"}
-            <div class="mt-2 flex flex-col gap-2">
-                <label  for="expense_types" class="block font-serif">Expense Type</label>
-                <select id="expense_types" class="font-sans hover:cursor-pointer" bind:value={chosenExpenseType}>
-                    <option value="0">--Select--</option>
-                    {#each expenseTypes as type }
-                        <option value={type.id}>{type.name}</option>
-                    {/each}
-                </select>
+            <div class="flex gap-20 items-center w-full mt-5">
+                <div class="w-full flex flex-col gap-2">
+                    <label  for="expense_types" class="block font-serif text-sm">Expense Type</label>
+                    <select id="expense_types" class="w-full h-10 font-sans hover:cursor-pointer" bind:value={chosenExpenseType}>
+                        <option value="0">--Select--</option>
+                        {#each expenseTypes as type }
+                            <option value={type.id}>{type.name}</option>
+                        {/each}
+                    </select>
+                </div>
+                <div class="flex flex-col gap-2 w-full">
+                    <label class="font-serif text-sm" for="expense_title">Title</label>
+                    <input name="expense_title" class="w-full h-10 font-sans rounded border-primary-800" type="text" id="expense_title" bind:value={expenseTitle}>
+                </div>
             </div>
-            <div class="flex flex-col gap-2 mt-2">
-                <label class="font-serif" for="expense_title">Title</label>
-                <input name="expense_title" class="font-sans rounded border-primary-800" type="text" id="expense_title" bind:value={expenseTitle}>
+            
+            <div class="flex gap-20 items-center w-full mt-5">
+                <div class="flex flex-col gap-2 w-full">
+                    <label class="font-serif text-sm" for="cost">Cost</label>
+                    <input name="cost" class="font-sans rounded w-full h-10 border-primary-800" type="text" id="cost" bind:value={expenseCostDisplay} on:input={updateExpenseCost}>
+                </div>
+                <div class="flex flex-col gap-2 w-full">
+                    <label class="font-serif text-sm" for="join_date">Date</label>
+                    <input name="join_date" class="font-sans w-full h-10 rounded border-primary-800" type="date" id="join_date" bind:value={date}>
+                </div>
             </div>
-            <div class="flex flex-col gap-2 mt-2">
-                <label class="font-serif" for="cost">Cost</label>
-                <input name="cost" class="font-sans rounded border-primary-800" type="text" id="cost" bind:value={expenseCostDisplay} on:input={updateExpenseCost}>
-            </div>
-            <div class="flex flex-col gap-2 mt-2">
-                <label class="font-serif" for="note">Note</label>
+
+            <div class="flex flex-col gap-2 mt-5">
+                <label class="font-serif text-sm" for="note">Note</label>
                 <textarea name="note" class="font-sans rounded border-primary-800" bind:value={note} id="note"></textarea>
             </div>
-            <div class="flex flex-col gap-2 mt-3">
-                <Button height=12 width=36 label="Next" fontSize="sm" padding="8px" on:click={() => { currPage = "two"}}   />
+
+            <div class="flex flex-col gap-2 mt-5">
+                {#if expenseDocumentChosen === false}
+                    <label class="font-serif text-sm" for="contract">Expense Document (Not required*)</label>
+                    <input accept=".pdf" name="contract" class="font-sans rounded border-primary-800" type="file" id="contract" on:change={handleExpenseDocumentUpload}>
+                {:else}
+                    <div class="flex flex-col gap-2">
+                        <p class="text-lg font-serif">File</p>
+                        <div class="flex gap-5">
+                            <p class="italic text-base font-sans">{expenseDocument.name}</p>
+                            <!-- svelte-ignore a11y-click-events-have-key-events -->
+                            <!-- svelte-ignore a11y-no-static-element-interactions -->
+                            <svg on:click={()=> removeExpenseDocument()} class="h-7 w-7 hover:fill-primary-200 hover:cursor-pointer" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21.12 22.54L19 20.41L16.88 22.54L15.47 21.12L17.59 19L15.47 16.88L16.88 15.47L19 17.59L21.12 15.47L22.54 16.88L20.41 19L22.54 21.12L21.12 22.54M14 2H6C4.89 2 4 2.89 4 4V20C4 21.11 4.89 22 6 22H13.81C13.28 21.09 13 20.05 13 19C13 15.69 15.69 13 19 13C19.34 13 19.67 13.03 20 13.08V8L14 2M13 9V3.5L18.5 9H13Z" /></svg>
+                        </div>
+                    </div>
+                {/if}      
+            </div> 
+            
+            <div class="mt-5">
+                {#if loading}
+                    <Loader />
+                {:else}
+                    <Button 
+                        height=10 width=36 label="Add Expense" fontSize="sm" padding="8px"
+                        on:click={validateInput} 
+                    />
+                {/if}  
             </div>
+            <!-- <div class="flex flex-col gap-2 mt-3">
+                <Button height=12 width=36 label="Next" fontSize="sm" padding="8px" on:click={() => { currPage = "two"}}   />
+            </div> -->
         {:else}
             <div class="flex flex-col gap-2 mt-2">
                 <label class="font-serif" for="join_date">Date</label>

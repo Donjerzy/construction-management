@@ -218,18 +218,29 @@
     <Toast />
     <div class="mt-4">
         <form>
-            <div class="flex flex-col gap-2 mt-1">
-                <label class="font-serif" for="title">Title</label>
-                <input name="name" class="font-sans rounded border-primary-800" type="text" id="title" bind:value={title}>
+            <div class="flex gap-20 items-center w-full mt-5">
+                <div class="flex flex-col gap-2 w-full">
+                    <label class="font-serif text-sm" for="title">Title</label>
+                    <input name="name" class="font-sans rounded h-10 w-full border-primary-800" type="text" id="title" bind:value={title}>
+                </div>
+                <div class="flex flex-col gap-2 w-full">
+                    <label class="font-serif text-sm" for="title">Priority</label>
+                    <select class="font-serif w-full" id="priority" bind:value={priority}>
+                        <option value="0">--Select--</option>
+                        <option value="low">Low</option>
+                        <option value="medium">Medium</option>
+                        <option value="high">High</option>
+                    </select>
+                </div>
             </div>
-            <div class="flex flex-col gap-2 mt-1">
-                <label class="font-serif" for="description">Description</label>
+            <div class="flex flex-col gap-2 mt-5">
+                <label class="font-serif text-sm" for="description">Description</label>
                 <textarea class="font-sans" bind:value={description} id="description"></textarea>
             </div>
 
-            <div class="flex gap-4 mt-2">
+            <div class="flex gap-4 mt-5">
                 <div class="flex flex-col">
-                    <p class="font-serif">Chosen Employees</p>
+                    <p class="font-serif text-sm">Chosen Employees</p>
                     <div class="border border-primary-100 min-w-[600px] mt-2 min-h-[200px] rounded flex felx-wrap p-3">
                         {#each chosenEmployeeNamesDisplay as employee}
                            <div class="flex items-center h-12 p-3 gap-2 mr-4 rounded shadow-md bg-white">
@@ -241,10 +252,10 @@
                         {/each}
                     </div>
                 </div>
-                <div class="flex flex-col">
-                    <p class="font-serif">Choose employee</p>
-                    <div class="mt-2">
-                        <select class="hover:cursor-pointer font-sans" on:change={(e)=> addToChosenEmployees(e.target.value)}>
+                <div class="flex flex-col w-full">
+                    <p class="font-serif text-sm">Choose employee</p>
+                    <div class="w-full mt-2">
+                        <select class="hover:cursor-pointer font-sans w-full" on:change={(e)=> addToChosenEmployees(e.target.value)}>
                             <option value="0">--Select--</option>
                             {#each employeeList as employee }
                                 <option value={employee.id}>{employee.name}</option>
@@ -254,22 +265,14 @@
                 </div>
             </div>
 
-            <div class="flex flex-col gap-2 mt-1">
-                <label class="font-serif" for="title">Priority</label>
-                <select class="font-serif" id="priority" bind:value={priority}>
-                    <option value="0">--Select--</option>
-                    <option value="low">Low</option>
-                    <option value="medium">Medium</option>
-                    <option value="high">High</option>
-                </select>
-            </div>
+           
 
             <div class="mt-4 flex justify-between items-center">
                 {#if loading}
                     <Loader />
                 {:else}
                     <Button 
-                    height=12 width=36 label="Add Task" fontSize="sm" padding="8px"
+                    height=10 width=36 label="Add Task" fontSize="sm" padding="8px"
                     on:click={addTask} />
                     <button on:click={()=> defaultModal = true} class="bg-primary-50 h-10 w-10 flex justify-center items-center rounded-3xl hover:bg-primary-200 hover:cursor-pointer">
                         <svg class="w-5 h-5 fill-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12,2A7,7 0 0,0 5,9C5,11.38 6.19,13.47 8,14.74V17A1,1 0 0,0 9,18H15A1,1 0 0,0 16,17V14.74C17.81,13.47 19,11.38 19,9A7,7 0 0,0 12,2M9,21A1,1 0 0,0 10,22H14A1,1 0 0,0 15,21V20H9V21Z" /></svg>

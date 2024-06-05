@@ -172,7 +172,7 @@
 
         <div class="mt-8">
             <Button 
-                height=12 width=36 label="Logout" fontSize="sm" padding="8px"
+                height=10 width=36 label="Logout" fontSize="sm" padding="8px"
                 on:click={logOutUser} />
         </div>
     </div>

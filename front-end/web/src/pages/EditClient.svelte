@@ -155,32 +155,36 @@
 <AdminComponent appName={appName} contentTitle={title} userFirstName={get(firstName)}>
     <div class="container">
         <form class="mt-7">
-            <div class="flex flex-col gap-2 mt-1">
-                <label class="font-serif" for="client_name">Client Name</label>
-                <input name="name" class="font-sans rounded border-primary-800" type="text" id="client_name" bind:value={name}>
+            <div class="flex gap-20 items-center w-full">
+                <div class="flex flex-col gap-2 w-full">
+                    <label class="font-serif text-sm" for="client_name">Client Name</label>
+                    <input name="name" class="w-full h-10 font-sans rounded border-primary-800" type="text" id="client_name" bind:value={name}>
+                </div>
+                <div class="flex flex-col gap-2 w-full">
+                    <label class="font-serif text-sm" for="client_type">Client Type</label>
+                    <select name="client_type" class="w-full h-10 font-sans rounded border-primary-800" bind:value={typeOfClient} id="client_type">
+                        <option class="h-4" value="individual">Individual</option>
+                        <option class="h-4" value="group">Group</option>
+                        <option class="h-4" value="organisation">Organisation</option>
+                    </select>
+                </div>
             </div>
-            <div class="flex flex-col gap-2 mt-2">
-                <label class="font-serif" for="client_type">Client Type</label>
-                <select name="client_type" class="font-sans rounded border-primary-800" bind:value={typeOfClient} id="client_type">
-                    <option class="h-4" value="individual">Individual</option>
-                    <option class="h-4" value="group">Group</option>
-                    <option class="h-4" value="organisation">Organisation</option>
-                </select>
+            <div class="flex gap-20 items-center mt-5 w-full">
+                <div class="flex flex-col gap-2 w-full">
+                    <label class="font-serif text-sm" for="commited_amount">Committed Amount</label>
+                    <input name="commited_amount" class="w-full h-10 font-sans rounded border-primary-800" type="text" id="commited_amount" bind:value={committedAmountDisplay} on:input={updateCommitedAmount}>
+                </div>
+                <div class="flex flex-col gap-2 w-full">
+                    <label class="font-serif text-sm" for="invested_amount">Invested Amount</label>
+                    <input name="invested_amount" class="w-full h-10 font-sans rounded border-primary-800" type="text" id="invested_amount" bind:value={investedAmountDisplay} on:input={updateInvestedAmount}>
+                </div>
             </div>
-            <div class="flex flex-col gap-2 mt-2">
-                <label class="font-serif" for="commited_amount">Committed Amount</label>
-                <input name="commited_amount" class="font-sans rounded border-primary-800" type="text" id="commited_amount" bind:value={committedAmountDisplay} on:input={updateCommitedAmount}>
-            </div>
-            <div class="flex flex-col gap-2 mt-2">
-                <label class="font-serif" for="invested_amount">Invested Amount</label>
-                <input name="invested_amount" class="font-sans rounded border-primary-800" type="text" id="invested_amount" bind:value={investedAmountDisplay} on:input={updateInvestedAmount}>
-            </div>
-            <div class="mt-4">
+            <div class="mt-5">
                 {#if loading}
                     <Loader />
                 {:else}
                     <Button 
-                    height=12 width=36 label="Save" fontSize="sm" padding="8px"
+                    height=10 width=36 label="Save" fontSize="sm" padding="8px"
                     on:click={validateInput} />
                 {/if}    
             </div>

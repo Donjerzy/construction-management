@@ -86,16 +86,16 @@
 <AdminComponent appName={appName} contentTitle={title} userFirstName={get(firstName)}>
     <div class="container">
         <form>
-            <div class="form-row">
-                <label class="font-serif" for="project_name">Project Name</label>
-                <input class="rounded font-sans border-primary-800" type="text" id="project_name" bind:value={projectName}>
+            <div class="form-roww">
+                <label class="font-serif text-sm" for="project_name">Project Name</label>
+                <input class="rounded font-sans border-primary-800 w-1/2" type="text" id="project_name" bind:value={projectName}>
             </div>
             <div class="form-row">
                 {#if loading}
                     <Loader />
                 {:else}
                     <Button 
-                    height=12 width=36 label="Add Project" fontSize="sm" padding="8px"
+                    height=10 width=36 label="Add Project" fontSize="sm" padding="8px"
                     on:click={validateInput} />
                 {/if}
                 
@@ -112,7 +112,15 @@
         margin-top: 20px;
         min-height: 50%;
     }
+    .form-roww {
+        margin-top: 8px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 12px; 
+    }
     .form-row {
+        margin-top: 20px;
         display: flex;
         flex-direction: column;
         justify-content: center;

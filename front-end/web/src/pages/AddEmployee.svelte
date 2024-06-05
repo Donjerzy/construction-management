@@ -140,6 +140,7 @@
                 userEmail = "";
                 userPassword = "";
                 userWageDisplay = "0";
+                userJoinDate = undefined;
                 currentPage = "one"  // one || two
                 return;
             }
@@ -243,64 +244,87 @@
     <div class="container">
         <form class="mt-7">
             {#if currentPage === "one"}
-                <div class="flex flex-col gap-2 mt-1">
-                    <label class="font-serif" for="first_name">First Name</label>
-                    <input name="first_name" class="font-sans rounded border-primary-800" type="text" id="first_name" bind:value={userFirstName}>
-                </div>
-                <div class="flex flex-col gap-2 mt-2">
-                    <label class="font-serif" for="last_name">Last Name</label>
-                    <input name="last_name" class="font-sans rounded border-primary-800" type="text" id="last_name" bind:value={userLastName}>
-                </div>
-                <div class="flex flex-col gap-2 mt-2">
-                    <label class="font-serif" for="email">Email</label>
-                    <input name="email" class="rounded font-sans border-primary-800" type="email" id="email" bind:value={userEmail}>
-                </div>
-                <!-- <div class="flex flex-col gap-2 mt-2">
-                    <label class="font-serif" for="password">Password</label>
-                    <input name="password" class="rounded font-sans border-primary-800" type="password" id="password" bind:value={userPassword}>
-                </div> -->
-                <div class="flex flex-col gap-2 mt-2">
-                    <label class="font-serif" for="wage_type">Wage Type</label>
-                    <select name="wage_type" class="rounded font-sans border-primary-800" id="wage_type" bind:value={chosenWageType}>
-                        {#each wageTypes as type }
-                            <option value={type.id}>{type.name}</option>
-                        {/each}
-                    </select>
-                </div>
-                <div class="flex flex-col gap-2 mt-3">
-                    <Button height=12 width=36 label="Next" fontSize="sm" padding="8px" on:click={() => { currentPage = "two"}}   />
-                </div>
-            {:else}
-            <div class="flex flex-col gap-2 mt-2">
-                <label class="font-serif" for="wage">Wage</label>
-                <input name="wage" class="rounded font-sans border-primary-800" type="text" id="wage" bind:value={userWageDisplay} on:input={updateUserWage}  >
-            </div>
-            <div class="flex flex-col gap-2 mt-2">
-                <label class="font-serif" for="employee_type">Employee Type</label>
-                <select name="employee_type" class="font-sans rounded border-primary-800" id="employee_type" bind:value={chosenEmployeeType}>
-                    {#each employeeTypes as type }
-                        <option value={type.id}>{type.name}</option>
-                    {/each}
-                </select>
-            </div>
-            <div class="flex flex-col gap-2 mt-2">
-                <label class="font-serif" for="join_date">Join Date</label>
-                <input name="join_date" class="rounded font-sans border-primary-800" type="date" id="join_date" bind:value={userJoinDate}>
-            </div>
-            <div class="flex flex-col gap-2 mt-2">
-                {#if contractChosen === false}
-                    <label class="font-serif" for="contract">Contract (Not required*)</label>
-                    <input accept=".pdf" name="contract" class=" font-sans rounded border-primary-800" type="file" id="contract" on:change={handleContractUpload}>
-                {:else}
-                    <div class="flex gap-4 items-center">
-                        <p class="font-bold text-lg font-serif">File:</p>
-                        <p class="italic text-base font-sans">{contract.name}</p>
-                        <!-- svelte-ignore a11y-click-events-have-key-events -->
-                        <!-- svelte-ignore a11y-no-static-element-interactions -->
-                        <svg on:click={()=> removeContract()} class="h-7 w-7 hover:fill-primary-200 hover:cursor-pointer" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21.12 22.54L19 20.41L16.88 22.54L15.47 21.12L17.59 19L15.47 16.88L16.88 15.47L19 17.59L21.12 15.47L22.54 16.88L20.41 19L22.54 21.12L21.12 22.54M14 2H6C4.89 2 4 2.89 4 4V20C4 21.11 4.89 22 6 22H13.81C13.28 21.09 13 20.05 13 19C13 15.69 15.69 13 19 13C19.34 13 19.67 13.03 20 13.08V8L14 2M13 9V3.5L18.5 9H13Z" /></svg>
+                <div class="flex gap-20 items-center w-full">
+                    <div class="flex flex-col gap-2 w-full">
+                        <label class="font-serif text-sm" for="first_name">First Name</label>
+                        <input name="first_name" class="w-full h-10 font-sans rounded border-primary-800" type="text" id="first_name" bind:value={userFirstName}>
                     </div>
-                {/if}      
-            </div>
+                    <div class="flex flex-col gap-2 w-full">
+                        <label class="font-serif text-sm" for="last_name">Last Name</label>
+                        <input name="last_name" class="w-full h-10 font-sans rounded border-primary-800" type="text" id="last_name" bind:value={userLastName}>
+                    </div>
+                </div>
+
+                <div class="flex gap-20 items-center w-full mt-5">
+                    <div class="flex flex-col w-full  gap-2">
+                        <label class="font-serif text-sm" for="email">Email</label>
+                        <input name="email" class="w-full h-10  rounded font-sans border-primary-800" type="email" id="email" bind:value={userEmail}>
+                    </div>
+                    <div class="flex flex-col gap-2 w-full">
+                        <label class="font-serif text-sm" for="join_date">Join Date</label>
+                        <input name="join_date" class="w-full h-10 rounded font-sans border-primary-800" type="date" id="join_date" bind:value={userJoinDate}>
+                    </div>
+                </div>
+
+                <div class="flex gap-20 items-center w-full mt-5">
+                    <div class="flex flex-col gap-2 w-full ">
+                        <label class="font-serif text-sm" for="wage_type">Wage Type</label>
+                        <select name="wage_type" class="w-full h-10  rounded font-sans border-primary-800" id="wage_type" bind:value={chosenWageType}>
+                            {#each wageTypes as type }
+                                <option value={type.id}>{type.name}</option>
+                            {/each}
+                        </select>
+                    </div>
+                    <div class="flex flex-col gap-2 w-full">
+                        <label class="font-serif text-sm" for="wage">Wage</label>
+                        <input name="wage" class="rounded font-sans w-full border-primary-800" type="text" id="wage" bind:value={userWageDisplay} on:input={updateUserWage}  >
+                    </div>
+                </div>
+
+                <div class="flex gap-20 items-center w-full mt-5">
+                    <div class="flex flex-col gap-2 w-full">
+                        <label class="font-serif text-sm" for="employee_type">Employee Type</label>
+                        <select name="employee_type" class="w-full font-sans rounded border-primary-800" id="employee_type" bind:value={chosenEmployeeType}>
+                            {#each employeeTypes as type }
+                                <option value={type.id}>{type.name}</option>
+                            {/each}
+                        </select>
+                    </div>
+                    <div class="flex flex-col gap-2 w-full">
+                        {#if contractChosen === false}
+                            <label class="font-serif text-sm" for="contract">Contract (Not required*)</label>
+                            <input accept=".pdf" name="contract" class=" font-sans rounded border-primary-800" type="file" id="contract" on:change={handleContractUpload}>
+                        {:else}
+                            <div class="flex flex-col gap-2">
+                                <p class="text-sm font-serif">File</p>
+                                <div class="flex gap-5">
+                                    <p class="italic text-base font-sans">{contract.name}</p>
+                                    <!-- svelte-ignore a11y-click-events-have-key-events -->
+                                    <!-- svelte-ignore a11y-no-static-element-interactions -->
+                                    <svg on:click={()=> removeContract()} class="h-7 w-7 hover:fill-primary-200 hover:cursor-pointer" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21.12 22.54L19 20.41L16.88 22.54L15.47 21.12L17.59 19L15.47 16.88L16.88 15.47L19 17.59L21.12 15.47L22.54 16.88L20.41 19L22.54 21.12L21.12 22.54M14 2H6C4.89 2 4 2.89 4 4V20C4 21.11 4.89 22 6 22H13.81C13.28 21.09 13 20.05 13 19C13 15.69 15.69 13 19 13C19.34 13 19.67 13.03 20 13.08V8L14 2M13 9V3.5L18.5 9H13Z" /></svg>
+                                </div>
+                            </div>
+                        {/if}      
+                    </div>
+                </div>
+
+                <div class="mt-5">
+                    {#if loading}
+                        <Loader />
+                    {:else}
+                        <Button 
+                        height=10 width=36 label="Add Employee" fontSize="sm" padding="8px"
+                        on:click={validateInput} />
+                    {/if}  
+                </div>
+
+
+
+                <!-- <div class="flex flex-col gap-2 mt-3">
+                    <Button height=12 width=36 label="Next" fontSize="sm" padding="8px" on:click={() => { currentPage = "two"}}   />
+                </div> -->
+            {:else}
+            
             <div class="flex flex-col gap-2 mt-3">
                 <Button height=12 width=36 label="Previous" fontSize="sm" padding="8px" on:click={() => { currentPage = "one"}}   />
             </div>

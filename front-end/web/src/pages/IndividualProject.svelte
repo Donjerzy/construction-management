@@ -538,29 +538,28 @@
                 <a href={`/project/${projectId}/add-employee`}><Button fontSize="base" height="10" label="Add Employee" padding="7" width="32" /> </a>
                 </div>
                 <div class="mt-4 pb-8 max-h-screen">
-                    <TableSearch placeholder="Search by employee name" hoverable={true} bind:inputValue={searchTerm}>
+                    <TableSearch placeholder="Search by employee name" divClass="font-sans" hoverable={true} bind:inputValue={searchTerm}>
                     <Table divClass="max-h-80 overflow-auto" shadow>
                             <TableHead defaultRow={false} theadClass="border-black">
                                 <tr class="bg-primary-100">
-                                    <TableHeadCell class="text-white">Name</TableHeadCell>
-                                    <TableHeadCell class="text-white">Employee Type</TableHeadCell>
-                                    <TableHeadCell class="text-white">Wage Type</TableHeadCell>
-                                    <TableHeadCell class="text-white">Wage</TableHeadCell>
-                                    <TableHeadCell class="text-white">Action</TableHeadCell>
+                                    <TableHeadCell class="text-white font-serif">Name</TableHeadCell>
+                                    <TableHeadCell class="text-white font-serif">Employee Type</TableHeadCell>
+                                    <TableHeadCell class="text-white font-serif">Wage Type</TableHeadCell>
+                                    <TableHeadCell class="text-white font-serif">Wage</TableHeadCell>
+                                    <TableHeadCell class="text-white font-serif">Action</TableHeadCell>
                                 </tr>
                             </TableHead>
                             <TableBody>
                                 {#each filteredEmployees as employee}
                                     <TableBodyRow>
-                                        <TableBodyCell>{employee.name}</TableBodyCell>
-                                        <TableBodyCell>{employee.employeeType}</TableBodyCell>
-                                        <TableBodyCell>{employee.wageType}</TableBodyCell>
-                                        <TableBodyCell>{numberWithCommas(employee.wage)}</TableBodyCell>
-                                        <TableBodyCell>
+                                        <TableBodyCell class="font-sans">{employee.name}</TableBodyCell>
+                                        <TableBodyCell class="font-sans">{employee.employeeType}</TableBodyCell>
+                                        <TableBodyCell class="font-sans">{employee.wageType}</TableBodyCell>
+                                        <TableBodyCell class="font-sans">{numberWithCommas(employee.wage)}</TableBodyCell>
+                                        <TableBodyCell class="font-sans">
                                             <div class="flex gap-4 items-center">
                                                 <a class="underline hover:cursor-pointer hover:text-primary-200" href={`/project/${projectId}/${employee.id}`}>View</a>
-                                            </div>
-                                            
+                                            </div>  
                                         </TableBodyCell>
                                     </TableBodyRow>
                                 {/each}
@@ -604,7 +603,7 @@
                     </div>
                 </div>
                 <div class="mt-4">
-                    <p class="text-sm font-serif">Change status</p>
+                    <p class="text-sm font-serif">Change project status</p>
                     <div class="mt-2 border-black bg-white h-16 rounded p-4 flex justify-between items-center shadow-md shadow-primary-600">
                         <p class="font-sans text-base">{projectStatus}</p>
                         {#if chosenStatus.toUpperCase() !== projectStatus}
@@ -776,21 +775,21 @@
                     <p class="font-serif underline text-primary-900 hover:cursor-pointer hover:text-primary-200"  on:click={()=> navigate("actions")}>Actions</p>
                 </div>
                 <div class="mt-5">
-                    <TableSearch placeholder="Search by report name" hoverable={true} bind:inputValue={reportSearchTerm}>
+                    <TableSearch placeholder="Search by report name" divClass="font-sans" hoverable={true} bind:inputValue={reportSearchTerm}>
                         <Table divClass="max-h-80 overflow-auto" shadow>
                              <TableHead defaultRow={false} theadClass="border-black">
                                  <tr class="bg-primary-100">
-                                     <TableHeadCell class="text-white">#</TableHeadCell>
-                                     <TableHeadCell class="text-white">Name</TableHeadCell>
-                                     <TableHeadCell class="text-white">Action</TableHeadCell>
+                                     <TableHeadCell class="text-white font-serif">#</TableHeadCell>
+                                     <TableHeadCell class="text-white font-serif">Name</TableHeadCell>
+                                     <TableHeadCell class="text-white font-serif">Action</TableHeadCell>
                                  </tr>
                              </TableHead>
                              <TableBody>
                                  {#each filteredReports as report}
                                      <TableBodyRow>
-                                         <TableBodyCell>{report.id}</TableBodyCell>
-                                         <TableBodyCell>{report.name}</TableBodyCell>
-                                         <TableBodyCell class="flex gap-8">
+                                         <TableBodyCell class="font-sans">{report.id}</TableBodyCell>
+                                         <TableBodyCell class="font-sans">{report.name}</TableBodyCell>
+                                         <TableBodyCell class="flex gap-8 font-sans">
                                             {#if report.id === 1}
                                                 <a target="_blank" class="underline hover:cursor-pointer hover:text-primary-200" href={`/project/${projectId}/report/general`}>View</a>
                                             {:else if report.id === 2}
@@ -833,28 +832,28 @@
                     <a href={`/project/${projectId}/add-expense`}><Button fontSize="base" height="10" label="Add Expense" padding="7" width="32" /> </a>
                 </div>
                 <div class="mt-4 pb-8 max-h-screen">
-                    <TableSearch placeholder="Search by title" hoverable={true} bind:inputValue={expenseSearchTerm}>
+                    <TableSearch placeholder="Search by title" divClass="font-sans" hoverable={true} bind:inputValue={expenseSearchTerm}>
                         <Table divClass="max-h-80 overflow-auto" shadow>
                             <TableHead defaultRow={false} theadClass="border-black">
                                 <tr class="bg-primary-100">
-                                    <TableHeadCell class="text-white">Title</TableHeadCell>
-                                    <TableHeadCell class="text-white">Expense Type</TableHeadCell>
-                                    <TableHeadCell class="text-white">Cost</TableHeadCell>
-                                    <TableHeadCell class="text-white">Added By</TableHeadCell>
-                                    <TableHeadCell class="text-white">Date</TableHeadCell>
-                                    <TableHeadCell class="text-white">Document</TableHeadCell>
-                                    <TableHeadCell class="text-white">Note</TableHeadCell>
+                                    <TableHeadCell class="text-white font-serif">Title</TableHeadCell>
+                                    <TableHeadCell class="text-white font-serif">Expense Type</TableHeadCell>
+                                    <TableHeadCell class="text-white font-serif">Cost</TableHeadCell>
+                                    <TableHeadCell class="text-white font-serif">Added By</TableHeadCell>
+                                    <TableHeadCell class="text-white font-serif">Date</TableHeadCell>
+                                    <TableHeadCell class="text-white font-serif">Document</TableHeadCell>
+                                    <TableHeadCell class="text-white font-serif">Note</TableHeadCell>
                                 </tr>
                             </TableHead>
                             <TableBody>
                                 {#each filteredExpenses as expense}
                                     <TableBodyRow>
-                                        <TableBodyCell>{expense.title}</TableBodyCell>
-                                        <TableBodyCell>{expense.type}</TableBodyCell>
-                                        <TableBodyCell>{numberWithCommas(expense.cost)}</TableBodyCell>
-                                        <TableBodyCell>{expense.addedBy}</TableBodyCell>
-                                        <TableBodyCell>{expense.date}</TableBodyCell>
-                                        <TableBodyCell>
+                                        <TableBodyCell class="font-sans">{expense.title}</TableBodyCell>
+                                        <TableBodyCell class="font-sans">{expense.type}</TableBodyCell>
+                                        <TableBodyCell class="font-sans">{numberWithCommas(expense.cost)}</TableBodyCell>
+                                        <TableBodyCell class="font-sans">{expense.addedBy}</TableBodyCell>
+                                        <TableBodyCell class="font-sans">{expense.date}</TableBodyCell>
+                                        <TableBodyCell class="font-sans">
                                             {#if expense.hasDocument === true}
                                                 <div class="flex gap-4 items-center">
                                                     <a class="underline hover:cursor-pointer hover:text-primary-200" href={`/expense/document/${expense.expenseId}`}>View</a>
@@ -863,7 +862,7 @@
                                                 <p>n/a</p>
                                             {/if}     
                                         </TableBodyCell>
-                                        <TableBodyCell>{expense.note}</TableBodyCell>
+                                        <TableBodyCell class="font-sans">{expense.note}</TableBodyCell>
                                     </TableBodyRow>
                                 {/each}
                             </TableBody>

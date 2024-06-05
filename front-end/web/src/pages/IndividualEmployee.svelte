@@ -293,13 +293,13 @@
             </div>
             <div class="flex flex-col w-[500px]">
                 <div>
-                    <p class="underline text-lg">Personal Information</p>
+                    <p class="underline text-lg font-serif">Personal Information</p>
                 </div>
                 <div class="mt-2">
                     <div class="flex flex-col gap-1 max-h-72 overflow-auto w-[500px]">
                         <div class="flex items-center justify-between pr-4 border-b pb-2">
-                            <p class="text-base">Name:</p>
-                            <p class="flex gap-2 items-center italic text-sm">
+                            <p class="text-base font-serif">Name:</p>
+                            <p class="flex gap-2 items-center italic text-sm font-sans">
                                 {#if editName}
                                     {#if nameLoading}
                                         <Loader />
@@ -325,8 +325,8 @@
 
                         <!--Email-->
                         <div class="flex items-center justify-between pr-4 border-b pb-2">
-                            <p class="text-base">Email:</p>
-                            <p class="flex gap-2 items-center italic text-sm">
+                            <p class="text-base font-serif">Email:</p>
+                            <p class="flex gap-2 items-center italic text-sm font-sans">
                                 {#if editEmail}
                                     {#if emailLoading}
                                         <Loader />
@@ -357,7 +357,7 @@
                 <svg class="w-10 h-10 mx-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17.66 11.2C17.43 10.9 17.15 10.64 16.89 10.38C16.22 9.78 15.46 9.35 14.82 8.72C13.33 7.26 13 4.85 13.95 3C13 3.23 12.17 3.75 11.46 4.32C8.87 6.4 7.85 10.07 9.07 13.22C9.11 13.32 9.15 13.42 9.15 13.55C9.15 13.77 9 13.97 8.8 14.05C8.57 14.15 8.33 14.09 8.14 13.93C8.08 13.88 8.04 13.83 8 13.76C6.87 12.33 6.69 10.28 7.45 8.64C5.78 10 4.87 12.3 5 14.47C5.06 14.97 5.12 15.47 5.29 15.97C5.43 16.57 5.7 17.17 6 17.7C7.08 19.43 8.95 20.67 10.96 20.92C13.1 21.19 15.39 20.8 17.03 19.32C18.86 17.66 19.5 15 18.56 12.72L18.43 12.46C18.22 12 17.66 11.2 17.66 11.2M14.5 17.5C14.22 17.74 13.76 18 13.4 18.1C12.28 18.5 11.16 17.94 10.5 17.28C11.69 17 12.4 16.12 12.61 15.23C12.78 14.43 12.46 13.77 12.33 13C12.21 12.26 12.23 11.63 12.5 10.94C12.69 11.32 12.89 11.7 13.13 12C13.9 13 15.11 13.44 15.37 14.8C15.41 14.94 15.43 15.08 15.43 15.23C15.46 16.05 15.1 16.95 14.5 17.5H14.5Z" /></svg>
             </div>
             <div class="flex flex-col">
-                <p class="underline text-lg">Other Information</p>
+                <p class="underline text-lg font-serif">Other Information</p>
                 <div class="mt-2">
                     <div class="flex flex-col gap-1 max-h-72 overflow-auto w-[340px]">
                         <div class="flex items-center justify-between pr-4 pb-10 ">
@@ -366,7 +366,7 @@
                                 <span class="tooltiptext">Based on employee comments</span>
                             </div>
                             
-                            <p class="italic text-sm">{employee.morale}</p>
+                            <p class="italic text-sm font-sans">{employee.morale}</p>
                         </div>  
                     </div>
                 </div>  
@@ -379,47 +379,47 @@
                 <svg class="w-10 h-10 mx-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10,2H14A2,2 0 0,1 16,4V6H20A2,2 0 0,1 22,8V19A2,2 0 0,1 20,21H4C2.89,21 2,20.1 2,19V8C2,6.89 2.89,6 4,6H8V4C8,2.89 8.89,2 10,2M14,6V4H10V6H14Z" /></svg>
             </div>
             <div class="flex flex-col gap-1 max-h-72 overflow-auto w-[500px]">
-                <p class="underline text-lg">Employment Information</p>
+                <p class="underline text-lg font-serif">Employment Information</p>
                 <div class="mt-2">
                     <div class="flex items-center justify-between pr-4 border-b pb-2">
-                        <p class="text-base">Employee Type:</p>
-                        <p class="italic text-sm">{employee.employeeType}</p>
+                        <p class="text-base font-serif">Employee Type:</p>
+                        <p class="italic text-sm font-sans">{employee.employeeType}</p>
                     </div>
                     <div class="flex items-center justify-between pr-4 border-b pb-2 pt-2">
-                        <p class="text-base">Join Date:</p>
-                        <p class="italic text-sm">{employee.joinDate}</p>
+                        <p class="text-base font-serif">Join Date:</p>
+                        <p class="italic text-sm font-sans">{employee.joinDate}</p>
                     </div>
                     <div class="flex items-center justify-between pr-4 border-b pb-2 pt-2">
-                        <p class="text-base">Tasks:</p>
-                        <p class="italic text-sm">{employee.totalTasks}</p>
+                        <p class="text-base font-serif">Tasks:</p>
+                        <p class="italic text-sm font-sans">{employee.totalTasks}</p>
                     </div>
                     <div class="flex items-center justify-between pr-4 border-b pb-2 pt-2">
-                        <p class="text-base">Completed Tasks:</p>
-                        <p class="italic text-sm">{employee.tasksCompleted}</p>
+                        <p class="text-base font-serif">Completed Tasks:</p>
+                        <p class="italic text-sm font-sans">{employee.tasksCompleted}</p>
                     </div>
-                    <div class="flex items-center justify-between pr-4 border-b pb-2 pt-2">
+                    <!-- <div class="flex items-center justify-between pr-4 border-b pb-2 pt-2">
                         <p class="text-base">Completed On Time Tasks:</p>
                         <p class="italic text-sm">{employee.tasksCompletedOnTime}</p>
                     </div>
                     <div class="flex items-center justify-between pr-4 border-b pb-2 pt-2">
                         <p class="text-base">Completed Past Time:</p>
                         <p class="italic text-sm">{employee.tasksCompletedPastTime}</p>
+                    </div> -->
+                    <div class="flex items-center justify-between pr-4 border-b pb-2 pt-2">
+                        <p class="text-base font-serif">Ongoing Tasks:</p>
+                        <p class="italic text-sm font-sans">{employee.tasksOngoing}</p>
                     </div>
                     <div class="flex items-center justify-between pr-4 border-b pb-2 pt-2">
-                        <p class="text-base">Ongoing Tasks:</p>
-                        <p class="italic text-sm">{employee.tasksOngoing}</p>
+                        <p class="text-base font-serif">Wage Type:</p>
+                        <p class="italic text-sm font-sans">{employee.wageType}</p>
                     </div>
                     <div class="flex items-center justify-between pr-4 border-b pb-2 pt-2">
-                        <p class="text-base">Wage Type:</p>
-                        <p class="italic text-sm">{employee.wageType}</p>
+                        <p class="text-base font-serif">Wage:</p>
+                        <p class="italic text-sm font-sans">{numberWithCommas(employee.wage)}</p>
                     </div>
                     <div class="flex items-center justify-between pr-4 border-b pb-2 pt-2">
-                        <p class="text-base">Wage:</p>
-                        <p class="italic text-sm">{numberWithCommas(employee.wage)}</p>
-                    </div>
-                    <div class="flex items-center justify-between pr-4 border-b pb-2 pt-2">
-                        <p class="text-base">Wage Paid:</p>
-                        <p class="italic text-sm">{numberWithCommas(employee.wagesPaid)}</p>
+                        <p class="text-base font-serif">Wage Paid:</p>
+                        <p class="italic text-sm font-sans">{numberWithCommas(employee.wagesPaid)}</p>
                     </div>
                 </div>
             </div>
@@ -430,7 +430,7 @@
                 <svg class="w-10 h-10 mx-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6,2A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2H6M6,4H13V9H18V20H6V4M8,12V14H16V12H8M8,16V18H13V16H8Z" /></svg>
             </div>
             <div class="flex flex-col">
-                <p class="underline text-lg">Contract</p>
+                <p class="underline text-lg font-serif">Contract</p>
                 <div class="flex justify-start w-[340px] max-h-full pt-4">
                     {#if employee.hasContract === 'yes'}
                         <div>
@@ -444,12 +444,14 @@
                             {#if contractChosen === false}
                                 <input accept=".pdf" name="contract" class="font-sans rounded border-primary-800" type="file" id="contract" on:change={handleContractUpload}>
                             {:else}
-                                <div class="flex gap-4 items-center">
-                                    <p class="font-bold text-lg font-serif">File:</p>
-                                    <p class="italic text-base font-sans">{contract.name}</p>
-                                    <!-- svelte-ignore a11y-click-events-have-key-events -->
-                                    <!-- svelte-ignore a11y-no-static-element-interactions -->
-                                    <svg on:click={()=> removeContract()} class="h-7 w-7 hover:fill-primary-200 hover:cursor-pointer" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21.12 22.54L19 20.41L16.88 22.54L15.47 21.12L17.59 19L15.47 16.88L16.88 15.47L19 17.59L21.12 15.47L22.54 16.88L20.41 19L22.54 21.12L21.12 22.54M14 2H6C4.89 2 4 2.89 4 4V20C4 21.11 4.89 22 6 22H13.81C13.28 21.09 13 20.05 13 19C13 15.69 15.69 13 19 13C19.34 13 19.67 13.03 20 13.08V8L14 2M13 9V3.5L18.5 9H13Z" /></svg>
+                                <div class="flex flex-col gap-2">
+                                    <p class="text-sm font-serif">File</p>
+                                    <div class="flex gap-5">
+                                        <p class="italic text-base font-sans">{contract.name}</p>
+                                        <!-- svelte-ignore a11y-click-events-have-key-events -->
+                                        <!-- svelte-ignore a11y-no-static-element-interactions -->
+                                        <svg on:click={()=> removeContract()} class="h-7 w-7 hover:fill-primary-200 hover:cursor-pointer" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21.12 22.54L19 20.41L16.88 22.54L15.47 21.12L17.59 19L15.47 16.88L16.88 15.47L19 17.59L21.12 15.47L22.54 16.88L20.41 19L22.54 21.12L21.12 22.54M14 2H6C4.89 2 4 2.89 4 4V20C4 21.11 4.89 22 6 22H13.81C13.28 21.09 13 20.05 13 19C13 15.69 15.69 13 19 13C19.34 13 19.67 13.03 20 13.08V8L14 2M13 9V3.5L18.5 9H13Z" /></svg>
+                                    </div>
                                 </div>
                                 <div class="mt-4">
                                     {#if loading}

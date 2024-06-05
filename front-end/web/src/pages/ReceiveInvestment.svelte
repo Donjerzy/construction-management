@@ -125,32 +125,37 @@
 <AdminComponent appName={appName} userFirstName={get(firstName)} contentTitle={contentTitle}>
     <Toast />
     <div class="mt-10">
-        <div class="flex-col gap-40 mt-1">
-            <p class="font-serif">Client</p>
-            <p class="font-sans italic border mt-1 border-primary-100 p-2 bg-primary-100">{client}</p>
+        <div class="flex gap-20 items-center w-full">
+            <div class="flex-col gap-40 w-full">
+                <p class="font-serif text-sm">Client</p>
+                <p class="w-full h-10 font-sans italic border mt-1 border-primary-100 p-2 bg-primary-100 rounded">{client}</p>
+            </div>
+            <div class="flex-col gap-40 w-full">
+                <p class="font-serif text-sm">Committed Amount</p>
+                <p class="w-full h-10 font-sans italic border mt-1 border-primary-100 p-2 bg-primary-100 rounded">{isNaN(totalCommitted) ? 0 : numberWithCommas(totalCommitted)}</p>
+            </div>
         </div>
-        <div class="flex-col gap-40 mt-2">
-            <p class="font-serif">Committed Amount</p>
-            <p class="font-sans italic border mt-1 border-primary-100 p-2 bg-primary-100">{isNaN(totalCommitted) ? 0 : numberWithCommas(totalCommitted)}</p>
+
+        <div class="flex gap-20 items-center w-full mt-5">
+            <div class="flex-col gap-40 w-full">
+                <p class="font-serif text-sm">Invested Amount</p>
+                <p class="font-sans w-full h-10 italic border mt-1 border-primary-100 p-2 bg-primary-100 rounded">{isNaN(totalInvested) ? 0 : numberWithCommas(totalInvested)}</p>
+            </div>
+            <div class="flex-col gap-40 w-full">
+                <p class="font-serif text-sm">Remaining Amount</p>
+                <p class="font-sans italic border mt-1 h-10 w-full border-primary-100 p-2 bg-primary-100 rounded">{isNaN(remainingAmount) ? 0 : numberWithCommas(remainingAmount)}</p>
+            </div>
         </div>
-        <div class="flex-col gap-40 mt-2">
-            <p class="font-serif">Invested Amount</p>
-            <p class="font-sans italic border mt-1 border-primary-100 p-2 bg-primary-100">{isNaN(totalInvested) ? 0 : numberWithCommas(totalInvested)}</p>
-        </div>
-        <div class="flex-col gap-40 mt-2">
-            <p class="font-serif">Remaining Amount</p>
-            <p class="font-sans italic border mt-1 border-primary-100 p-2 bg-primary-100">{isNaN(remainingAmount) ? 0 : numberWithCommas(remainingAmount)}</p>
-        </div>
-        <div class="flex flex-col gap-2 mt-2">
-            <label class="font-serif" for="wage">Amount Received</label>
-            <input name="wage" class="font-sans rounded border-primary-800" type="text" id="wage" bind:value={amountReceivedDisplay} on:input={updateAmountReceived}  >
+        <div class="flex flex-col gap-2 mt-5 w-full">
+            <label class="font-serif text-sm" for="wage">Amount Received</label>
+            <input name="wage" class="w-[560px] font-sans rounded border-primary-800" type="text" id="wage" bind:value={amountReceivedDisplay} on:input={updateAmountReceived}  >
         </div> 
-        <div class="mt-4">
+        <div class="mt-5">
             {#if loading}
                 <Loader />
             {:else}
-                <Button 
-                height=12 width=36 label="Save" fontSize="sm" padding="8px"
+                <Button
+                height=10 width=36 label="Save" fontSize="sm" padding="8px"
                 on:click={validateInput} />
             {/if} 
         </div>
