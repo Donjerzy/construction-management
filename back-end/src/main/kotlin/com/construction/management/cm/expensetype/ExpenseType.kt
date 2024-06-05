@@ -13,7 +13,6 @@ import jakarta.persistence.OneToMany
 class ExpenseType {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     var id: Long = 0
 
