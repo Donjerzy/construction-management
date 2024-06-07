@@ -50,7 +50,7 @@
             if(!errorFetch) {
                 employeeList = result.employees.map((employee)=> {
                    return { 
-                    name: employee.name, 
+                    name: `${employee.name} - ${employee.employeeType}`, 
                     id: employee.id
                    }
                 }

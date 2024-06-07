@@ -11,6 +11,9 @@
     export let projectId;
 
 
+    let taskSplit = 'unassigned'
+
+
     
     let reports = [{ id: 1 ,name: "General Project Report"}, { id: 2 ,name: "Client Report"}]
 
@@ -22,6 +25,12 @@
 
     let expenseSearchTerm = '';
     let expenses = [];
+
+
+    let unassignedTaskSearchTerm = '';
+    let unassignedTasks = [];
+    $: filteredUnassignedTasks = unassignedTasks.filter((task) => task.title.toLowerCase().indexOf(unassignedTaskSearchTerm.toLowerCase()) !== -1);
+
 
     $: filteredExpenses = expenses.filter((expense) => expense.title.toLowerCase().indexOf(expenseSearchTerm.toLowerCase()) !== -1);
 
@@ -143,7 +152,7 @@
             }
         });
 
-        fetch(`http://localhost:8080/api/v1/task/project/list?project=${projectId}`, {
+        fetch(`http://localhost:8080/api/v1/task/project/assigned?project=${projectId}`, {
             headers: {
                 'Authorization': `Bearer ${get(accessToken)}`
             }
@@ -163,6 +172,27 @@
                 toDoTasks = result.tasks.filter((task)=> task.status === 'todo');
                 inProgressTasks = result.tasks.filter((task)=> task.status === 'in_progress');
                 doneTasks = result.tasks.filter((task)=> task.status === 'done');
+            }
+        });
+
+        fetch(`http://localhost:8080/api/v1/task/project/unassigned?project=${projectId}`, {
+            headers: {
+                'Authorization': `Bearer ${get(accessToken)}`
+            }
+        })
+        .then(response => {
+            if(!response.ok) {
+                errorFetch = true;
+               firstName.set("");
+               accessToken.set("");
+               loggedIn.set("false");
+               window.location.replace('/'); 
+            } else {
+                return response.json();
+            }
+        }).then((result)=> {
+            if(!errorFetch) {
+                unassignedTasks = result.tasks
             }
         });
 
@@ -214,7 +244,7 @@
 
     async function fetchTasks() {
         let errorFetch = false;
-        fetch(`http://localhost:8080/api/v1/task/project/list?project=${projectId}`, {
+        fetch(`http://localhost:8080/api/v1/task/project/assigned?project=${projectId}`, {
             headers: {
                 'Authorization': `Bearer ${get(accessToken)}`
             }
@@ -661,6 +691,54 @@
                 <div class="mt-2 flex justify-end">
                     <a href={`/project/${projectId}/add-task`}><Button fontSize="base" height="10" label="Add Task" padding="7" width="32" /> </a>
                 </div>
+                
+                <div class="flex justify-center gap-20">
+                    {#if taskSplit === 'unassigned'}
+                        <p class="font-serif underline text-lg text-primary-200">Unassigned</p>
+                        <!-- svelte-ignore a11y-click-events-have-key-events -->
+                        <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+                        <p on:click={()=> taskSplit = 'assigned'} class="font-serif underline hover:cursor-pointer hover:text-primary-200">Assigned</p>
+                    {:else}
+                        <!-- svelte-ignore a11y-click-events-have-key-events -->
+                        <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+                        <p on:click={()=> taskSplit = 'unassigned'} class="font-serif underline hover:cursor-pointer hover:text-primary-200">Unassigned</p>
+                        <p class="font-serif underline text-lg text-primary-200">Assigned</p>
+                    {/if}   
+                </div>
+
+
+                {#if taskSplit === 'unassigned'}
+                    <div class="mt-4 pb-8 max-h-screen">
+                        <TableSearch placeholder="Search by title" divClass="font-sans" hoverable={true} bind:inputValue={unassignedTaskSearchTerm}>
+                        <Table divClass="max-h-80 overflow-auto" shadow>
+                                <TableHead defaultRow={false} theadClass="border-black">
+                                    <tr class="bg-primary-100">
+                                        <TableHeadCell class="text-white font-serif">Title</TableHeadCell>
+                                        <TableHeadCell class="text-white font-serif">Description</TableHeadCell>
+                                        <TableHeadCell class="text-white font-serif">Priority</TableHeadCell>
+                                        <TableHeadCell class="text-white font-serif">Status</TableHeadCell>
+                                        <TableHeadCell class="text-white font-serif">Actions</TableHeadCell>
+                                    </tr>
+                                </TableHead>
+                                <TableBody>
+                                    {#each filteredUnassignedTasks as task}
+                                        <TableBodyRow>
+                                            <TableBodyCell class="font-sans">{task.title}</TableBodyCell>
+                                            <TableBodyCell class="font-sans">{task.description}</TableBodyCell>
+                                            <TableBodyCell class="font-sans">{task.priority}</TableBodyCell>
+                                            <TableBodyCell class="font-sans">{task.status}</TableBodyCell>
+                                            <TableBodyCell class="font-sans">
+                                                <div class="flex gap-4 items-center">
+                                                    <a class="underline hover:cursor-pointer hover:text-primary-200"  href={`/project/${projectId}/${task.taskId}/assign`}>assign</a>
+                                                </div>  
+                                            </TableBodyCell>
+                                        </TableBodyRow>
+                                    {/each}
+                                </TableBody>
+                        </Table> 
+                        </TableSearch>
+                    </div>
+                {:else}
                 <div id="task-tracks">
                     {#if bigLoading}
                         <div class="mt-20">
@@ -747,7 +825,8 @@
                         {/each}  
                     </div>
                 {/if}    
-                </div>   
+                </div>  
+                {/if}
             </div>
         {:else if active === 'reports'}     
             <div class="container">
@@ -889,7 +968,7 @@
     }
     #task-tracks {
         display: grid;
-        grid-template-rows: 32% 32% 32%;
+        grid-template-rows: 31.5% 31.5% 31.5%;
         grid-template-areas: 
             "todo"
             "in-progress"
