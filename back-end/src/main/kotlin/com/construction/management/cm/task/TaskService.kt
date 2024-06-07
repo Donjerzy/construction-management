@@ -129,14 +129,16 @@ class TaskService(private val repository: TaskRepository,
         val tasks = repository.getProjectTasks(projectId = project)
         val result = mutableSetOf<GetProjectTasks>()
         for (task in tasks) {
-            result.add (
-                GetProjectTasks (
-                    taskId = task.id,
-                    title = task.name,
-                    status = task.status.lowercase(),
-                    priority = task.priority.lowercase()
+            if (task.employees.size > 0) {
+                result.add(
+                    GetProjectTasks(
+                        taskId = task.id,
+                        title = task.name,
+                        status = task.status.lowercase(),
+                        priority = task.priority.lowercase()
+                    )
                 )
-            )
+            }
         }
         return result
     }
@@ -371,6 +373,70 @@ class TaskService(private val repository: TaskRepository,
         val task = repository.findById(addComment.taskId).get()
         if (task.project.projectManager.id != projectOwner) {
             return "not-project-owner"
+        }
+        return "ok"
+    }
+
+    fun getProjectUnassignedTasks(project: Long, userEmail: String): MutableSet<GetUnassignedTasks> {
+        when (getProjectTasksValidations(
+            project = project,
+            projectOwner = userService.getUserId(userEmail)!!
+        )) {
+            "invalid-project" -> throw CustomException("invalid-project", null)
+            "not-project-owner" -> throw CustomException("not-project-owner", null)
+        }
+        val tasks = repository.getProjectTasks(projectId = project)
+        val result = mutableSetOf<GetUnassignedTasks>()
+        for (task in tasks) {
+            if (task.employees.size <= 0) {
+                result.add(
+                    GetUnassignedTasks(
+                        taskId = task.id,
+                        title = task.name,
+                        status = task.status.lowercase(),
+                        priority = task.priority.lowercase(),
+                        description = when {
+                            task.description.isBlank() || task.description.isEmpty() -> "n/a"
+                            else -> task.description
+                        }
+                    )
+                )
+            }
+        }
+        return result
+    }
+
+    fun assignEmployees(userEmail: String, employees: AssignEmployees): String {
+        when(assignEmployeesValidation (
+            projectOwner = userService.getUserId(userEmail)!!,
+            employees = employees
+        )) {
+            "not-project-owner" -> throw CustomException("not-project-owner",null)
+            "invalid-task" -> throw CustomException("invalid-task", null)
+            "employee-not-in-project" -> throw CustomException("employee-not-in-project", null)
+        }
+        val task = repository.findById(employees.taskId).get()
+        val taskEmployees = task.employees
+        for (employee in employees.employees) {
+            val fetchedEmployee: Employee = employeeRepository.findById(employee).get()
+            taskEmployees.add(fetchedEmployee)
+        }
+        task.employees = taskEmployees
+        repository.save(task)
+        return "Employees assigned successfully"
+    }
+
+    fun assignEmployeesValidation(projectOwner: Long, employees: AssignEmployees): String {
+        if (projectRepository.isProjectManager(projectManager = projectOwner, project =  employees.projectId) <= 0) {
+            return "not-project-owner"
+        }
+        if (!repository.findById(employees.taskId).isPresent) {
+            return "invalid-task"
+        }
+        for (employee in employees.employees) {
+            if (employeeRepository.employeeInProjectEmployeeId(project = employees.projectId, employeeId = employee) <= 0) {
+               return "employee-not-in-project"
+            }
         }
         return "ok"
     }

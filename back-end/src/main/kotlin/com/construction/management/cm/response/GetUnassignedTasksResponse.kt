@@ -1,3 +1,11 @@
 package com.construction.management.cm.response
 
-data class GetUnassignedTasksResponse()
+import com.construction.management.cm.dto.GetUnassignedTasks
+
+data class GetUnassignedTasksResponse(
+    val httpStatus: Int,
+    val message: String,
+    val tasks: MutableSet<GetUnassignedTasks>
+)
+
+

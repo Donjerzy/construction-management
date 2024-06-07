@@ -3,9 +3,11 @@ package com.construction.management.cm.task
 import com.construction.management.cm.auth.TokenService
 import com.construction.management.cm.dto.AddComment
 import com.construction.management.cm.dto.AddTask
+import com.construction.management.cm.dto.AssignEmployees
 import com.construction.management.cm.dto.MoveTask
 import com.construction.management.cm.response.DefaultNa
 import com.construction.management.cm.response.GetProjectTasksResponse
+import com.construction.management.cm.response.GetUnassignedTasksResponse
 import com.construction.management.cm.response.ViewTaskResponse
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
@@ -35,7 +37,7 @@ class TaskController(
             )
         )
     }
-    @GetMapping("/project/list")
+    @GetMapping("/project/assigned")
     fun getProjectTaskList (
         @RequestHeader("Authorization") header:String,
         @RequestParam("project") project: Long
@@ -51,6 +53,44 @@ class TaskController(
         )
     }
 
+    @GetMapping("/project/unassigned")
+    fun getUnassignedTasks (
+        @RequestHeader("Authorization") header:String,
+        @RequestParam("project") project: Long
+    ): ResponseEntity<Any> {
+        val userEmail = tokenService.extractEmail(header.substringAfter("Bearer "))
+        val tasks = service.getProjectUnassignedTasks(project = project, userEmail = userEmail!!)
+        return ResponseEntity.status(200).body(
+            GetUnassignedTasksResponse (
+                httpStatus = 200,
+                message = "Project tasks retrieved successfully",
+                tasks = tasks
+            )
+        )
+    }
+
+
+//    @GetMapping("/unassigned/details")
+//    fun getUnassignedDetails(): ResponseEntity<Any> {
+//
+//    }
+
+
+    @PostMapping("/assign")
+    fun assignEmployee (
+        @RequestHeader("Authorization") header:String,
+        @RequestBody employees: AssignEmployees
+    ): ResponseEntity<Any> {
+        val userEmail = tokenService.extractEmail(header.substringAfter("Bearer "))
+        val message = service.assignEmployees(userEmail = userEmail!!, employees = employees)
+        return ResponseEntity.status(200).body(
+            DefaultNa (
+                httpStatus = 200,
+                message = message
+            )
+        )
+
+    }
 
     @PostMapping("/move")
     fun moveTask(@RequestHeader("Authorization") header:String,
