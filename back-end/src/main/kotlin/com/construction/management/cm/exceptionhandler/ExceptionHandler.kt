@@ -200,6 +200,13 @@ class ExceptionHandler {
                 )
             )
 
+            "invalid-task" -> ResponseEntity.status(400).body(
+                ExceptionResponse(
+                    httpStatus = 400,
+                    message = "Task does not exist"
+                )
+            )
+
             "invalid-token" -> ResponseEntity.status(400).body(
                 ExceptionResponse(
                     httpStatus = 400,
