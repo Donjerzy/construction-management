@@ -605,7 +605,8 @@ class EmployeeService(private val repository: EmployeeRepository,
             wageType = employee.wageType.name,
             numberOfPeriod = "$daysBetween",
             amountToPay = stringFormatter.doubleToString(wageToBePaid),
-            employeeWage = stringFormatter.doubleToString(employee.wage)
+            employeeWage = stringFormatter.doubleToString(employee.wage),
+            lastPaymentDate = stringFormatter.timestampToString(lastPaymentDate)
         )
 
     }

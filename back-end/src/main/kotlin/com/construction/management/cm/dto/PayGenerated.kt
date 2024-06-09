@@ -4,5 +4,6 @@ data class PayGenerated (
     val wageType: String,
     val numberOfPeriod: String,
     val amountToPay: String,
-    val employeeWage: String
+    val employeeWage: String,
+    val lastPaymentDate: String
 )
