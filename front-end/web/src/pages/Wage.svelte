@@ -13,6 +13,7 @@
     let contentTitle = "Wage";
     let loading = false;
     let employeeId = $page.params.employeeId;
+    let projectId = $page.params.projectId;
     let currentPage = 'pay'; // pay || history
     let employeeWageType;
     let employeeWage;
@@ -26,6 +27,9 @@
     let customAmountDisplay;
     let wageNote = null;
     let wageHistory = [];
+    let daysSinceLastPayment = 0;
+    let automaticAmount = 0;
+    let lastPaymentDate;
 
 
     // table history sort
@@ -74,6 +78,29 @@
         .then(response => {
             if(!response.ok) {
                 errorFetch = true;
+                firstName.set("");
+                accessToken.set("");
+                loggedIn.set("false");
+                window.location.replace('/'); 
+            } else {
+                return response.json();
+            }
+        }).then((result)=> {
+            if(!errorFetch) {
+                employeeWageType = result.wageInfo.type;
+                employeeWage = parseFloat(result.wageInfo.wage);
+                nextValidPaymentDate = result.wageInfo.nextValidPaymentDate;
+            }
+        })
+
+        fetch(`http://localhost:8080/api/v1/employee/pay/generated?project_id=${projectId}&employee_id=${employeeId}`, {
+            headers: {
+                'Authorization': `Bearer ${get(accessToken)}`
+            }
+        })
+        .then(response => {
+            if(!response.ok) {
+                errorFetch = true;
                firstName.set("");
                accessToken.set("");
                loggedIn.set("false");
@@ -83,9 +110,9 @@
             }
         }).then((result)=> {
             if(!errorFetch) {
-                employeeWageType = result.wageInfo.type;
-                employeeWage = parseFloat(result.wageInfo.wage);
-                nextValidPaymentDate = result.wageInfo.nextValidPaymentDate;
+                daysSinceLastPayment = result.generated.numberOfPeriod;
+                automaticAmount = result.generated.amountToPay;
+                lastPaymentDate = result.generated.lastPaymentDate;
             }
         })
 
@@ -241,49 +268,11 @@
 
 
     async function automaticPay() {
-        let endDate;
-        if(isNaN(parseFloat(noOfPeriod))) {
-            return notifications.danger("Invalid Period", 1000);
-        }
-        if(parseFloat(noOfPeriod) <= 0 ) {
-            return notifications.danger("Invalid Period", 1000);
-        }
-        switch(employeeWageType.toLowerCase()) {
-            case "monthly":
-                for (let i = 0; i< noOfPeriod; i++) {
-                    if(i === 0) {
-                        endDate = addOneMonthToCurrentDate(nextValidPaymentDate);
-                    } else {
-                        endDate = addOneMonthToCurrentDate(endDate);
-                    }
-                }
-                break;
-            case "daily":
-                if(noOfPeriod == 1) {
-                    endDate = nextValidPaymentDate;
-                } else {
-                    endDate = nextValidPaymentDate;
-                    for (let i = 0; i < noOfPeriod - 1; i++) {
-                        endDate = addOneDayToCurrentDate(endDate);    
-                    }
-                }    
-                break;
-            case "weekly":
-                if(noOfPeriod == 1) {
-                    endDate = addOneWeekToCurrentDate(nextValidPaymentDate)
-                } else {
-                    endDate = nextValidPaymentDate;
-                    for (let i = 0; i < noOfPeriod; i++) {
-                        if(i == 0) {
-                            endDate = addOneWeekToCurrentDate(endDate);  
-                        } else {
-                            endDate = addOneWeekToCurrentDateVariation(endDate);
-                        }
-                          
-                    }
-                } 
-                break;
-        }
+        const currentDate = new Date();
+        const year = currentDate.getFullYear();
+        const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+        const day = String(currentDate.getDate()).padStart(2, '0');
+        const formattedDate = `${year}-${month}-${day}`;
         loading = true;
         let error = false;
         let existsError = false;
@@ -295,9 +284,9 @@
             },
             body: JSON.stringify({   
                 employeeId: employeeId,
-                amount: parseFloat(generatedAmount),
-                startDate: nextValidPaymentDate,
-                endDate: endDate
+                amount: parseFloat(automaticAmount),
+                startDate: lastPaymentDate,
+                endDate: formattedDate
             })
         }).then(response=> {
             loading = false;
@@ -386,14 +375,19 @@
                                 <p  class="italic border rounded w-full h-10 font-sans mt-1 border-primary-100 p-2 bg-primary-100">{employeeWageType}</p>
                             </div>
                             <div class="flex-col gap-40 w-full">
-                                <label  for="number_of_periods" class="block font-serif text-sm">Number of Period (Months/days/weeks)</label>
-                                <input class="font-sans mt-1 w-full h-10" type="number" id="number_of_periods" bind:value={noOfPeriod} on:input={calculateWage}>
+                                <label  for="number_of_periods" class="block font-serif text-sm">Days since last payment</label>
+                                <p  class="italic border rounded w-full h-10 font-sans mt-1 border-primary-100 p-2 bg-primary-100">{daysSinceLastPayment}</p></div>
                             </div>
-                        </div>
 
-                        <div class="flex-col gap-40 mt-5">
-                            <p class="font-serif text-sm">Amount</p>
-                            <p  class="italic border mt-1 w-[560px] rounded h-10 font-sans border-primary-100 p-2 bg-primary-100">{isNaN(generatedAmount) ? 0 : numberWithCommas(generatedAmount)}</p>
+                        <div class="flex gap-20 items-center w-full mt-5">
+                            <div class="flex-col gap-40 w-full">
+                                <p class="font-serif text-sm">Employee wage</p>
+                                <p  class="italic border mt-1 w-full rounded h-10 font-sans border-primary-100 p-2 bg-primary-100">{isNaN(employeeWage) ? 0 : numberWithCommas(employeeWage)}</p>
+                            </div>
+                            <div class="flex-col gap-40 w-full">
+                                <p class="font-serif text-sm">Generated Amount</p>
+                                <p  class="italic border mt-1 w-full rounded h-10 font-sans border-primary-100 p-2 bg-primary-100">{isNaN(automaticAmount) ? 0 : numberWithCommas(automaticAmount)}</p>
+                            </div>
                         </div>
                         <div class="flex-col gap-40 mt-5">
                             {#if loading}
