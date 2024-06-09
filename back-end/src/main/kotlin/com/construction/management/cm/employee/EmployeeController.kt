@@ -168,6 +168,22 @@ class EmployeeController(private val service: EmployeeService,
         )
     }
 
+    @GetMapping("/pay/generated")
+    fun getPayGenerated(
+        @RequestHeader("Authorization") header:String,
+        @RequestParam(name = "project_id") projectId: Long,
+        @RequestParam(name = "employee_id") employeeId: Long): ResponseEntity<Any> {
+        val userEmail = tokenService.extractEmail(header.substringAfter("Bearer "))
+        val generated = service.getGeneratedPay(employeeId = employeeId, userEmail = userEmail!!, project = projectId)
+        return ResponseEntity.status(200).body (
+            PayGeneratedResponse (
+                httpStatus = 200,
+                message = "Generated pay retrieved successfully",
+                generated = generated
+            )
+        )
+    }
+
     @GetMapping("/suggested")
     fun getSuggestedEmployees(
         @RequestHeader("Authorization") header:String,

@@ -70,12 +70,6 @@ class TaskController(
     }
 
 
-//    @GetMapping("/unassigned/details")
-//    fun getUnassignedDetails(): ResponseEntity<Any> {
-//
-//    }
-
-
     @PostMapping("/assign")
     fun assignEmployee (
         @RequestHeader("Authorization") header:String,

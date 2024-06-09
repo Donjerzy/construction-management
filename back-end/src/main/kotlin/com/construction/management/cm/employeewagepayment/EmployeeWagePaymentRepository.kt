@@ -16,4 +16,5 @@ interface EmployeeWagePaymentRepository: JpaRepository<EmployeeWagePayment, Long
     @Query("select period_end from employee_wage_payment where employee = :employeeId order by period_end desc limit 1", nativeQuery = true)
     fun lastPaymentDate(employeeId: Long): Date?
 
+
 }

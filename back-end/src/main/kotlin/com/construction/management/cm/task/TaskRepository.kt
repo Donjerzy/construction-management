@@ -3,6 +3,8 @@ package com.construction.management.cm.task
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.stereotype.Repository
+import org.springframework.transaction.TransactionUsageException
+import java.util.*
 
 @Repository
 interface TaskRepository: JpaRepository<Task, Long> {
@@ -35,6 +37,12 @@ interface TaskRepository: JpaRepository<Task, Long> {
 
     @Query("select round(EXTRACT(EPOCH FROM (completion_date - creation_date)) / 60, 2) as minutes from task where id = :taskId", nativeQuery = true)
     fun getTaskCompletionTime(taskId: Long): Double
+
+    @Query("select count(*) from task inner join public.employee_task et on task.id = et.task where creation_date between :start and :end and et.employee = :employeeId", nativeQuery = true)
+    fun getAssignedTasksForPeriod(start: Date, end: Date, employeeId: Long): Int
+
+    @Query("select count(*) from task inner join public.employee_task et on task.id = et.task where creation_date between :start and :end and et.employee = :employeeId and lower(task.status) = 'done'", nativeQuery = true)
+    fun getDoneTasksForPeriod(start: Date, end: Date, employeeId: Long): Int
 
 
 }

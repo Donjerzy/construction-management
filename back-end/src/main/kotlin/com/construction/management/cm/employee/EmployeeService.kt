@@ -10,6 +10,7 @@ import com.construction.management.cm.exceptionhandler.CustomException
 import com.construction.management.cm.formatters.StringFormatter
 import com.construction.management.cm.project.ProjectRepository
 import com.construction.management.cm.response.PredictionResponse
+import com.construction.management.cm.task.TaskRepository
 import com.construction.management.cm.user.UserService
 import com.construction.management.cm.validator.Validator
 import com.construction.management.cm.wagetype.WageTypeRepository
@@ -26,7 +27,11 @@ import org.springframework.web.multipart.MultipartFile
 import java.awt.PageAttributes
 import java.io.File
 import java.io.FileInputStream
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.temporal.ChronoUnit
 import java.util.*
+import kotlin.math.abs
 
 @Service
 class EmployeeService(private val repository: EmployeeRepository,
@@ -38,7 +43,8 @@ class EmployeeService(private val repository: EmployeeRepository,
                       private val projectRepository: ProjectRepository,
                       private val runner: Runner,
                       private val employeeWagePaymentService: EmployeeWagePaymentService,
-                      private val employeeWagePaymentRepository: EmployeeWagePaymentRepository  ) {
+                      private val employeeWagePaymentRepository: EmployeeWagePaymentRepository,
+                      private val taskRepository: TaskRepository) {
 
     private val predictionApi = "http://127.0.0.1:8000/prediction-api/predict"
 
@@ -375,7 +381,7 @@ class EmployeeService(private val repository: EmployeeRepository,
         if (projectManager != employee.project.projectManager.id) {
             return "not-project-owner"
         }
-        if (payEmployeeBody.amount <= 0) {
+        if (payEmployeeBody.amount < 0) {
             return "invalid-amount"
         }
         if (
@@ -515,6 +521,107 @@ class EmployeeService(private val repository: EmployeeRepository,
         }
         return "ok"
     }
+
+    fun getGeneratedPay(employeeId: Long, userEmail: String, project: Long): PayGenerated {
+        when (getGeneratedPayValidations(
+            employee = employeeId,
+            projectOwner = userService.getUserId(userEmail)!!,
+            project = project
+        )) {
+            "not-project-owner" -> throw CustomException("not-project-owner", null)
+            "employee-doesn't-exist" -> throw CustomException("employee-doesn't-exist", null)
+        }
+        val employee = repository.findById(employeeId).get()
+        val lastPaymentDateLocal : LocalDate = when(employeeWagePaymentService.noPaymentsMade(employeeId)) {
+            true -> employee.joinDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+            false -> employeeWagePaymentService.lastPaymentMade(employeeId).toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+        }
+        val lastPaymentDate: Date = when(employeeWagePaymentService.noPaymentsMade(employeeId)) {
+            true -> employee.joinDate
+            false -> employeeWagePaymentService.lastPaymentMade(employeeId)
+        }
+        val currentDateLocal = Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+        val currentDate = Date()
+
+        val daysBetween = abs(ChronoUnit.DAYS.between(lastPaymentDateLocal, currentDateLocal))
+        val wageToBePaid: Double = when (employee.wageType.name.lowercase()) {
+            "daily" -> {
+                val completeWage: Double = (daysBetween * employee.wage) / 1
+                if (taskRepository.getAssignedTasksForPeriod(
+                    start = lastPaymentDate,
+                    end = currentDate,
+                    employeeId = employeeId
+                ) == 0) {
+                    0.0
+                } else {
+                    (taskRepository.getDoneTasksForPeriod(
+                        start = lastPaymentDate,
+                        end = currentDate,
+                        employeeId = employeeId)
+                            / taskRepository.getAssignedTasksForPeriod(
+                        start = lastPaymentDate,
+                        end = currentDate,
+                        employeeId = employeeId)) * completeWage
+                }
+            }
+            "weekly" -> {
+                val completeWage: Double = (daysBetween * employee.wage) / 7
+                if (taskRepository.getAssignedTasksForPeriod(
+                        start = lastPaymentDate,
+                        end = currentDate,
+                        employeeId = employeeId
+                    ) == 0) {
+                    0.0
+                } else {
+                    (taskRepository.getDoneTasksForPeriod(
+                        start = lastPaymentDate,
+                        end = currentDate,
+                        employeeId = employeeId) / taskRepository.getAssignedTasksForPeriod(
+                        start = lastPaymentDate,
+                        end = currentDate,
+                        employeeId = employeeId)) * completeWage
+                }
+            }
+            else -> {
+                val completeWage: Double = (daysBetween * employee.wage) / 30
+                if (taskRepository.getAssignedTasksForPeriod(
+                        start = lastPaymentDate,
+                        end = currentDate,
+                        employeeId = employeeId
+                    ) == 0) {
+                    0.0
+                } else {
+                    (taskRepository.getDoneTasksForPeriod(
+                        start = lastPaymentDate,
+                        end = currentDate,
+                        employeeId = employeeId) / taskRepository.getAssignedTasksForPeriod(
+                        start = lastPaymentDate,
+                        end = currentDate,
+                        employeeId = employeeId)) * completeWage
+                }
+            }
+        }
+        return PayGenerated(
+            wageType = employee.wageType.name,
+            numberOfPeriod = "$daysBetween",
+            amountToPay = stringFormatter.doubleToString(wageToBePaid),
+            employeeWage = stringFormatter.doubleToString(employee.wage)
+        )
+
+    }
+
+    fun getGeneratedPayValidations(
+        employee: Long, projectOwner: Long, project: Long
+    ): String {
+        if (projectRepository.isProjectManager(project = project, projectManager = projectOwner) <= 0) {
+            return "not-project-owner"
+        }
+        if (repository.employeeInProjectEmployeeId(project = project, employeeId = employee) <=0 ) {
+            return "employee-doesn't-exist"
+        }
+        return "ok"
+    }
+
 
 
 }

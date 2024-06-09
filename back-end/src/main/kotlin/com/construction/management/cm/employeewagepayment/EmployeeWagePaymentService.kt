@@ -55,4 +55,8 @@ class EmployeeWagePaymentService(
         return formatter.timestampToString(nextPaymentDate)
     }
 
+    fun lastPaymentMade(employeeId: Long): Date {
+        return repository.lastPaymentDate(employeeId)!!
+    }
+
 }
