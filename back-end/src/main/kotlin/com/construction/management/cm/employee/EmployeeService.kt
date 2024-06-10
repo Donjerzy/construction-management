@@ -543,7 +543,10 @@ class EmployeeService(private val repository: EmployeeRepository,
         val currentDateLocal = Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
         val currentDate = Date()
 
-        val daysBetween = abs(ChronoUnit.DAYS.between(lastPaymentDateLocal, currentDateLocal))
+        val daysBetween = when {
+            lastPaymentDateLocal.isAfter(currentDateLocal) -> 0
+            else -> abs(ChronoUnit.DAYS.between(lastPaymentDateLocal, currentDateLocal))
+        }
         val wageToBePaid: Double = when (employee.wageType.name.lowercase()) {
             "daily" -> {
                 val completeWage: Double = (daysBetween * employee.wage) / 1

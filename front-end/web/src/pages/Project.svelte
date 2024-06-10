@@ -3,6 +3,9 @@
     import {firstName, accessToken, loggedIn} from '../stores.js' 
     import { get } from "svelte/store";
     import {onMount} from 'svelte';
+    import { Card, Button } from 'flowbite-svelte';
+    import { ArrowLeftOutline, ArrowRightOutline } from 'flowbite-svelte-icons';
+
     let userFirstName = get(firstName);
     let appName = 'Mjengo Bora Construction';
     let contentTitle = "Projects";
@@ -92,35 +95,33 @@
                 <input bind:value={userSearchValue} type="text" on:change={projectSearch}>
             </div>
             <div>
-                <a href="/project/add"><button class="add-project-btn">Add Project</button></a>    
+                <a href="/project/add"><Button color="dark">Add Project</Button></a>    
             </div>
         </div>
         <div class="container">
             {#each validProjects as project }
-                    <div class="project-container">
-                        <a class="a-project-card" href={`/project/${project.id}`}>
-                        <div class="strip"></div>
-                        <div class="project-items">
-                            <p class="card-text font-sans text-base">{project.name}</p>
-                            <p class="card-text font-sans text-base">{project.status}</p>
-                        </div>
+                    <Card>
+                        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{project.name}</h5>
+                        <p class="mb-3 font-normal text-gray-700 dark:text-gray-400 leading-tight">{project.status}</p>
+                        <a href={`/project/${project.id}`}>
+                            <Button class="w-fit">
+                                View <ArrowRightOutline class="w-6 h-6 ms-2 text-white" />
+                            </Button>
                         </a>
-                    </div>
+                    </Card>
             {/each}
         </div>
         <div class="pagination">
             {#if start >= 6}
-            <button on:click={()=> adjustPagination("previous")} class="pagination-btn">
-                <svg class="button-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z" /></svg>
-                <p class="button-text">Previous</p>
-            </button>
+            <Button on:click={()=> adjustPagination("previous")} color="dark" class="w-fit">
+                 <ArrowLeftOutline class="w-6 h-6 me-2 text-white" /> Previous
+            </Button>
             {/if}
         
             {#if validProjects.length >= (start + 6) }
-            <button on:click={()=> adjustPagination("next")} class="pagination-btn">
-                <p class="button-text">Next</p>
-                <svg class="button-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4,11V13H16L10.5,18.5L11.92,19.92L19.84,12L11.92,4.08L10.5,5.5L16,11H4Z" /></svg>
-            </button>
+            <Button on:click={()=> adjustPagination("next")} color="dark" class="w-fit">
+                Next <ArrowRightOutline class="w-6 h-6 ms-2 text-white" />
+            </Button>
             {/if}
         
         </div>
@@ -161,11 +162,8 @@
         width: 100%;
         height: 40px;
         padding-left: 48px;
-        border: none;
+        border: solid 1px black;
         border-radius: 20px;
-    }
-    input:focus, input:active, input:hover {
-        border: none;
     }
     .container {
         padding-top: 20px;
@@ -175,83 +173,10 @@
         row-gap: 40px;
         grid-template-rows: 200px 200px;
     }
-    .project-container,
-    .a-project-card {
-        background-color: white;
-        border-radius: 4px;
-        border-left-width: 12px;   
-        display: flex;
-        gap: 16px;
-        width: 100%;
-        text-decoration: none;
-    }
-    .a-project-card {
-        text-decoration: none;
-        font-size: 1.1rem;
-        color: black;
-    }
-
-    .project-container:hover,
-    .a-project-card:hover {
-        background-color: #eeeee4;
-        cursor: pointer;
-    }
+    
     .pagination {
         padding-top: 24px;
         display: flex;
         justify-content: space-between;
-    }
-    .pagination-btn {
-        display: flex;
-        width: 120px;
-        height: 40px;
-        align-items: center;
-        border-radius: 4px;
-        justify-content: center;
-        border: none;
-        background-color: var(--primary-clr);
-        color: white;
-        padding: 4px;
-        gap: 8px;
-    } 
-    .pagination-btn:hover {
-        background-color: var(--tertiary-clr);
-        cursor: pointer;
-    }
-    .button-icon {
-        height: 28px;
-        width: 28px;
-        fill: white;
-    }
-    .strip {
-        display: flex;
-        flex-direction: column;
-        width: 12px;
-        height: 100%;
-        background-color: #f0b429;
-    }
-    .project-items {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        padding-top: 12px;
-        padding-bottom: 12px;
-    }
-    .card-text {
-        font-size: 1.1rem;
-    }
-    .add-project-btn {
-        background-color: var(--primary-clr);
-        border: none;
-        color: white;
-        height: 40px;
-        width: 120px;
-        padding: 8px;
-        border-radius: 4px;
-        font-size: 0.8rem;
-    }
-    .add-project-btn:hover {
-        cursor: pointer;
-        background-color: var(--tertiary-clr);
     }
 </style>

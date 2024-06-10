@@ -4,7 +4,8 @@
     import AdminComponent from "../components/admin-component.svelte";
     import {firstName, accessToken, loggedIn} from '../stores.js'; 
     import { get } from "svelte/store";
-    import Button from "../components/button.svelte";
+    import { Button } from 'flowbite-svelte';
+    import { ArrowLeftOutline, ArrowRightOutline } from 'flowbite-svelte-icons';
     import { onMount } from "svelte";
     import { notifications } from "../lib/notification";
     import Toast from '../components/toast.svelte';
@@ -280,23 +281,21 @@
             />
         </a> -->
         <a href={`/project/${projectId}/${employeeId}/wage`}>
-            <Button 
-            height=10 width=36 label="Wages" fontSize="sm" padding="8px"
-            />
+            <Button class="w-fit" color="dark">Wages</Button> 
         </a>
     </div>
-    <div class="mt-6 flex gap-4">
+    <div class="mt-6 flex gap-4 w-full">
         <!-- Card -->
-        <div class="flex gap-7 border  border-primary-100 rounded-md w-fit p-4 bg-white shadow-xl">
+        <div class="flex gap-7 border  border-primary-100 rounded-md w-full p-4 bg-white shadow-xl">
             <div>
                 <svg class="w-10 h-10 mx-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M2,3H22C23.05,3 24,3.95 24,5V19C24,20.05 23.05,21 22,21H2C0.95,21 0,20.05 0,19V5C0,3.95 0.95,3 2,3M14,6V7H22V6H14M14,8V9H21.5L22,9V8H14M14,10V11H21V10H14M8,13.91C6,13.91 2,15 2,17V18H14V17C14,15 10,13.91 8,13.91M8,6A3,3 0 0,0 5,9A3,3 0 0,0 8,12A3,3 0 0,0 11,9A3,3 0 0,0 8,6Z" /></svg>
             </div>
-            <div class="flex flex-col w-[500px]">
+            <div class="flex flex-col w-full">
                 <div>
                     <p class="underline text-lg font-serif">Personal Information</p>
                 </div>
                 <div class="mt-2">
-                    <div class="flex flex-col gap-1 max-h-72 overflow-auto w-[500px]">
+                    <div class="flex flex-col gap-1 max-h-72 overflow-auto w-full">
                         <div class="flex items-center justify-between pr-4 border-b pb-2">
                             <p class="text-base font-serif">Name:</p>
                             <p class="flex gap-2 items-center italic text-sm font-sans">
@@ -352,14 +351,14 @@
             </div>
         </div>
 
-        <div class="flex gap-7 border border-primary-100 rounded-md w-fit p-4 bg-white shadow-xl">
+        <div class="flex gap-7 border border-primary-100 rounded-md w-full p-4 bg-white shadow-xl">
             <div>
                 <svg class="w-10 h-10 mx-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17.66 11.2C17.43 10.9 17.15 10.64 16.89 10.38C16.22 9.78 15.46 9.35 14.82 8.72C13.33 7.26 13 4.85 13.95 3C13 3.23 12.17 3.75 11.46 4.32C8.87 6.4 7.85 10.07 9.07 13.22C9.11 13.32 9.15 13.42 9.15 13.55C9.15 13.77 9 13.97 8.8 14.05C8.57 14.15 8.33 14.09 8.14 13.93C8.08 13.88 8.04 13.83 8 13.76C6.87 12.33 6.69 10.28 7.45 8.64C5.78 10 4.87 12.3 5 14.47C5.06 14.97 5.12 15.47 5.29 15.97C5.43 16.57 5.7 17.17 6 17.7C7.08 19.43 8.95 20.67 10.96 20.92C13.1 21.19 15.39 20.8 17.03 19.32C18.86 17.66 19.5 15 18.56 12.72L18.43 12.46C18.22 12 17.66 11.2 17.66 11.2M14.5 17.5C14.22 17.74 13.76 18 13.4 18.1C12.28 18.5 11.16 17.94 10.5 17.28C11.69 17 12.4 16.12 12.61 15.23C12.78 14.43 12.46 13.77 12.33 13C12.21 12.26 12.23 11.63 12.5 10.94C12.69 11.32 12.89 11.7 13.13 12C13.9 13 15.11 13.44 15.37 14.8C15.41 14.94 15.43 15.08 15.43 15.23C15.46 16.05 15.1 16.95 14.5 17.5H14.5Z" /></svg>
             </div>
-            <div class="flex flex-col">
+            <div class="flex flex-col w-full">
                 <p class="underline text-lg font-serif">Other Information</p>
                 <div class="mt-2">
-                    <div class="flex flex-col gap-1 max-h-72 overflow-auto w-[340px]">
+                    <div class="flex flex-col gap-1 max-h-72 overflow-auto w-full">
                         <div class="flex items-center justify-between pr-4 pb-10 ">
                             <div class="tooltip">
                                <p class="font-mono text-base underline hover:cursor-pointer">Morale: ?</p> 
@@ -373,14 +372,15 @@
             </div>
         </div>
     </div>
-    <div class="mt-6 flex gap-4">
-        <div class="flex gap-7 border border-primary-100 rounded-md w-fit p-4 bg-white shadow-xl">
+
+    <div class="mt-6 flex gap-4 w-full">
+        <div class="flex gap-7 border border-primary-100 rounded-md w-full p-4 bg-white shadow-xl">
             <div>
                 <svg class="w-10 h-10 mx-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10,2H14A2,2 0 0,1 16,4V6H20A2,2 0 0,1 22,8V19A2,2 0 0,1 20,21H4C2.89,21 2,20.1 2,19V8C2,6.89 2.89,6 4,6H8V4C8,2.89 8.89,2 10,2M14,6V4H10V6H14Z" /></svg>
             </div>
-            <div class="flex flex-col gap-1 max-h-72 overflow-auto w-[500px]">
+            <div class="flex flex-col gap-1 max-h-72 overflow-auto w-full">
                 <p class="underline text-lg font-serif">Employment Information</p>
-                <div class="mt-2">
+                <div class="mt-2 w-full">
                     <div class="flex items-center justify-between pr-4 border-b pb-2">
                         <p class="text-base font-serif">Employee Type:</p>
                         <p class="italic text-sm font-sans">{employee.employeeType}</p>
@@ -425,18 +425,19 @@
             </div>
         </div>
         <!--Contract Card-->
-        <div class="flex gap-7 border border-primary-100 rounded-md w-fit p-4 bg-white shadow-xl">
+        <div class="flex gap-7 border border-primary-100 rounded-md w-full p-4 bg-white shadow-xl">
             <div>
                 <svg class="w-10 h-10 mx-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6,2A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2H6M6,4H13V9H18V20H6V4M8,12V14H16V12H8M8,16V18H13V16H8Z" /></svg>
             </div>
-            <div class="flex flex-col">
+            <div class="flex flex-col w-full">
                 <p class="underline text-lg font-serif">Contract</p>
                 <div class="flex justify-start w-[340px] max-h-full pt-4">
                     {#if employee.hasContract === 'yes'}
                         <div>
                             <a href={`/contract/${employeeId}`} target="_blank">
-                                <Button height=10 width=36 label="View" fontSize="sm" padding="8px"
-                                />
+                                <Button class="w-fit">
+                                    View <ArrowRightOutline class="w-6 h-6 ms-2 text-white" />
+                                </Button> 
                             </a>
                         </div> 
                     {:else}
@@ -462,7 +463,7 @@
                                                 employeeId: employeeId,
                                                 contract: contract
                                             }
-                                        )} height=10 width=36 label="Save" fontSize="sm" padding="8px" />
+                                        )} class="w-fit" color="dark">Save</Button> 
                                     {/if} 
                                 </div> 
                             {/if}    

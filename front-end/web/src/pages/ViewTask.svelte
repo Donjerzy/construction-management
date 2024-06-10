@@ -150,7 +150,7 @@
             <div class="flex gap-16 h-8 align-middle text-base w-fit ml-auto mr-auto">
                 <!-- svelte-ignore a11y-click-events-have-key-events -->
                 <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                <p class="underline text-primary-900 hover:cursor-pointer font-serif hover:text-primary-200" id="active-link"  on:click={()=> navigate("view")}>View</p>
+                <p class="underline text-lg hover:cursor-pointer font-serif hover:text-primary-200 text-primary-200"   on:click={()=> navigate("view")}>View</p>
                 <!-- svelte-ignore a11y-click-events-have-key-events -->
                 <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
                 <p class="underline text-primary-900 hover:cursor-pointer font-serif hover:text-primary-200" on:click={()=> navigate("comments")}>Comments</p>
@@ -212,12 +212,12 @@
                 <p class="underline text-primary-900 hover:cursor-pointer font-serif hover:text-primary-200" on:click={()=> navigate("view")}>View</p>
                 <!-- svelte-ignore a11y-click-events-have-key-events -->
                 <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                <p class="underline text-primary-900 hover:cursor-pointer font-serif hover:text-primary-200" id="active-link" on:click={()=> navigate("comments")}>Comments</p>
+                <p class="underline text-primary-200 hover:cursor-pointer font-serif hover:text-primary-200 text-lg" on:click={()=> navigate("comments")}>Comments</p>
                 <!-- svelte-ignore a11y-click-events-have-key-events -->
                 <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
                 <p class="underline text-primary-900 hover:cursor-pointer font-serif hover:text-primary-200"  on:click={()=> navigate("history")}>History</p>
             </div> 
-            <div class="mt-6 h-4/5 border border-primary-100 rounded-md bg-white overflow-auto pt-4 pr-4 pl-4">
+            <div class="mt-6 min-h-48 h-4/5  max-h-[400px] border border-primary-100 rounded-md bg-white overflow-auto pt-4 pr-4 pl-4">
                 {#each task.taskComments as comment}
                     {#if comment.commenter.toLowerCase() === 'you'}
                         <div class="flex flex-col gap-1 items-end ml-1 mb-4">
@@ -253,10 +253,10 @@
                 <p class="underline text-primary-900 hover:cursor-pointer font-serif hover:text-primary-200"  on:click={()=> navigate("comments")}>Comments</p>
                 <!-- svelte-ignore a11y-click-events-have-key-events -->
                 <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                <p class="underline text-primary-900 hover:cursor-pointer font-serif hover:text-primary-200" id="active-link" on:click={()=> navigate("history")}>History</p>
+                <p class="underline text-primary-200 hover:cursor-pointer font-serif hover:text-primary-200 text-lg" on:click={()=> navigate("history")}>History</p>
             </div>  
             <div class="mt-8">
-                <Table divClass="max-h-80 overflow-auto" shadow hoverable={true}>
+                <Table  shadow hoverable={true}>
                     <TableHead defaultRow={false} theadClass="border-black">
                         <tr class="bg-primary-100">
                             <TableHeadCell class="text-white hover:cursor-pointer font-serif">Date</TableHeadCell>
@@ -280,11 +280,3 @@
     </div>
 
 </AdminComponent>
-
-
-<style>
-    #active-link {
-        color: var(--tertiary-clr);
-        font-size: 1.2rem;
-    }
-</style>
