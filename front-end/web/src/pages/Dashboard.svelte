@@ -2,13 +2,13 @@
     import {firstName, accessToken, loggedIn} from '../stores.js' 
     import { get } from "svelte/store";
     import AdminComponent from '../components/admin-component.svelte';
+    import { Card, Chart } from 'flowbite-svelte';
     import { onMount } from 'svelte';
-    import Chart from 'chart.js/auto';
     let userFirstName = get(firstName);
     let appName = 'Mjengo Bora Construction';
 
     let projectStatusValues = [];
-    let projectStatusLabels = ['Ongoing', 'Complete', 'Abandoned'];
+    let projectStatusLabels = ['Ongoing', 'Complete'];
     let projectStatusCtx;
     let projectStatusCanvas;
     let projectCount = 0;
@@ -17,6 +17,69 @@
     let projectBudgetLabels = [];
     let projectBudgetCtx;
     let projectBudgetCanvas;
+
+
+
+    let options = {
+        series: [],
+        colors: ['#1C64F2', '#16BDCA'],
+        chart: {
+        height: '100%',
+        width: '100%',
+        type: 'pie'
+        },
+        stroke: {
+        colors: ['white'],
+        lineCap: ''
+        },
+        plotOptions: {
+        pie: {
+            labels: {
+            show: true
+            },
+            size: '100%',
+            dataLabels: {
+            offset: -25
+            }
+        }
+        },
+        labels: projectStatusLabels,
+        dataLabels: {
+        enabled: true,
+        style: {
+            fontFamily: 'Inter, sans-serif'
+        }
+        },
+        legend: {
+        position: 'bottom',
+        fontFamily: 'Inter, sans-serif'
+        },
+        yaxis: {
+        labels: {
+            formatter: function (value) {
+            return value;
+            }
+        }
+        },
+        xaxis: {
+        labels: {
+            formatter: function (value) {
+            return value + '%';
+            }
+        },
+        axisTicks: {
+            show: false
+        },
+        axisBorder: {
+            show: false
+        }
+        }
+  };
+
+
+
+
+
 
     function numberWithCommas(x) {
         return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -45,68 +108,8 @@
                 projectStatusValues.push(result.report.ongoingProjects);
                 projectStatusValues.push(result.report.completeProjects);
                 projectStatusValues.push(result.report.abandonedProjects);
-                let budgetData = result.report.projectBudgets;
-
-                for(const budget of budgetData) {
-                    projectBudgetLabels.push(budget.name);
-                    projectBudgetValues.push(budget.budget);
-                }
-
-                projectCount = result.report.ongoingProjects + result.report.completeProjects + result.report.abandonedProjects;
-                totalAvailableBudget = result.report.totalAvailableBudget;
-                projectStatusCtx = projectStatusCanvas.getContext('2d');
-                projectBudgetCtx = projectBudgetCanvas.getContext('2d');
-
-                let chart = new Chart(projectStatusCtx, {
-				type: 'doughnut',
-				data: {
-						labels: projectStatusLabels,
-						datasets: [{
-								backgroundColor: [
-						      'rgb(255, 99, 132)',
-						      'rgb(54, 162, 235)',
-						      'rgb(255, 205, 86)'
-						    ],
-								data: projectStatusValues
-						}]
-				}
-		        });
-
-
-                let projectBudgetChart = new Chart(projectBudgetCanvas, {
-				type: 'doughnut',
-				data: {
-						labels: projectBudgetLabels,
-						datasets: [{
-								backgroundColor: [
-                              'rgb(255, 0, 0)',
-                              'rgb(0, 255, 0)',
-                              'rgb(0, 0, 255)',
-                              'rgb(0, 255, 255)',
-                              'rgb(255, 0, 255)',
-                              'rgb(255, 255, 0)',
-                              'rgb(0, 0, 0)',
-                              'rgb(255, 255, 255)',
-                              'rgb(128, 128, 128)',
-                              'rgb(192, 192, 192)',
-                              'rgb(64, 64, 64)',
-                              'rgb(128, 0, 0)',
-                              'rgb(128, 128, 0)',
-                              'rgb(0, 128, 0)',
-                              'rgb(128, 0, 128)',
-						      'rgb(255, 99, 132)',
-						      'rgb(54, 162, 235)',
-						      'rgb(255, 205, 86)'
-						    ],
-								data: projectBudgetValues
-						}]
-				}
-		        });
-
-
-
-
-
+                options['series'] = [result.report.ongoingProjects, result.report.completeProjects];
+                projectCount = result.report.completeProjects + result.report.ongoingProjects + result.report.abandonedProjects;
             }
         })
     });
@@ -126,8 +129,43 @@
 
 
 <AdminComponent appName={appName} userFirstName={userFirstName} contentTitle="Dashboard">
-    <div id="container">
 
+    <div class="mt-10 flex items-center justify-center">
+        <p class="font-mono text-xl">Hi there, {get(firstName)}</p>
+    </div>
+
+
+    <div class="mt-5 min-h-[400px] flex items-center w-full justify-center gap-20">
+        <Card class="h-72 w-full font-bold font-serif flex items-center">
+            <h5 class="text-xl font-bold leading-none text-gray-900">Number of Projects</h5>
+            <div class="flex flex-col h-full justify-center">
+                <p class="text-center text-5xl">{numberWithCommas(projectCount)}</p>
+            </div> 
+        </Card>
+
+        <Card class="h-72">
+            <div class="flex justify-between items-start w-full">
+              <div class="flex-col items-center w-full">
+                <div class="flex items-center w-full justify-center mb-1">
+                  <h5 class="text-xl font-bold leading-none text-gray-900 dark:text-white me-1">Projects</h5> 
+                </div>
+              </div>
+            </div>
+            <Chart {options} class="py-6" />
+        </Card>
+    </div>
+
+    <div class="flex items-center justify-center gap-5">
+        <p class="font-mono">Pick up from exactly where you left off!</p>
+        <a href="/project">
+            <button class="p-3 font-mono w-40 border border-blue-400 rounded-lg shadow-lg hover:cursor-pointer hover:bg-slate-500 hover:text-white">Projects</button>
+            </a>
+    </div>
+    
+
+
+
+    <!-- <div id="container">
         <div id="projects">
             <p>Projects</p>
         </div>
@@ -151,13 +189,14 @@
             </div> 
             <canvas class="max-h-64 max-w-64" id="projectStatus" bind:this={projectBudgetCanvas}></canvas>
         </div>
+    </div> -->
 
-    </div>
 </AdminComponent>
 
 
-<style>
+<!-- <style>
     #container {
+        margin-top: 20px;
         height: 90%;
         max-height: 100%;
         width: 90%;
@@ -194,4 +233,4 @@
         padding-left: 80px;
         justify-content: space-between;
     }
-</style>
+</style> -->
