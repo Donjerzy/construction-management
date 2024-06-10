@@ -2,7 +2,7 @@
     import AdminComponent from "../components/admin-component.svelte";
     import Button from '../components/button.svelte';
     import {firstName, accessToken, loggedIn, projectClient} from '../stores.js'; 
-    import { Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, Checkbox, TableSearch } from 'flowbite-svelte';    
+    import { Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, Checkbox, TableSearch, Toggle } from 'flowbite-svelte';    
     import { get } from "svelte/store";
     import {onMount} from 'svelte';
     import Toast from '../components/toast.svelte';
@@ -13,6 +13,8 @@
 
     let taskSplit = 'unassigned'
 
+    let view = false;
+
 
     
     let reports = [{ id: 1 ,name: "General Project Report"}, { id: 2 ,name: "Client Report"}]
@@ -21,6 +23,46 @@
     let reportSearchTerm = '';
     
     $: filteredReports = reports.filter((report) => report.name.toLowerCase().indexOf(reportSearchTerm.toLowerCase()) !== -1);
+
+
+
+    let taskSearchTerm = '';
+    
+    $: filteredTasks = assignedTasks.filter((task) => task.title.toLowerCase().indexOf(taskSearchTerm.toLowerCase()) !== -1);
+
+    function sortByPriority() {
+        let low = []
+        let medium = []
+        let high = []
+
+        for (const x of filteredTasks) {
+            if(x.priority.toLowerCase() === 'low') {
+                low.push(x)
+            } else if (x.priority.toLowerCase() === 'medium') {
+                medium.push(x)
+            } else {
+                high.push(x)
+            }
+        }
+        filteredTasks = low.concat(medium).concat(high);
+    }
+
+    function sortByStatus() {
+        let done = []
+        let todo = []
+        let in_progress = []
+
+        for (const x of filteredTasks) {
+            if(x.status.toLowerCase() === 'todo') {
+                todo.push(x)
+            } else if (x.status.toLowerCase() === 'in_progress') {
+                in_progress.push(x)
+            } else {
+                done.push(x)
+            }
+        }
+        filteredTasks = todo.concat(in_progress).concat(done);
+    }
 
 
     let expenseSearchTerm = '';
@@ -36,6 +78,7 @@
 
 
     let clients = [];
+    let assignedTasks = [];
     let projectCode = "56TRT-SUGUFSO-SFGSVF";
     let employees = [];
     let chosenStatus = '';
@@ -172,6 +215,7 @@
                 toDoTasks = result.tasks.filter((task)=> task.status === 'todo');
                 inProgressTasks = result.tasks.filter((task)=> task.status === 'in_progress');
                 doneTasks = result.tasks.filter((task)=> task.status === 'done');
+                assignedTasks = result.tasks;
             }
         });
 
@@ -264,6 +308,7 @@
                 toDoTasks = result.tasks.filter((task)=> task.status === 'todo');
                 inProgressTasks = result.tasks.filter((task)=> task.status === 'in_progress');
                 doneTasks = result.tasks.filter((task)=> task.status === 'done');
+                assignedTasks = result.tasks;
                 bigLoading = false;
             }
         });
@@ -692,19 +737,30 @@
                     <a href={`/project/${projectId}/add-task`}><Button fontSize="base" height="10" label="Add Task" padding="7" width="32" /> </a>
                 </div>
                 
-                <div class="flex justify-center gap-20">
-                    {#if taskSplit === 'unassigned'}
-                        <p class="font-serif underline text-lg text-primary-200">Unassigned</p>
-                        <!-- svelte-ignore a11y-click-events-have-key-events -->
-                        <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                        <p on:click={()=> taskSplit = 'assigned'} class="font-serif underline hover:cursor-pointer hover:text-primary-200">Assigned</p>
-                    {:else}
-                        <!-- svelte-ignore a11y-click-events-have-key-events -->
-                        <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                        <p on:click={()=> taskSplit = 'unassigned'} class="font-serif underline hover:cursor-pointer hover:text-primary-200">Unassigned</p>
-                        <p class="font-serif underline text-lg text-primary-200">Assigned</p>
-                    {/if}   
-                </div>
+                        <div class="flex justify-center gap-20 items-center">
+                            {#if taskSplit === 'unassigned'}
+                                <p class="font-serif underline text-lg text-primary-200">Unassigned</p>
+                                <!-- svelte-ignore a11y-click-events-have-key-events -->
+                                <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+                                <p on:click={()=> taskSplit = 'assigned'} class="font-serif underline hover:cursor-pointer hover:text-primary-200">Assigned</p>
+                            {:else}
+                                <!-- svelte-ignore a11y-click-events-have-key-events -->
+                                <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+                                <p on:click={()=> taskSplit = 'unassigned'} class="font-serif underline hover:cursor-pointer hover:text-primary-200">Unassigned</p>
+                                <p class="font-serif underline text-lg text-primary-200">Assigned</p>
+                                <!-- svelte-ignore a11y-no-static-element-interactions -->
+                                <div class="flex items-center gap-4">
+                                    {#if !view}
+                                        <p class="font-sans text-lg">Track view</p>
+                                    {:else}
+                                        <p class="font-sans text-lg">Table view</p> 
+                                    {/if}
+                                    
+                                    <!-- svelte-ignore a11y-click-events-have-key-events -->
+                                    <svg on:click={()=> view = !view} class="h-6 w-6 hover:cursor-pointer hover:fill-primary-200" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21,9L17,5V8H10V10H17V13M7,11L3,15L7,19V16H14V14H7V11Z" /></svg>
+                                </div>
+                            {/if}    
+                        </div>
 
 
                 {#if taskSplit === 'unassigned'}
@@ -739,6 +795,8 @@
                         </TableSearch>
                     </div>
                 {:else}
+
+                {#if !view}
                 <div id="task-tracks">
                     {#if bigLoading}
                         <div class="mt-20">
@@ -824,8 +882,64 @@
                             </div> 
                         {/each}  
                     </div>
-                {/if}    
-                </div>  
+                    {/if}    
+                </div> 
+                {:else}
+                <div class="mt-5">
+                    <TableSearch placeholder="Search by task name" divClass="font-sans" hoverable={true} bind:inputValue={taskSearchTerm}>
+                        <Table divClass="max-h-80 overflow-auto" shadow>
+                             <TableHead defaultRow={false} theadClass="border-black">
+                                 <tr class="bg-primary-100">
+                                     <TableHeadCell class="text-white font-serif">Name</TableHeadCell>
+                                     <TableHeadCell on:click={sortByPriority} class="text-white font-serif hover:cursor-pointer">Priority</TableHeadCell>
+                                     <TableHeadCell on:click={sortByStatus} class="text-white font-serif hover:cursor-pointer">Status</TableHeadCell>
+                                     <TableHeadCell class="text-white font-serif">Actions</TableHeadCell>
+                                 </tr>
+                             </TableHead>
+                             <TableBody>
+                                 {#each filteredTasks as task}
+                                     <TableBodyRow>
+                                         <TableBodyCell class="font-sans">{task.title}</TableBodyCell>
+                                         <TableBodyCell class="font-sans">{task.priority}</TableBodyCell>
+                                         <TableBodyCell class="font-sans">{task.status}</TableBodyCell>
+                                         <TableBodyCell class="flex gap-10 font-sans">
+                                                <a class="underline hover:cursor-pointer font-serif hover:text-primary-200" href={`/task/${task.taskId}`}>view</a>
+                                                {#if task.status.toLowerCase() === 'todo'}
+                                                    <!-- svelte-ignore a11y-click-events-have-key-events -->
+                                                    <!-- svelte-ignore a11y-no-static-element-interactions -->
+                                                    <!-- svelte-ignore a11y-missing-attribute -->
+                                                    <a on:click={()=> moveTask(task.taskId, "done")} class="underline hover:cursor-pointer font-serif hover:text-primary-200">move to done</a>  
+                                                    <!-- svelte-ignore a11y-click-events-have-key-events -->
+                                                    <!-- svelte-ignore a11y-no-static-element-interactions -->
+                                                    <!-- svelte-ignore a11y-missing-attribute -->
+                                                    <a on:click={()=> moveTask(task.taskId, "in_progress")} class="underline hover:cursor-pointer font-serif hover:text-primary-200" >move to in progress</a>     
+                                                {:else if task.status.toLowerCase() === 'in_progress'}
+                                                    <!-- svelte-ignore a11y-click-events-have-key-events -->
+                                                    <!-- svelte-ignore a11y-no-static-element-interactions -->
+                                                    <!-- svelte-ignore a11y-missing-attribute -->
+                                                    <a on:click={()=> moveTask(task.taskId, "todo")} class="underline hover:cursor-pointer font-serif hover:text-primary-200" >move to todo</a> 
+                                                    <!-- svelte-ignore a11y-click-events-have-key-events -->
+                                                    <!-- svelte-ignore a11y-no-static-element-interactions -->
+                                                    <!-- svelte-ignore a11y-missing-attribute -->
+                                                    <a on:click={()=> moveTask(task.taskId, "done")} class="underline hover:cursor-pointer font-serif hover:text-primary-200" >move to done</a> 
+                                                {:else}
+                                                    <!-- svelte-ignore a11y-click-events-have-key-events -->
+                                                    <!-- svelte-ignore a11y-no-static-element-interactions -->
+                                                    <!-- svelte-ignore a11y-missing-attribute -->
+                                                    <a on:click={()=> moveTask(task.taskId, "todo")} class="underline hover:cursor-pointer font-serif hover:text-primary-200" >move to todo</a> 
+                                                    <!-- svelte-ignore a11y-click-events-have-key-events -->
+                                                    <!-- svelte-ignore a11y-no-static-element-interactions -->
+                                                    <!-- svelte-ignore a11y-missing-attribute -->
+                                                    <a on:click={()=> moveTask(task.taskId, "in_progress")} class="underline hover:cursor-pointer font-serif hover:text-primary-200">move to in progress</a>   
+                                                {/if}               
+                                             </TableBodyCell>
+                                     </TableBodyRow>
+                                 {/each}
+                             </TableBody>
+                        </Table> 
+                     </TableSearch>
+                </div>
+                {/if}
                 {/if}
             </div>
         {:else if active === 'reports'}     
