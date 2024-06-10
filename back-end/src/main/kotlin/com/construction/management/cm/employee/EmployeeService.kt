@@ -498,10 +498,18 @@ class EmployeeService(private val repository: EmployeeRepository,
             return mutableSetOf()
         }
         val sortedValues = employeePredictedMinutes.values.sorted()
+        var index = 0
         for (value in sortedValues) {
             for (x in employeePredictedMinutes.keys) {
                 if (employeePredictedMinutes[x] == value) {
-                    rankedEmployees.add(x)
+                    if (index == 0) {
+                        rankedEmployees.add("$x - Most Suited ($value)")
+                    } else if (index == sortedValues.size - 1) {
+                        rankedEmployees.add("$x - Least Suited ($value)")
+                    } else {
+                        rankedEmployees.add("$x - ($value)")
+                    }
+                    index += 1
                 }
             }
         }
