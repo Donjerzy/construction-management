@@ -3,6 +3,11 @@ package com.construction.management.cm.report
 import com.construction.management.cm.Runner.Runner
 import com.construction.management.cm.client.ClientRepository
 import com.construction.management.cm.dto.*
+import com.construction.management.cm.employee.Employee
+import com.construction.management.cm.employee.EmployeeRepository
+import com.construction.management.cm.employee.EmployeeService
+import com.construction.management.cm.employeetype.EmployeeTypeRepository
+import com.construction.management.cm.employeewagepayment.EmployeeWagePaymentRepository
 import com.construction.management.cm.exceptionhandler.CustomException
 import com.construction.management.cm.formatters.StringFormatter
 import com.construction.management.cm.project.Project
@@ -23,7 +28,11 @@ class ReportsService (
     private val formatter: StringFormatter,
     private val runner: Runner,
     private val clientRepository: ClientRepository,
-    private val projectService: ProjectService) {
+    private val projectService: ProjectService,
+    private val employeeRepository: EmployeeRepository,
+    private val employeeTypeRepository: EmployeeTypeRepository,
+    private val employeeWagePaymentRepository: EmployeeWagePaymentRepository,
+    private val employeeService: EmployeeService) {
 
 
     private val calendar = Calendar.getInstance()
@@ -249,6 +258,137 @@ class ReportsService (
             parameters = parameters
         )
         return pdfToString("${reportsOutputDir}client-report.pdf")
+
+
+
+    }
+
+    fun getProjectEmployeeReport(userEmail: String, project: Long): String {
+        when (getProjectGeneralReportValidations(
+            project = project,
+            projectManager = userService.getUserId(userEmail)!!
+        )) {
+            "not-project-owner" -> throw CustomException("not-project-owner", null)
+        }
+
+        val employeeCountTable = mutableSetOf<EmployeeCountTable>()
+        employeeCountTable.add(EmployeeCountTable(numberOfEmployees = employeeRepository.numberOfEmployeesInProject(project).toString()))
+        val employeeCountDataset = JRBeanCollectionDataSource(employeeCountTable)
+
+        val employeeTypeTable = mutableSetOf<EmployeeTypeTable>()
+        val employeeTypes = employeeTypeRepository.getUserEmployeeTypes(userService.getUserId(userEmail)!!)
+        for (type in employeeTypes) {
+            if (type.employees.size > 0) {
+                employeeTypeTable.add(
+                    EmployeeTypeTable(
+                    employeeType = type.name,
+                    employeeCount = type.employees.size.toString()
+                )
+                )
+            }
+        }
+        val employeeTypesDataset = JRBeanCollectionDataSource(employeeTypeTable)
+
+
+        val wagesTable = mutableSetOf<WagesTable>()
+        val employees = employeeRepository.getProjectEmployees(project)
+        var paidWages = 0.0
+        var unpaidWages = 0.0
+        for (employee in employees) {
+            paidWages += employeeWagePaymentRepository.employeeWagesPaid(employee.id)
+            unpaidWages += employeeService.getGeneratedPay(
+                employeeId = employee.id,
+                userEmail = userEmail,
+                project = project
+            ).amountToPay.toDouble()
+        }
+        wagesTable.add(
+            WagesTable(
+               paidWages = formatter.doubleToStringCommaSeparated(paidWages),
+               unpaidWages = formatter.doubleToStringCommaSeparated(unpaidWages),
+               estimatedBudget = formatter.doubleToStringCommaSeparated(projectsRepository.getProjectBudgetAvailable(project) - unpaidWages)
+            )
+        )
+        val wagesTableDataset = JRBeanCollectionDataSource(wagesTable)
+
+        val employeePerformanceTable = mutableSetOf<EmployeePerformanceTable>()
+        if (employees.size < 2) {
+            employeePerformanceTable.add(
+                EmployeePerformanceTable(
+                    rank = "Best Employee",
+                    employeeType = "n/a",
+                    totalTasks = "n/a",
+                    closedTasks = "n/a",
+                    openTasks = "n/a",
+                    averageCompletionTime = "n/a",
+                    employeeName = "n/a"
+                )
+            )
+        } else {
+            var bestEmployee: Employee? = when(employeeRepository.getEmployeeDoneTasks(employees[0].id)) {
+                0 -> null
+                else -> employees[0]
+            }
+            var bestEmployeeScore = when(employeeRepository.getEmployeeDoneTasks(employees[0].id)) {
+                0 -> null
+                else -> (employeeRepository.getEmployeeDoneTasks(bestEmployee!!.id)
+                        / employeeRepository.getEmployeeAllTasks(bestEmployee.id) ) * (1/employeeRepository.getAverageTasksCompletionTime(bestEmployee.id))
+            }
+
+            for (employee in employees) {
+                if (employeeRepository.getEmployeeDoneTasks(employee.id) == 0 || employeeRepository.getEmployeeAllTasks(employee.id) == 0) {
+                    continue
+                } else {
+                    val score = (employeeRepository.getEmployeeDoneTasks(employee.id)
+                            / employeeRepository.getEmployeeAllTasks(employee.id)) * (1/employeeRepository.getAverageTasksCompletionTime(employee.id))
+                    if (bestEmployeeScore == null || score > bestEmployeeScore) {
+                        bestEmployee = employee
+                        bestEmployeeScore = score
+                    }
+                }
+            }
+            if (bestEmployee == null) {
+                employeePerformanceTable.add(
+                    EmployeePerformanceTable(
+                        rank = "Best Employee",
+                        employeeType = "n/a",
+                        totalTasks = "n/a",
+                        closedTasks = "n/a",
+                        openTasks = "n/a",
+                        averageCompletionTime = "n/a",
+                        employeeName = "n/a"
+                    )
+                )
+            } else {
+                employeePerformanceTable.add(
+                    EmployeePerformanceTable(
+                        rank = "Best Employee",
+                        employeeType = bestEmployee.employeeType.name,
+                        totalTasks = employeeRepository.getEmployeeAllTasks(bestEmployee.id).toString(),
+                        closedTasks = employeeRepository.getEmployeeDoneTasks(bestEmployee.id).toString(),
+                        openTasks = employeeRepository.getEmployeeActiveTasks(bestEmployee.id).toString(),
+                        averageCompletionTime = employeeRepository.getAverageTasksCompletionTime(bestEmployee.id).toString(),
+                        employeeName = "${bestEmployee.firstName.capitalize()} ${bestEmployee.lastName.capitalize()}"
+                    )
+                )
+            }
+        }
+        val employeePerformanceTableDataset = JRBeanCollectionDataSource(employeePerformanceTable)
+
+        val parameters = mutableMapOf<String, Any>()
+        parameters["reportYear"] = currentYear.toString()
+        parameters["numberOfEmployeesDataset"] = employeeCountDataset
+        parameters["employeeTypeDataset"] = employeeTypesDataset
+        parameters["wagesDataset"] = wagesTableDataset
+        parameters["employeePerformanceDataset"] = employeePerformanceTableDataset
+
+
+        generateJasperReportPdf (
+            templatePath = "${reportTemplatesDir}employee_report.jrxml",
+            outputFilePath = "${reportsOutputDir}${project}-employee-report.pdf",
+            parameters = parameters
+        )
+        return pdfToString("${reportsOutputDir}${project}-employee-report.pdf")
 
 
 

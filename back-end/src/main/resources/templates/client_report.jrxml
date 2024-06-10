@@ -225,11 +225,12 @@
                     <datasetRun subDataset="clientAmountsDataset" uuid="eaf1e0ca-d921-487b-8968-6e686011a414">
                         <dataSourceExpression><![CDATA[$P{clientAmountsDataset}]]></dataSourceExpression>
                     </datasetRun>
-                    <jr:column width="100" uuid="7e411043-46e9-47ab-9b8a-6f6a4377d2ed">
+                    <jr:column width="140" uuid="7e411043-46e9-47ab-9b8a-6f6a4377d2ed">
                         <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
                         <jr:columnHeader style="Table 1_CH" height="30" rowSpan="1">
+                            <property name="com.jaspersoft.studio.unit.width" value="px"/>
                             <staticText>
-                                <reportElement x="0" y="0" width="100" height="30" uuid="164b54ae-2de3-4c5c-8296-dfb0e3381e04"/>
+                                <reportElement x="0" y="0" width="140" height="30" uuid="164b54ae-2de3-4c5c-8296-dfb0e3381e04"/>
                                 <textElement textAlignment="Center" verticalAlignment="Middle">
                                     <font fontName="Times New Roman" size="12"/>
                                 </textElement>
@@ -238,7 +239,7 @@
                         </jr:columnHeader>
                         <jr:detailCell style="Table 1_TD" height="30">
                             <textField>
-                                <reportElement x="0" y="0" width="100" height="30" uuid="844a5bbf-3c3e-43f1-94a8-c384a2319141"/>
+                                <reportElement x="0" y="0" width="140" height="30" uuid="844a5bbf-3c3e-43f1-94a8-c384a2319141"/>
                                 <textElement textAlignment="Center" verticalAlignment="Middle">
                                     <font fontName="Times New Roman" size="12"/>
                                 </textElement>

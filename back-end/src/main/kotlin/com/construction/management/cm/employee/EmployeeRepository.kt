@@ -34,6 +34,10 @@ interface EmployeeRepository: JpaRepository<Employee, Long> {
     fun getEmployeeInProgressTasks(employeeId: Long): Int
     @Query("select count(*) from task t inner join employee_task et on et.task = t.id where lower(status) = 'done' and et.employee = :employeeId", nativeQuery = true)
     fun getEmployeeDoneTasks(employeeId: Long): Int
+
+    @Query("select count(*) from task t inner join employee_task et on et.task = t.id where et.employee = :employeeId", nativeQuery = true)
+    fun getEmployeeAllTasks(employeeId: Long): Int
+
     @Query("select avg(round(EXTRACT(EPOCH FROM (t.completion_date - t.creation_date)) / 60,2)) as minutes from task t inner join employee_task et on et.task = t.id where lower(t.status) = 'done' and et.employee = :employeeId group by et.employee", nativeQuery = true)
     fun getAverageTasksCompletionTime(employeeId: Long): Double
 

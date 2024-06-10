@@ -15,6 +15,8 @@ interface EmployeeWagePaymentRepository: JpaRepository<EmployeeWagePayment, Long
     fun numberOfPaymentsMade(employee: Long): Int
     @Query("select period_end from employee_wage_payment where employee = :employeeId order by period_end desc limit 1", nativeQuery = true)
     fun lastPaymentDate(employeeId: Long): Date?
+    @Query("select coalesce(sum(coalesce(amount,0)),0) from employee_wage_payment where employee = :employeeId", nativeQuery = true)
+    fun employeeWagesPaid(employeeId: Long): Double
 
 
 }
