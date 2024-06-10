@@ -22,9 +22,9 @@
 <AdminComponent appName={appName} contentTitle={contentTitle} userFirstName={get(firstName)}>
 
     <div>
-        <div class="mt-4 pb-8 max-h-screen">
+        <div class="mt-4 pb-8">
             <TableSearch placeholder="Search by report name" hoverable={true} bind:inputValue={searchTerm}>
-               <Table divClass="max-h-80 overflow-auto" shadow>
+               <Table  shadow>
                     <TableHead defaultRow={false} theadClass="border-black">
                         <tr class="bg-primary-100">
                             <TableHeadCell class="text-white">#</TableHeadCell>

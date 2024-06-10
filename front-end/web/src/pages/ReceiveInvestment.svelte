@@ -2,7 +2,7 @@
     import AdminComponent from "../components/admin-component.svelte";
     import {firstName, accessToken, loggedIn} from '../stores.js'
     import { get } from "svelte/store";
-    import Button from "../components/button.svelte";
+    import { Button } from 'flowbite-svelte';
     import Loader from "../components/loading-component.svelte";
     import { notifications } from "../lib/notification";
     import {onMount} from 'svelte';
@@ -154,9 +154,7 @@
             {#if loading}
                 <Loader />
             {:else}
-                <Button
-                height=10 width=36 label="Save" fontSize="sm" padding="8px"
-                on:click={validateInput} />
+                <Button color="dark" class="w-fit" on:click={validateInput}>Save</Button>
             {/if} 
         </div>
     </div>

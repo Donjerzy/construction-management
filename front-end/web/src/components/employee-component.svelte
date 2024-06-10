@@ -1,7 +1,5 @@
 <script>
     export let contentTitle;
-    import {firstName} from '../stores.js' 
-    import { get } from "svelte/store";
     let appName = "Mjengo Bora Construction";
 </script>
 

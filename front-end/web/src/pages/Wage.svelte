@@ -2,7 +2,7 @@
     import AdminComponent from "../components/admin-component.svelte";
     import {firstName, accessToken, loggedIn} from '../stores.js'; 
     import { get, writable } from "svelte/store";
-    import Button from "../components/button.svelte";
+    import { Button } from 'flowbite-svelte';
     import { onMount } from "svelte";
     import { notifications } from "../lib/notification";
     import Toast from '../components/toast.svelte';
@@ -393,9 +393,7 @@
                             {#if loading}
                                 <Loader />
                             {:else}
-                                <Button 
-                                    height=10 width=36 label="Pay Wage" fontSize="sm" padding="8px"
-                                    on:click={automaticPay} />
+                                <Button on:click={automaticPay} class="w-fit" color="dark">Pay Wage</Button>
                                 {/if} 
                         </div>
                     </div>
@@ -424,10 +422,8 @@
                         {#if loading}
                             <Loader />
                         {:else}
-                            <Button 
-                                height=10 width=36 label="Pay Wage" fontSize="sm" padding="8px"
-                                on:click={customPay} />
-                            {/if} 
+                        <Button on:click={customPay} class="w-fit" color="dark">Pay Wage</Button>
+                        {/if} 
                     </div>    
                 {/if}
 

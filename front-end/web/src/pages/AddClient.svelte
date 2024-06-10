@@ -2,12 +2,12 @@
     import AdminComponent from "../components/admin-component.svelte";
     import {firstName, accessToken, loggedIn} from '../stores.js' 
     import { get } from "svelte/store";
-    import Button from "../components/button.svelte";
+    import { Button } from 'flowbite-svelte';
     import Loader from "../components/loading-component.svelte";
     import { notifications } from "../lib/notification";
     import Toast from '../components/toast.svelte';
     import {page} from '$app/stores';
-    import {commaSeparator} from "../lib/comma_separator.js";
+   
 
     const projectId = $page.params.projectId;
     let appName = "Mjengo Bora Construction";
@@ -169,9 +169,7 @@
                 {#if loading}
                     <Loader />
                 {:else}
-                    <Button 
-                    height=10 width=36 label="Add Client" fontSize="sm" padding="8px"
-                    on:click={validateInput} />
+                <Button color="dark" class="w-fit" on:click={validateInput}>Add Client</Button>
                 {/if} 
             </div>
         </form>

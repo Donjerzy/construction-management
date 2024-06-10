@@ -1,6 +1,6 @@
 <script>
     import AdminComponent from "../components/admin-component.svelte";
-    import Button from '../components/button.svelte';
+    import { Button } from 'flowbite-svelte';
     import {firstName, accessToken, loggedIn, projectClient} from '../stores.js'; 
     import { Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, Checkbox, TableSearch, Toggle } from 'flowbite-svelte';    
     import { get } from "svelte/store";
@@ -544,11 +544,13 @@
                 <p class="font-serif underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("actions")}>Actions</p>
             </div>
             <div class="flex mt-5 justify-end">
-               <a href={`/project/${projectId}/add-client`}><Button fontSize="base" height="10" label="Add Client" padding="7" width="32" /> </a>
+               <a href={`/project/${projectId}/add-client`}>
+                <Button class="w-fit" color="dark">Add Client</Button> 
+            </a>
             </div>
-            <div class="mt-4 pb-8 max-h-screen">
+            <div class="mt-4 pb-8 min-h-screen">
                 <TableSearch divClass="font-sans" placeholder="Search by client name" hoverable={true} bind:inputValue={searchTerm}>
-                   <Table divClass="max-h-80 overflow-auto" shadow>
+                   <Table shadow>
                         <TableHead defaultRow={false} theadClass="border-black">
                             <tr class="bg-primary-100">
                                 <TableHeadCell class="text-white font-serif">Name</TableHeadCell>
@@ -610,11 +612,13 @@
                     <p class="font-serif underline text-primary-900 hover:cursor-pointer hover:text-primary-200" on:click={()=> navigate("actions")}>Actions</p>
                 </div>
                 <div class="flex mt-5 justify-end">
-                <a href={`/project/${projectId}/add-employee`}><Button fontSize="base" height="10" label="Add Employee" padding="7" width="32" /> </a>
+                <a href={`/project/${projectId}/add-employee`}>
+                    <Button class="w-fit" color="dark">Add Employee</Button> 
+                </a>
                 </div>
-                <div class="mt-4 pb-8 max-h-screen">
+                <div class="mt-4 pb-8 min-h-screen">
                     <TableSearch placeholder="Search by employee name" divClass="font-sans" hoverable={true} bind:inputValue={searchTerm}>
-                    <Table divClass="max-h-80 overflow-auto" shadow>
+                    <Table shadow>
                             <TableHead defaultRow={false} theadClass="border-black">
                                 <tr class="bg-primary-100">
                                     <TableHeadCell class="text-white font-serif">Name</TableHeadCell>
@@ -670,11 +674,11 @@
                 </div>
                 <div class="mt-5">
                     <p class="text-sm font-serif">Project Code</p>
-                    <div class="mt-2 border-black bg-white h-16 rounded p-4 flex justify-between items-center">
-                        <p class="font-sans text-base">{projectCode}</p>
+                    <div class="mt-2 border-black bg-primary-50 h-16 rounded p-4 flex justify-between items-center">
+                        <p class="font-sans text-base text-white">{projectCode}</p>
                         <!-- svelte-ignore a11y-click-events-have-key-events -->
                         <!-- svelte-ignore a11y-no-static-element-interactions -->
-                        <svg on:click={copyProjectCode} class="w-5 h-5 hover:fill-primary-200 hover:cursor-pointer" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z" /></svg>
+                        <svg on:click={copyProjectCode} class="w-5 h-5 fill-white hover:fill-primary-200 hover:cursor-pointer" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z" /></svg>
                     </div>
                 </div>
                 <div class="mt-4">
@@ -734,7 +738,9 @@
                     <p class="font-serif underline text-primary-900 hover:cursor-pointer hover:text-primary-200"  on:click={()=> navigate("actions")}>Actions</p>
                 </div>
                 <div class="mt-2 flex justify-end">
-                    <a href={`/project/${projectId}/add-task`}><Button fontSize="base" height="10" label="Add Task" padding="7" width="32" /> </a>
+                    <a href={`/project/${projectId}/add-task`}>
+                        <Button class="w-fit" color="dark">Add Task</Button> 
+                    </a>
                 </div>
                 
                         <div class="flex justify-center gap-20 items-center">
@@ -763,9 +769,9 @@
 
 
                 {#if taskSplit === 'unassigned'}
-                    <div class="mt-4 pb-8 max-h-screen">
+                    <div class="mt-4 pb-8 min-h-screen">
                         <TableSearch placeholder="Search by title" divClass="font-sans" hoverable={true} bind:inputValue={unassignedTaskSearchTerm}>
-                        <Table divClass="max-h-80 overflow-auto" shadow>
+                        <Table  shadow>
                                 <TableHead defaultRow={false} theadClass="border-black">
                                     <tr class="bg-primary-100">
                                         <TableHeadCell class="text-white font-serif">Title</TableHeadCell>
@@ -796,19 +802,17 @@
                 {:else}
 
                 {#if !view}
-                <div id="task-tracks">
+                <div class="mt-5 min-h-screen grid grid-cols-3 w-full">
                     {#if bigLoading}
                         <div class="mt-20">
                             <Loader />
                         </div>
                     {:else}
-                    <div id="to-do">
-                        <div>
-                            <p class="-rotate-90 mr-3 font-serif">TODO</p>
-                        </div>
+                    <div class="border-l border-t border-r w-full border-primary-100 flex flex-col items-center pt-5 pl-16 pr-16 bg-blue-50">
+                        <div class="text-base mb-4">TODO</div>
                         {#each toDoTasks as task }
-                            <div class="flex border border-black flex-col justify-between bg-primary-50 text-white h-full  pt-4 pl-2 pr-4 pb-2 min-w-[160px] max-w-[200px] rounded-md mr-20 text-ellipsis text-nowrap">
-                                <div class="overflow-hidden text-base font-sans">{task.title}</div>
+                            <div class="w-full h-48 rounded-md shadow flex border flex-col justify-between bg-primary-50 pt-4 pl-4 pb-4 pr-4 mb-4">
+                                <p class="text-white text-base overflow-hidden">{task.title}</p>
                                 {#if task.priority === "medium"}
                                     <svg class="fill-white w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19,13H5V11H19V13Z" /></svg>
                                 {:else if task.priority === "low"}
@@ -816,24 +820,22 @@
                                 {:else}
                                     <svg class="fill-white w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.41,15.41L12,10.83L16.59,15.41L18,14L12,8L6,14L7.41,15.41Z" /></svg>
                                 {/if}
-                                <div class="flex gap-3 items-center">
+                                <div class="flex justify-between items-center">
                                     <a href={`/task/${task.taskId}`}>
                                         <p class="text-white underline hover:cursor-pointer font-serif hover:text-primary-200">View</p>
                                      </a>
                                     <!-- svelte-ignore a11y-click-events-have-key-events -->
                                     <!-- svelte-ignore a11y-no-static-element-interactions -->
-                                    <svg on:click={()=> moveTask(task.taskId, "in_progress")} class=" fill-white h-5 w-6 hover:fill-primary-200 hover:cursor-pointer" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11,4H13V16L18.5,10.5L19.92,11.92L12,19.84L4.08,11.92L5.5,10.5L11,16V4Z" /></svg>
+                                    <svg on:click={()=> moveTask(task.taskId, "in_progress")} class="w-8 h-8 fill-white hover:cursor-pointer hover:fill-primary-200" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z" /></svg> 
                                 </div>  
                             </div>
                         {/each}  
                     </div>
-                    <div id="in-progress">
-                        <div>
-                            <p class="-rotate-90 mr-3 font-serif">IN-PROGRESS</p>
-                        </div>
+                    <div class="border-l border-t border-r border-primary-100 flex flex-col items-center pt-5 pl-16 pr-16 bg-blue-50">
+                        <div class="text-base mb-4">IN PROGRESS</div> 
                         {#each inProgressTasks as task }
-                            <div class="flex border border-black flex-col justify-between bg-primary-50 text-white h-full  pt-4 pl-2 pr-4 pb-2 min-w-[160px] max-w-[200px] rounded-md   mr-20 text-ellipsis text-nowrap ">
-                                <div class="overflow-hidden text-base font-sans">{task.title}</div>
+                        <div class="w-full h-48 rounded-md shadow flex border flex-col justify-between bg-primary-50 pt-4 pl-4 pb-4 pr-4 mb-4">
+                                <p class="text-white text-base overflow-hidden">{task.title}</p>
                                 {#if task.priority === "medium"}
                                     <svg class="fill-white w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19,13H5V11H19V13Z" /></svg>
                                 {:else if task.priority === "low"}
@@ -842,26 +844,27 @@
                                     <svg class="fill-white w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.41,15.41L12,10.83L16.59,15.41L18,14L12,8L6,14L7.41,15.41Z" /></svg>
                                 {/if}
                                     <!-- svelte-ignore a11y-click-events-have-key-events -->
-                                    <div class="flex gap-3 items-center">
+                                    <div class="flex justify-between items-center">
                                         <a href={`/task/${task.taskId}`}>
                                             <p class="text-white underline hover:cursor-pointer font-serif hover:text-primary-200">View</p>
                                          </a>
-                                        <!-- svelte-ignore a11y-click-events-have-key-events -->
-                                        <!-- svelte-ignore a11y-no-static-element-interactions -->
-                                        <svg on:click={()=> moveTask(task.taskId, "done")} class="fill-white h-5 w-6 hover:fill-primary-200 hover:cursor-pointer" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11,4H13V16L18.5,10.5L19.92,11.92L12,19.84L4.08,11.92L5.5,10.5L11,16V4Z" /></svg>
-                                        <!-- svelte-ignore a11y-no-static-element-interactions -->
-                                        <svg on:click={()=> moveTask(task.taskId, "todo")} class="fill-white h-5 w-6 hover:fill-primary-200 hover:cursor-pointer" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13,20H11V8L5.5,13.5L4.08,12.08L12,4.16L19.92,12.08L18.5,13.5L13,8V20Z" /></svg>
+                                         <div class="flex gap-0">
+                                            <!-- svelte-ignore a11y-click-events-have-key-events -->
+                                             <!-- svelte-ignore a11y-no-static-element-interactions -->
+                                            <svg on:click={()=> moveTask(task.taskId, "todo")} class="w-8 h-8 fill-white hover:cursor-pointer hover:fill-primary-200" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z" /></svg>
+                                            <!-- svelte-ignore a11y-click-events-have-key-events -->
+                                            <!-- svelte-ignore a11y-no-static-element-interactions -->
+                                            <svg on:click={()=> moveTask(task.taskId, "done")} class="w-8 h-8 fill-white hover:cursor-pointer hover:fill-primary-200" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z" /></svg>   
+                                        </div>   
                                     </div>            
                             </div> 
                         {/each} 
                     </div>
-                    <div id="done">
-                        <div>
-                            <p class="-rotate-90 mr-3 font-serif">DONE</p>
-                        </div>
+                    <div class="border-l border-t border-r border-primary-100 flex flex-col items-center pt-5 pl-16 pr-16 bg-blue-50">
+                        <div class="text-base mb-4">DONE</div>
                         {#each doneTasks as task}
-                            <div class="flex border border-black flex-col justify-between bg-primary-50 text-white h-full  pt-4 pl-2 pr-4 pb-2 min-w-[160px] max-w-[200px] rounded-md   mr-20 text-ellipsis text-nowrap ">
-                                <div class="overflow-hidden text-base font-sans">{task.title}</div>
+                        <div class="w-full h-48 rounded-md shadow flex border flex-col justify-between bg-primary-50 pt-4 pl-4 pb-4 pr-4 mb-4">
+                                <p class="text-white text-base overflow-hidden">{task.title}</p>
                                 <!-- svelte-ignore a11y-no-static-element-interactions -->
                                 {#if task.priority === "medium"}
                                     <svg class="fill-white w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19,13H5V11H19V13Z" /></svg>
@@ -870,15 +873,15 @@
                                 {:else}
                                     <svg class="fill-white w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.41,15.41L12,10.83L16.59,15.41L18,14L12,8L6,14L7.41,15.41Z" /></svg>
                                 {/if}
-                                <div class="flex gap-3 items-center">
+                                <div class="flex justify-between items-center">
                                     <a href={`/task/${task.taskId}`}>
                                         <p class="text-white underline hover:cursor-pointer font-serif hover:text-primary-200">View</p>
                                      </a>
                                     <!-- svelte-ignore a11y-click-events-have-key-events -->
                                     <!-- svelte-ignore a11y-no-static-element-interactions -->
-                                    <svg on:click={()=> moveTask(task.taskId, "in_progress")} class="fill-white h-5 w-6 hover:fill-primary-200 hover:cursor-pointer" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13,20H11V8L5.5,13.5L4.08,12.08L12,4.16L19.92,12.08L18.5,13.5L13,8V20Z" /></svg>
-                                </div> 
+                                    <svg on:click={()=> moveTask(task.taskId, "in_progress")} class="w-8 h-8 fill-white hover:cursor-pointer hover:fill-primary-200" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z" /></svg>
                             </div> 
+                        </div> 
                         {/each}  
                     </div>
                     {/if}    
@@ -886,7 +889,7 @@
                 {:else}
                 <div class="mt-5">
                     <TableSearch placeholder="Search by task name" divClass="font-sans" hoverable={true} bind:inputValue={taskSearchTerm}>
-                        <Table divClass="max-h-80 overflow-auto" shadow>
+                        <Table shadow>
                              <TableHead defaultRow={false} theadClass="border-black">
                                  <tr class="bg-primary-100">
                                      <TableHeadCell class="text-white font-serif">Name</TableHeadCell>
@@ -968,7 +971,7 @@
                 </div>
                 <div class="mt-5">
                     <TableSearch placeholder="Search by report name" divClass="font-sans" hoverable={true} bind:inputValue={reportSearchTerm}>
-                        <Table divClass="max-h-80 overflow-auto" shadow>
+                        <Table  shadow>
                              <TableHead defaultRow={false} theadClass="border-black">
                                  <tr class="bg-primary-100">
                                      <TableHeadCell class="text-white font-serif">#</TableHeadCell>
@@ -1021,11 +1024,13 @@
                     <p class="font-serif underline text-primary-900 hover:cursor-pointer hover:text-primary-200"  on:click={()=> navigate("actions")}>Actions</p>
                 </div>
                 <div class="mt-2 flex justify-end">
-                    <a href={`/project/${projectId}/add-expense`}><Button fontSize="base" height="10" label="Add Expense" padding="7" width="32" /> </a>
+                    <a href={`/project/${projectId}/add-expense`}>
+                        <Button class="w-fit" color="dark">Add Expense</Button> 
+                    </a>
                 </div>
-                <div class="mt-4 pb-8 max-h-screen">
+                <div class="mt-4">
                     <TableSearch placeholder="Search by title" divClass="font-sans" hoverable={true} bind:inputValue={expenseSearchTerm}>
-                        <Table divClass="max-h-80 overflow-auto" shadow>
+                        <Table  shadow>
                             <TableHead defaultRow={false} theadClass="border-black">
                                 <tr class="bg-primary-100">
                                     <TableHeadCell class="text-white font-serif">Title</TableHeadCell>
@@ -1079,70 +1084,4 @@
     .overview-table {
         margin-top: 40px;
     }
-    #task-tracks {
-        display: grid;
-        grid-template-rows: 31.5% 31.5% 31.5%;
-        grid-template-areas: 
-            "todo"
-            "in-progress"
-            "done";
-        margin-top: 20px;
-        height: 100%;
-        max-height: 100%;
-    }
-    #to-do {
-        grid-area: todo;
-        border: 1px solid #ccc;
-        padding-left: 8px; 
-        display: flex; 
-        flex-wrap: nowrap; 
-        overflow-x: auto;
-        align-items: center;
-        padding-top: 12px;
-        padding-bottom: 12px;
-        border-radius: 4px;
-        padding-right: 8px;
-        background-color: aliceblue;
-    }
-    #in-progress {
-        grid-area: in-progress;
-        border: 1px solid #ccc;
-        display: flex; 
-        flex-wrap: nowrap; 
-        overflow-x: auto;
-        align-items: center;
-        padding-top: 12px;
-        padding-bottom: 12px;
-        border-radius: 4px;
-        padding-right: 8px;
-        background-color: aliceblue;
-    }
-    #done {
-        grid-area: done;
-        border: 1px solid #ccc;
-        padding-left: 8px; 
-        display: flex; 
-        flex-wrap: nowrap; 
-        overflow-x: auto;
-        align-items: center;
-        padding-top: 12px;
-        padding-bottom: 12px;
-        border-radius: 4px;
-        padding-right: 8px;
-        background-color: aliceblue;
-    }
-    /* Table{
-       border-collapse: collapse;
-       width: 100%;
-    }
-    th, td {
-        border: 1px black solid;
-        width: 120px;
-        height: 80px; 
-        text-align: center;
-    }
-    .table-head,
-    .table-attributes {
-        height: 80px;
-    } */
 </style>
