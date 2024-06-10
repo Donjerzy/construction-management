@@ -397,14 +397,6 @@
                         <p class="text-base font-serif">Completed Tasks:</p>
                         <p class="italic text-sm font-sans">{employee.tasksCompleted}</p>
                     </div>
-                    <!-- <div class="flex items-center justify-between pr-4 border-b pb-2 pt-2">
-                        <p class="text-base">Completed On Time Tasks:</p>
-                        <p class="italic text-sm">{employee.tasksCompletedOnTime}</p>
-                    </div>
-                    <div class="flex items-center justify-between pr-4 border-b pb-2 pt-2">
-                        <p class="text-base">Completed Past Time:</p>
-                        <p class="italic text-sm">{employee.tasksCompletedPastTime}</p>
-                    </div> -->
                     <div class="flex items-center justify-between pr-4 border-b pb-2 pt-2">
                         <p class="text-base font-serif">Ongoing Tasks:</p>
                         <p class="italic text-sm font-sans">{employee.tasksOngoing}</p>

@@ -10,7 +10,7 @@
 
     onMount(()=> {
         let errorFetch = false;
-        fetch(`http://localhost:8080/api/v1/report/project-client?project=${projectId}`, {
+        fetch(`http://localhost:8080/api/v1/report/project-employee?project=${projectId}`, {
             headers: {
                 'Authorization': `Bearer ${get(accessToken)}`
             }
