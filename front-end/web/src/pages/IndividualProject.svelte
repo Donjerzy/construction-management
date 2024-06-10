@@ -755,7 +755,6 @@
                                     {:else}
                                         <p class="font-sans text-lg">Table view</p> 
                                     {/if}
-                                    
                                     <!-- svelte-ignore a11y-click-events-have-key-events -->
                                     <svg on:click={()=> view = !view} class="h-6 w-6 hover:cursor-pointer hover:fill-primary-200" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21,9L17,5V8H10V10H17V13M7,11L3,15L7,19V16H14V14H7V11Z" /></svg>
                                 </div>

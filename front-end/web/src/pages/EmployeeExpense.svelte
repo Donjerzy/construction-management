@@ -48,8 +48,8 @@
         <a href={`/employee/expense/add-expense`}><Button fontSize="base" height="10" label="Add Expense" padding="7" width="32" /> </a>
     </div>
     <div class="mt-4 pb-8 max-h-screen">
-        <TableSearch placeholder="Search by title" hoverable={true} bind:inputValue={expenseSearchTerm} divClass="bg-slate-500 rounded">
-            <Table divClass="max-h-80 overflow-auto" shadow>
+        <TableSearch divClass="font-sans" placeholder="Search by title" hoverable={true} bind:inputValue={expenseSearchTerm}>
+            <Table shadow>
                 <TableHead defaultRow={false} theadClass="border-black ">
                     <tr class="bg-primary-100">
                         <TableHeadCell class="text-white">Title</TableHeadCell>

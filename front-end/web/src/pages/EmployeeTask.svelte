@@ -5,10 +5,13 @@
     import EmployeeComponent from "../components/employee-component.svelte";
     import Toast from "../components/toast.svelte";
     import { notifications } from "../lib/notification.js";
+    import { Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, Checkbox, TableSearch, Toggle } from 'flowbite-svelte';   
     let contentTitle = 'Tasks';
     let toDoTasks = [];
     let inProgressTasks = [];
     let doneTasks = [];
+    let view = false;
+    let assignedTasks = [];
 
 
     onMount(()=> {
@@ -33,9 +36,48 @@
                 toDoTasks = result.tasks.filter((task)=> task.status.toLowerCase() === 'todo');
                 inProgressTasks = result.tasks.filter((task)=> task.status.toLowerCase() === 'in_progress');
                 doneTasks = result.tasks.filter((task)=> task.status.toLowerCase() === 'done');
+                assignedTasks = result.tasks;
             }
         });
     });
+
+    let taskSearchTerm = '';
+    
+    $: filteredTasks = assignedTasks.filter((task) => task.title.toLowerCase().indexOf(taskSearchTerm.toLowerCase()) !== -1);
+
+    function sortByPriority() {
+        let low = []
+        let medium = []
+        let high = []
+
+        for (const x of filteredTasks) {
+            if(x.priority.toLowerCase() === 'low') {
+                low.push(x)
+            } else if (x.priority.toLowerCase() === 'medium') {
+                medium.push(x)
+            } else {
+                high.push(x)
+            }
+        }
+        filteredTasks = low.concat(medium).concat(high);
+    }
+
+    function sortByStatus() {
+        let done = []
+        let todo = []
+        let in_progress = []
+
+        for (const x of filteredTasks) {
+            if(x.status.toLowerCase() === 'todo') {
+                todo.push(x)
+            } else if (x.status.toLowerCase() === 'in_progress') {
+                in_progress.push(x)
+            } else {
+                done.push(x)
+            }
+        }
+        filteredTasks = todo.concat(in_progress).concat(done);
+    }
 
     async function refetchTasks() {
         let errorFetch = false;
@@ -59,6 +101,7 @@
                 toDoTasks = result.tasks.filter((task)=> task.status.toLowerCase() === 'todo');
                 inProgressTasks = result.tasks.filter((task)=> task.status.toLowerCase() === 'in_progress');
                 doneTasks = result.tasks.filter((task)=> task.status.toLowerCase() === 'done');
+                assignedTasks = result.tasks;
             }
         });
     }
@@ -111,8 +154,18 @@
 
 <EmployeeComponent contentTitle={contentTitle}>
     <Toast />
+    <div class="flex items-center gap-4 justify-center">
+        {#if !view}
+            <p class="font-sans text-lg">Track view</p>
+        {:else}
+            <p class="font-sans text-lg">Table view</p> 
+        {/if}
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
+        <!-- svelte-ignore a11y-no-static-element-interactions -->
+        <svg on:click={()=> view = !view} class="h-6 w-6 hover:cursor-pointer hover:fill-primary-200" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21,9L17,5V8H10V10H17V13M7,11L3,15L7,19V16H14V14H7V11Z" /></svg>
+    </div>   
+    {#if !view} 
     <div class="mt-5 min-h-[580px] grid grid-cols-3 w-full">
-
         <div class="border-l border-t border-r border-primary-100 flex flex-col items-center pt-5 pl-16 pr-16 bg-blue-50">
             <div class="text-base mb-4">TODO</div>
             {#each toDoTasks as task }
@@ -189,6 +242,61 @@
                 </div>
             {/each} 
         </div>
-
     </div>
+    {:else}
+        <div class="mt-5">
+            <TableSearch placeholder="Search by task name" divClass="font-sans" hoverable={true} bind:inputValue={taskSearchTerm}>
+                <Table shadow>
+                    <TableHead defaultRow={false} theadClass="border-black">
+                        <tr class="bg-primary-100">
+                            <TableHeadCell class="text-white font-serif">Name</TableHeadCell>
+                            <TableHeadCell on:click={sortByPriority} class="text-white font-serif hover:cursor-pointer">Priority</TableHeadCell>
+                            <TableHeadCell on:click={sortByStatus} class="text-white font-serif hover:cursor-pointer">Status</TableHeadCell>
+                            <TableHeadCell class="text-white font-serif">Actions</TableHeadCell>
+                        </tr>
+                    </TableHead>
+                    <TableBody>
+                        {#each filteredTasks as task}
+                            <TableBodyRow>
+                                <TableBodyCell class="font-sans">{task.title}</TableBodyCell>
+                                <TableBodyCell class="font-sans">{task.priority}</TableBodyCell>
+                                <TableBodyCell class="font-sans">{task.status}</TableBodyCell>
+                                <TableBodyCell class="flex gap-10 font-sans">
+                                        <a class="underline hover:cursor-pointer font-serif hover:text-primary-200" href={`/employee/task/${task.taskId}`}>view</a>
+                                        {#if task.status.toLowerCase() === 'todo'}
+                                            <!-- svelte-ignore a11y-click-events-have-key-events -->
+                                            <!-- svelte-ignore a11y-no-static-element-interactions -->
+                                            <!-- svelte-ignore a11y-missing-attribute -->
+                                            <a on:click={()=> moveTask(task.taskId, "done")} class="underline hover:cursor-pointer font-serif hover:text-primary-200">move to done</a>  
+                                            <!-- svelte-ignore a11y-click-events-have-key-events -->
+                                            <!-- svelte-ignore a11y-no-static-element-interactions -->
+                                            <!-- svelte-ignore a11y-missing-attribute -->
+                                            <a on:click={()=> moveTask(task.taskId, "in_progress")} class="underline hover:cursor-pointer font-serif hover:text-primary-200" >move to in progress</a>     
+                                        {:else if task.status.toLowerCase() === 'in_progress'}
+                                            <!-- svelte-ignore a11y-click-events-have-key-events -->
+                                            <!-- svelte-ignore a11y-no-static-element-interactions -->
+                                            <!-- svelte-ignore a11y-missing-attribute -->
+                                            <a on:click={()=> moveTask(task.taskId, "todo")} class="underline hover:cursor-pointer font-serif hover:text-primary-200" >move to todo</a> 
+                                            <!-- svelte-ignore a11y-click-events-have-key-events -->
+                                            <!-- svelte-ignore a11y-no-static-element-interactions -->
+                                            <!-- svelte-ignore a11y-missing-attribute -->
+                                            <a on:click={()=> moveTask(task.taskId, "done")} class="underline hover:cursor-pointer font-serif hover:text-primary-200" >move to done</a> 
+                                        {:else}
+                                            <!-- svelte-ignore a11y-click-events-have-key-events -->
+                                            <!-- svelte-ignore a11y-no-static-element-interactions -->
+                                            <!-- svelte-ignore a11y-missing-attribute -->
+                                            <a on:click={()=> moveTask(task.taskId, "todo")} class="underline hover:cursor-pointer font-serif hover:text-primary-200" >move to todo</a> 
+                                            <!-- svelte-ignore a11y-click-events-have-key-events -->
+                                            <!-- svelte-ignore a11y-no-static-element-interactions -->
+                                            <!-- svelte-ignore a11y-missing-attribute -->
+                                            <a on:click={()=> moveTask(task.taskId, "in_progress")} class="underline hover:cursor-pointer font-serif hover:text-primary-200">move to in progress</a>   
+                                        {/if}               
+                                    </TableBodyCell>
+                            </TableBodyRow>
+                        {/each}
+                    </TableBody>
+                </Table> 
+            </TableSearch>
+        </div>
+    {/if}
 </EmployeeComponent>
