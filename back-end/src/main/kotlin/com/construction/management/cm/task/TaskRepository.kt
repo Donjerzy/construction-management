@@ -15,6 +15,15 @@ interface TaskRepository: JpaRepository<Task, Long> {
     @Query("select count(*) from task where project = :project and lower(status) like '%done'", nativeQuery = true)
     fun getProjectDoneTasksCount(project:Long): Int
 
+    @Query("select count(*) from task where project = :projectId and lower(status) = 'todo'", nativeQuery = true)
+    fun getProjectToDoTasks(projectId: Long): Int
+
+    @Query("select count(*) from task where project = :projectId and lower(status) = 'in_progress'", nativeQuery = true)
+    fun getProjectInProgressTasks(projectId: Long): Int
+
+    @Query("select count(*) from task where project = :projectId and lower(status) = 'done'", nativeQuery = true)
+    fun getProjectDoneTasks(projectId: Long): Int
+
     @Query("select count(*) from employee_task inner join task on task.id = employee_task.task and lower(task.status) like '%done%' where employee = :employeeId", nativeQuery = true)
     fun getEmployeeDoneTasks(employeeId: Long): Int
 
@@ -43,6 +52,18 @@ interface TaskRepository: JpaRepository<Task, Long> {
 
     @Query("select count(*) from task inner join public.employee_task et on task.id = et.task where creation_date between :start and :end and et.employee = :employeeId and lower(task.status) = 'done'", nativeQuery = true)
     fun getDoneTasksForPeriod(start: Date, end: Date, employeeId: Long): Int
+
+    @Query("select coalesce(avg(round(EXTRACT(EPOCH FROM (completion_date - creation_date)) / 60, 2)),0) as minutes from task where project = :project and lower(status) = 'done'", nativeQuery = true)
+    fun getProjectAverageTaskCompletionTime(project: Long): Double
+
+    @Query("select coalesce(avg(round(EXTRACT(EPOCH FROM (completion_date - creation_date)) / 60, 2)),0) as minutes from task where project = :project and lower(status) = 'done' and lower(priority) = 'low'", nativeQuery = true)
+    fun getProjectAverageLowPriorityTaskCompletionTime(project: Long): Double
+
+    @Query("select coalesce(avg(round(EXTRACT(EPOCH FROM (completion_date - creation_date)) / 60, 2)),0) as minutes from task where project = :project and lower(status) = 'done' and lower(priority) = 'medium'", nativeQuery = true)
+    fun getProjectAverageMediumPriorityTaskCompletionTime(project: Long): Double
+
+    @Query("select coalesce(avg(round(EXTRACT(EPOCH FROM (completion_date - creation_date)) / 60, 2)),0) as minutes from task where project = :project and lower(status) = 'done' and lower(priority) = 'high'", nativeQuery = true)
+    fun getProjectAverageHighPriorityTaskCompletionTime(project: Long): Double
 
 
 }

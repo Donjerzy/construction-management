@@ -88,6 +88,20 @@ class ReportsController(
     }
 
 
+    @GetMapping("/project-task")
+    fun getProjectTaskReport(@RequestHeader("Authorization") header:String,
+                                 @RequestParam(name = "project") project: Long): ResponseEntity<Any> {
+        val userEmail = tokenService.extractEmail(header.substringAfter("Bearer "))
+        val report = service.getProjectTaskReport(userEmail = userEmail!!, project = project)
+        return ResponseEntity.status(200).body(GeneralReportResponse (
+            httpStatus = 200,
+            message = "Task report retrieved successfully",
+            report = report
+        )
+        )
+    }
+
+
 
 
 

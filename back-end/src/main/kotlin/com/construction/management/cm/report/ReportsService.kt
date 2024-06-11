@@ -13,6 +13,7 @@ import com.construction.management.cm.formatters.StringFormatter
 import com.construction.management.cm.project.Project
 import com.construction.management.cm.project.ProjectRepository
 import com.construction.management.cm.project.ProjectService
+import com.construction.management.cm.task.TaskRepository
 import com.construction.management.cm.user.UserService
 import net.sf.jasperreports.engine.*
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource
@@ -32,7 +33,8 @@ class ReportsService (
     private val employeeRepository: EmployeeRepository,
     private val employeeTypeRepository: EmployeeTypeRepository,
     private val employeeWagePaymentRepository: EmployeeWagePaymentRepository,
-    private val employeeService: EmployeeService) {
+    private val employeeService: EmployeeService,
+    private val taskRepository: TaskRepository) {
 
 
     private val calendar = Calendar.getInstance()
@@ -391,6 +393,64 @@ class ReportsService (
         return pdfToString("${reportsOutputDir}${project}-employee-report.pdf")
 
 
+
+    }
+
+    fun getProjectTaskReport(userEmail: String, project: Long): String {
+        when (getProjectGeneralReportValidations(
+            project = project,
+            projectManager = userService.getUserId(userEmail)!!
+        )) {
+            "not-project-owner" -> throw CustomException("not-project-owner", null)
+        }
+
+        val taskInfoTable = mutableSetOf<TaskInfoDataset>()
+        taskInfoTable.add(
+            TaskInfoDataset(
+                total = taskRepository.getProjectTasks(project).size.toString(),
+                todo = taskRepository.getProjectToDoTasks(project).toString(),
+                inProgress = taskRepository.getProjectInProgressTasks(project).toString(),
+                done = taskRepository.getProjectDoneTasks(project).toString()
+            )
+        )
+        val taskInfoDataset = JRBeanCollectionDataSource(taskInfoTable)
+
+        val taskCompletionTable = mutableSetOf<TaskCompletionTable>()
+        taskCompletionTable.addAll(
+            listOf(
+                TaskCompletionTable(
+                    priority = "All",
+                    averageCompletionTime = formatter.doubleToStringCommaSeparated(taskRepository.getProjectAverageTaskCompletionTime(project))
+                ),
+                TaskCompletionTable(
+                    priority = "Low",
+                    averageCompletionTime = formatter.doubleToStringCommaSeparated(taskRepository.getProjectAverageLowPriorityTaskCompletionTime(project))
+                ),
+                TaskCompletionTable(
+                    priority = "Medium",
+                    averageCompletionTime = formatter.doubleToStringCommaSeparated(taskRepository.getProjectAverageMediumPriorityTaskCompletionTime(project))
+                ),
+                TaskCompletionTable(
+                    priority = "High",
+                    averageCompletionTime = formatter.doubleToStringCommaSeparated(taskRepository.getProjectAverageHighPriorityTaskCompletionTime(project))
+                ),
+            )
+        )
+        val taskCompletionDataset = JRBeanCollectionDataSource(taskCompletionTable)
+
+
+
+        val parameters = mutableMapOf<String, Any>()
+        parameters["reportYear"] = currentYear.toString()
+        parameters["taskInformationDataset"] = taskInfoDataset
+        parameters["taskCompletionDataset"] = taskCompletionDataset
+
+        generateJasperReportPdf (
+            templatePath = "${reportTemplatesDir}task_report.jrxml",
+            outputFilePath = "${reportsOutputDir}${project}-task-report.pdf",
+            parameters = parameters
+        )
+        return pdfToString("${reportsOutputDir}${project}-task-report.pdf")
 
     }
 
