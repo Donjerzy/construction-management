@@ -9,6 +9,7 @@ import com.construction.management.cm.employee.EmployeeService
 import com.construction.management.cm.employeetype.EmployeeTypeRepository
 import com.construction.management.cm.employeewagepayment.EmployeeWagePaymentRepository
 import com.construction.management.cm.exceptionhandler.CustomException
+import com.construction.management.cm.expense.ExpenseRepository
 import com.construction.management.cm.formatters.StringFormatter
 import com.construction.management.cm.project.Project
 import com.construction.management.cm.project.ProjectRepository
@@ -34,7 +35,8 @@ class ReportsService (
     private val employeeTypeRepository: EmployeeTypeRepository,
     private val employeeWagePaymentRepository: EmployeeWagePaymentRepository,
     private val employeeService: EmployeeService,
-    private val taskRepository: TaskRepository) {
+    private val taskRepository: TaskRepository,
+    private val expenseRepository: ExpenseRepository) {
 
 
     private val calendar = Calendar.getInstance()
@@ -451,6 +453,53 @@ class ReportsService (
             parameters = parameters
         )
         return pdfToString("${reportsOutputDir}${project}-task-report.pdf")
+
+    }
+
+    fun getProjectExpenseReport(userEmail: String, project: Long): String {
+        when (getProjectGeneralReportValidations(
+            project = project,
+            projectManager = userService.getUserId(userEmail)!!
+        )) {
+            "not-project-owner" -> throw CustomException("not-project-owner", null)
+        }
+
+        val expenseTable = mutableSetOf<ExpenseTable>()
+        for (x in 1L..6L) {
+            if (expenseRepository.getProjectExpenseByType(projectId = project, type = x) > 0) {
+                expenseTable.add(
+                    ExpenseTable(
+                        amount = formatter.doubleToStringCommaSeparated(expenseRepository.getProjectExpenseByType(projectId = project, type = x)),
+                        type = when(x) {
+                            1L -> "Materials and Supplies"
+                            2L -> "Equipment and Machinery"
+                            3L -> "Permits and Fees"
+                            4L -> "Overhead and Administrative Costs"
+                            5L -> "Site Preparation and Development"
+                            else -> "Other"
+                        }
+                    )
+                )
+            }
+        }
+        expenseTable.add(
+            ExpenseTable(
+                type = "Total",
+                amount = formatter.doubleToStringCommaSeparated(expenseRepository.getProjectTotalExpense(project))
+            )
+        )
+        val expenseInfoDataset = JRBeanCollectionDataSource(expenseTable)
+
+        val parameters = mutableMapOf<String, Any>()
+        parameters["reportYear"] = currentYear.toString()
+        parameters["expenseInformationDataset"] = expenseInfoDataset
+
+        generateJasperReportPdf (
+            templatePath = "${reportTemplatesDir}expense_report.jrxml",
+            outputFilePath = "${reportsOutputDir}${project}-expense-report.pdf",
+            parameters = parameters
+        )
+        return pdfToString("${reportsOutputDir}${project}-expense-report.pdf")
 
     }
 
