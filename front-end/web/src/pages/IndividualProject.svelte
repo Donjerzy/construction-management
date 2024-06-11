@@ -17,7 +17,13 @@
 
 
     
-    let reports = [{ id: 1 ,name: "General Project Report"}, { id: 2 ,name: "Client Report"}, { id: 3 ,name: "Employee Report"}]
+    let reports = [
+        { id: 1, name: "General Project Report"}, 
+        { id: 2, name: "Client Report"}, 
+        { id: 3, name: "Employee Report"},
+        { id: 4, name: "Task Report"},
+        { id: 5, name: "Expense Report"}
+    ]
 
 
     let reportSearchTerm = '';
@@ -991,6 +997,10 @@
                                                 <a target="_blank" class="underline hover:cursor-pointer hover:text-primary-200" href={`/project/${projectId}/report/client`}>View</a>
                                             {:else if report.id === 3}
                                                 <a target="_blank" class="underline hover:cursor-pointer hover:text-primary-200" href={`/project/${projectId}/report/employee`}>View</a>
+                                            {:else if report.id === 4}
+                                                <a target="_blank" class="underline hover:cursor-pointer hover:text-primary-200" href={`/project/${projectId}/report/task`}>View</a>
+                                            {:else if report.id === 5}
+                                            <a target="_blank" class="underline hover:cursor-pointer hover:text-primary-200" href={`/project/${projectId}/report/expense`}>View</a>
                                             {/if}                
                                              </TableBodyCell>
                                      </TableBodyRow>

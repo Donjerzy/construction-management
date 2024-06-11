@@ -2,6 +2,7 @@
     import Toast from "../components/toast.svelte";
     import { notifications } from "../lib/notification";
     import {loggedIn, accessToken, firstName, projectUUID} from "../stores.js";
+    import { Card, Button } from 'flowbite-svelte';
     export let appName;
 
     let emailError = false;
@@ -184,52 +185,55 @@
         <a href="/sign-up" id="sign-up">Sign Up</a>
     </div>
     <div class="form">
-        <div id="title">
-            <h2>Login</h2>
-        </div>
-        <form on:submit={validateLogInDetails}>
-            <!-- <label style="font-family: 'Times New Roman', Times, serif; font-size: 1rem;" for="module">Module</label> -->
-            <!--  class="block appearance-none border w-32 border-primary-100"-->
-            <!-- <select bind:value={chosenModule} name="module" style="font-family: sans-serif; cursor: pointer; border: 1px #ccc solid; display:block; width: 240px; margin-top: 8px;" id="module">
-                <option style="height: 80px;" value="admin">Admin</option>
-                <option style="height: 80px;" value="employee">Employee</option>
-            </select> -->
+        <Card>
+            <div id="title">
+                <h2>Login</h2>
+            </div>
+            <form on:submit={validateLogInDetails}>
+                <!-- <label style="font-family: 'Times New Roman', Times, serif; font-size: 1rem;" for="module">Module</label> -->
+                <!--  class="block appearance-none border w-32 border-primary-100"-->
+                <!-- <select bind:value={chosenModule} name="module" style="font-family: sans-serif; cursor: pointer; border: 1px #ccc solid; display:block; width: 240px; margin-top: 8px;" id="module">
+                    <option style="height: 80px;" value="admin">Admin</option>
+                    <option style="height: 80px;" value="employee">Employee</option>
+                </select> -->
 
-            <!-- {#if chosenModule === "employee"}
-                <label for="project_id" style="display:block; font-family: 'Times New Roman', Times, serif; font-size: 1rem; margin-top: 8px;">Project</label>
-                <input bind:value={projectCode} name="project_id" style="font-family: sans-serif; border: 1px #ccc solid; display:block; width: 240px; margin-top: 8px;" type="text" id="project_id" on:change={clearProjectError}>
-                {#if projectError}
-                    <p class="text-primary-700 text-base mb-3 font-serif mt-1">Invalid Project</p>
+                <!-- {#if chosenModule === "employee"}
+                    <label for="project_id" style="display:block; font-family: 'Times New Roman', Times, serif; font-size: 1rem; margin-top: 8px;">Project</label>
+                    <input bind:value={projectCode} name="project_id" style="font-family: sans-serif; border: 1px #ccc solid; display:block; width: 240px; margin-top: 8px;" type="text" id="project_id" on:change={clearProjectError}>
+                    {#if projectError}
+                        <p class="text-primary-700 text-base mb-3 font-serif mt-1">Invalid Project</p>
+                    {/if}
+                {/if} -->
+
+                <label style="display:block; font-family: 'Times New Roman', Times, serif; font-size: 1rem; margin-top: 8px;" for="email">Email</label>
+                <input style="font-family: sans-serif; border: 1px #ccc solid; border-radius: 4px; display:block; width: 100%; margin-top: 8px;" type="email" name="email" id="email" on:change={clearEmailError}  >
+                {#if emailError}
+                <p class="text-primary-700 text-base mb-3 font-serif mt-1">Invalid Email Address</p>
                 {/if}
-            {/if} -->
-            
-            <label style="display:block; font-family: 'Times New Roman', Times, serif; font-size: 1rem; margin-top: 8px;" for="email">Email</label>
-            <input style="font-family: sans-serif; border: 1px #ccc solid; display:block; width: 240px; margin-top: 8px;" type="email" name="email" id="email" on:change={clearEmailError}  >
-            {#if emailError}
-            <p class="text-primary-700 text-base mb-3 font-serif mt-1">Invalid Email Address</p>
-            {/if}
-            <label style="display:block; font-family: 'Times New Roman', Times, serif; font-size: 1rem; margin-top: 8px;" for="pass">Password</label>
-            <input style="font-family: sans-serif; border: 1px #ccc solid; display:block; width: 240px; margin-top: 8px;" type="password" name="pass" id="pass" on:change={clearPasswordError}>
-            {#if passwordError}
-            <p class="text-primary-700 text-base mb-3 font-serif mt-1">Password field cannot be empty</p>
-            {/if}
-            {#if authenticationError}
-                <div style="text-align: center;">
-                    <p class="error">Invalid Credentials</p>
-                </div>
-            {/if}
-            <a style="margin-top: 12px; font-family: 'Times New Roman', Times, serif; text-decoration: underline; margin-bottom: 8px;" id="forgot" href="/forgot-password">Forgot Password?</a>
-            {#if loading}
-                <div id="loader-div">
-                    <span class="loader"></span>
-                </div>
-            {:else}
-                <div style="display: flex; justify-content: center;">
-                    <button type="submit" id="login-btn">Log in</button>
-                </div>
-            {/if}
-        </form>
-    </div>
+                <label style="display:block; font-family: 'Times New Roman', Times, serif; font-size: 1rem; margin-top: 8px;" for="pass">Password</label>
+                <input style="font-family: sans-serif; border: 1px #ccc solid; border-radius: 4px; display:block; width: 100%; margin-top: 8px;" type="password" name="pass" id="pass" on:change={clearPasswordError}>
+                {#if passwordError}
+                <p class="text-primary-700 text-base mb-3 font-serif mt-1">Password field cannot be empty</p>
+                {/if}
+                {#if authenticationError}
+                    <div style="text-align: center;">
+                        <p class="error">Invalid Credentials</p>
+                    </div>
+                {/if}
+                <a style="margin-top: 12px; font-family: 'Times New Roman', Times, serif; text-decoration: underline; margin-bottom: 8px;" id="forgot" href="/forgot-password">Forgot Password?</a>
+                {#if loading}
+                    <div id="loader-div">
+                        <span class="loader"></span>
+                    </div>
+                {:else}
+                    <div style="display: flex; justify-content: center;">
+                        <Button type="submit">Log in</Button>
+                        <!-- <button type="submit" id="login-btn">Log in</button> -->
+                    </div>
+                {/if}
+            </form>
+        </Card>
+    </div>   
 </div>
 
 
@@ -258,6 +262,7 @@
     }
 
     .main {
+        /* border: solid 1px black; */
         position: relative;
         margin-left: 12%;
         margin-right: 12%;
@@ -281,13 +286,13 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
+        /* border: solid 1px black */
     }
     #title {
         margin-bottom: 20px;
         font-size: 1.4rem;
     }
-    
-    #login-btn {
+    /* #login-btn {
         padding: 12px;
         border-radius: 4px;
         background-color: #5c595c;
@@ -300,7 +305,7 @@
     #login-btn:hover {
         cursor: pointer;
         background-color: #38aa3b;
-    }
+    } */
     h2 {
         font-family: Georgia, 'Times New Roman', Times, serif;
     }
