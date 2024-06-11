@@ -12,6 +12,7 @@
     let projectError = false;
     let projectCode;
 
+
     let chosenModule = "admin";
 
     function validateEmail(email) {
@@ -86,9 +87,9 @@
                 password: password
             })
         }).then(response=> {
-            loading = false;
             if(!response.ok) {
                 setAuthenticationError();
+                loading = false;
                 error = true;
                 return
             } else {
@@ -96,8 +97,7 @@
             }
         }).then(transformed=> {
             if(!error) {
-                updateLogIn(transformed.user.token, transformed.user.firstName);
-                window.location.replace('/');
+                accountType(transformed.user.token, transformed.user.firstName)
             } 
         }).catch(error=> {
             loading = false;
@@ -105,19 +105,12 @@
         })
     }
 
-
-    async function authenticateEmployee (project, email, password) {
+    async function accountType(token, firstName) {
         let error = false;
-        await fetch('http://localhost:8080/api/v1/employee/auth/login', {
-            method: 'POST',
+        await fetch('http://localhost:8080/api/v1/employee/member', {
             headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify( {
-                project: project,
-                email: email,
-                password: password
-            })
+                'Authorization': `Bearer ${token}`
+            }
         }).then(response=> {
             loading = false;
             if(!response.ok) {
@@ -129,8 +122,12 @@
             }
         }).then(transformed=> {
             if(!error) {
-                updateEmployeeLogIn(transformed.user.token, transformed.user.firstName, transformed.user.project);
-                window.location.replace('/employee/home');
+                if(transformed.info.count === 0) {
+                    updateLogIn(token, firstName);
+                    window.location.replace('/');
+                } else {
+                    switchToEmployeeModule(transformed.info.project, token)
+                }
             } 
         }).catch(error=> {
             loading = false;
@@ -139,6 +136,41 @@
         })
         return
     }
+
+
+    // async function authenticateEmployee (project, email, password) {
+    //     let error = false;
+    //     await fetch('http://localhost:8080/api/v1/employee/auth/login', {
+    //         method: 'POST',
+    //         headers: {
+    //             'Content-Type': 'application/json'
+    //         },
+    //         body: JSON.stringify( {
+    //             project: project,
+    //             email: email,
+    //             password: password
+    //         })
+    //     }).then(response=> {
+    //         loading = false;
+    //         if(!response.ok) {
+    //             setAuthenticationError();
+    //             error = true;
+    //             return
+    //         } else {
+    //             return response.json();
+    //         }
+    //     }).then(transformed=> {
+    //         if(!error) {
+    //             updateEmployeeLogIn(transformed.user.token, transformed.user.firstName, transformed.user.project);
+    //             window.location.replace('/employee/home');
+    //         } 
+    //     }).catch(error=> {
+    //         loading = false;
+    //         console.log(error);
+    //         notifications.danger("Could make request to server", 1000)
+    //     })
+    //     return
+    // }
 
 
 
@@ -169,6 +201,54 @@
         //     authenticateEmployee(projectCode, e.target.elements.email.value.toLowerCase(), e.target.elements.pass.value);
         // }       
         authenticateAdmin(e.target.elements.email.value.toLowerCase(), e.target.elements.pass.value);
+    }
+
+    async function switchToEmployeeModule(chosenProject, accessToken) {
+        if (chosenProject === undefined || chosenProject === "0") {
+            return notifications.danger("Project not chosen", 1000);
+        }
+        loading = true;
+        let error = false;
+        let existsError = false;
+        await fetch('http://localhost:8080/api/v1/employee/auth/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                    project: chosenProject,
+                    token: accessToken,
+                    from: "admin"
+            })
+        }).then(response=> {
+            loading = false;
+            if(response.status === 400) {
+                existsError = true;
+                return
+            }
+            if(!response.ok) {
+                error = true;
+                return
+            } else {
+                error = false;
+                existsError = false;
+                return response.json();
+            }
+        }).then(transformed=> {
+            if(!error) {
+                updateEmployeeLogIn(transformed.user.token, transformed.user.firstName, transformed.user.project);
+                window.location.replace('/employee/home');
+            } 
+        }).catch(error=> {
+            loading = false;
+            notifications.danger("Could make request to server", 1000);
+        })
+        if(error) {
+            firstName.set("");
+            accessToken.set("");
+            loggedIn.set("false");
+            window.location.replace('/'); 
+        }
     }
 </script>
 
