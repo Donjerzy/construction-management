@@ -79,11 +79,16 @@ class ReportsService (
 
         // Report Creation
         val numberOfProjectsCreated = NumberOfProjectsCreated(
-            years = "${projectsRepository.getEarliestProjectYear(userId)} - ${
-                projectsRepository.getLatestProjectYear(
-                    userId
-                )
-            }",
+            years = when(projectsRepository.getTotalNumberOfProjects(userId)) {
+                0 -> "2024 - 2024"
+                else -> {
+                    "${projectsRepository.getEarliestProjectYear(userId)} - ${
+                        projectsRepository.getLatestProjectYear(
+                            userId
+                        )
+                    }"
+                }
+            },
             numberOfProjectsCreated = projectsRepository.getTotalNumberOfProjects(userId)
         )
         val projectsCreatedDataset = JRBeanCollectionDataSource(mutableSetOf(numberOfProjectsCreated))
