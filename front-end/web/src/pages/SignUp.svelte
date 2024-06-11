@@ -1,6 +1,7 @@
 <script>
     import { notifications } from '../lib/notification.js'
     import Toast from '../components/toast.svelte'
+    import { Card, Button } from 'flowbite-svelte';
     export let appName;
     // stages = mail, enter-verification-code, enter-registration-details
     let stage = 'mail';
@@ -248,25 +249,27 @@
         <a href="/" id="log-in">Log In</a>
     </div>
     <div class="form">
-        <div id="title">
-            <h2>Sign Up</h2>
-        </div>
-        <form on:submit={handleEmailSubmit}>
-            <label style="font-family: 'Times New Roman', Times, serif; font-size: 1rem;" for="email">Email</label>
-            <input style="border: 1px #ccc solid; display:block; width: 240px; margin-top: 8px;" type="email" name="email" id="email" on:change={clearEmailError}>
-            {#if emailError}
-            <p class="error">Invalid Email Address</p>
-            {/if}
-            {#if !loading}
-                <div style="display: flex; justify-content: center;">
-                    <button type="submit" id="login-btn">Next</button>
-                </div>
-            {:else}
-            <div id="loader-div">
-                <span class="loader"></span>
+        <Card>
+            <div id="title">
+                <h2>Sign Up</h2>
             </div>
-            {/if}  
-        </form>
+            <form on:submit={handleEmailSubmit}>
+                <label style="font-family: 'Times New Roman', Times, serif; font-size: 1rem;" for="email">Email</label>
+                <input style="border: 1px #ccc solid; border-radius: 4px; width: 100%; display:block; margin-top: 8px;" type="email" name="email" id="email" on:change={clearEmailError}>
+                {#if emailError}
+                <p class="error">Invalid Email Address</p>
+                {/if}
+                {#if !loading}
+                    <div style="display: flex; justify-content: center; margin-top: 20px;">
+                        <Button type="submit">Next</Button>
+                    </div>
+                {:else}
+                <div id="loader-div">
+                    <span class="loader"></span>
+                </div>
+                {/if}  
+            </form>
+        </Card>
     </div>
 </div>
 {:else if stage === 'enter-verification-code'}
@@ -277,37 +280,41 @@
         <a href="/" id="log-in">Log In</a>
     </div>
     <div class="form">
-        <div id="title">
-            <h2>Sign Up</h2>
-        </div>
-        <form on:submit={handleCodeSubmit} on:change={clearVerificationCodeError}>
-            <div id="verif-code-label-div">
-                <label style="font-family: 'Times New Roman', Times, serif;" for="verif-code">Verification Code</label>
+        <Card>
+            <div id="title">
+                <h2>Sign Up</h2>
             </div>
-            <div id="verification-code-div">
-                <input style="border: 1px #ccc solid; height: 32px; width:32px; display:block; margin-top: 8px;" name="num1" type="text" maxlength="1" class="verif-input" />
-                <input style="border: 1px #ccc solid; height: 32px; width:32px; display:block; margin-top: 8px;" name="num2" type="text" maxlength="1" class="verif-input" />
-                <input style="border: 1px #ccc solid; height: 32px; width:32px; display:block; margin-top: 8px;" name="num3" type="text" maxlength="1" class="verif-input"/>
-                <input style="border: 1px #ccc solid; height: 32px; width:32px; display:block; margin-top: 8px;" name="num4" type="text"maxlength="1" class="verif-input"/>
-            </div>
-            {#if verificationCodeError}
-            <div class="center-text-div">
-                <p class="error">Invalid Verification Code</p>
-             </div>
-            {/if}
-                <div class="center-text-div">
-                    <!-- svelte-ignore a11y-click-events-have-key-events -->
-                    <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                    <p style="margin-top: 4px; font-family: 'Times New Roman', Times, serif; text-decoration: underline; margin-bottom: 8px;" on:click={resendVerificationCode} id="forgot">Re-send Verification Code</p>
+            <form on:submit={handleCodeSubmit} on:change={clearVerificationCodeError}>
+                <div style="display: flex; justify-content: center;">
+                    <label style="font-family: 'Times New Roman', Times, serif; font-size: 1rem;" for="verif-code">Verification Code</label>
                 </div>
-            {#if !loading}
-                <button type="submit" id="login-btn">Next</button>
-            {:else}
-                <div id="loader-div">
-                    <span class="loader"></span>
+                <div id="verification-code-div">
+                    <input style="border: 1px #ccc solid; height: 32px; width:32px; display:block; margin-top: 8px;" name="num1" type="text" maxlength="1" class="verif-input" />
+                    <input style="border: 1px #ccc solid; height: 32px; width:32px; display:block; margin-top: 8px;" name="num2" type="text" maxlength="1" class="verif-input" />
+                    <input style="border: 1px #ccc solid; height: 32px; width:32px; display:block; margin-top: 8px;" name="num3" type="text" maxlength="1" class="verif-input"/>
+                    <input style="border: 1px #ccc solid; height: 32px; width:32px; display:block; margin-top: 8px;" name="num4" type="text"maxlength="1" class="verif-input"/>
                 </div>
-            {/if}  
-        </form>
+                {#if verificationCodeError}
+                <div class="center-text-div" style="display: flex; justify-content: center;">
+                    <p class="error">Invalid Verification Code</p>
+                 </div>
+                {/if}
+                    <div class="center-text-div" style="display: flex; justify-content: center;">
+                        <!-- svelte-ignore a11y-click-events-have-key-events -->
+                        <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+                        <p style="margin-top: 4px; font-family: 'Times New Roman', Times, serif; text-decoration: underline; margin-bottom: 8px;" on:click={resendVerificationCode} id="forgot">Re-send Verification Code</p>
+                    </div>
+                {#if !loading}
+                    <div class="flex justify-center items-center" style="margin-top: 20px;">
+                        <Button type="submit">Next</Button>
+                    </div>
+                {:else}
+                    <div id="loader-div">
+                        <span class="loader"></span>
+                    </div>
+                {/if}  
+            </form>
+        </Card>
     </div>
 </div>
 {:else if stage === 'enter-registration-details'}
@@ -318,40 +325,42 @@
         <a href="/" id="log-in">Log In</a>
     </div>
     <div class="form">
-        <div id="title">
-            <h2>Sign Up</h2>
-        </div>
-        <form on:submit={handleDetailsSubmit}>
-            <label style="display:block; font-family: 'Times New Roman', Times, serif; font-size: 1rem; margin-top: 8px;" for="fn">First Name</label>
-            <input style="border: 1px #ccc solid; display:block; width: 240px; margin-top: 8px;" type="text" name="fn" id="fn" on:change={clearFirstNameError}>
-            {#if firstNameError}
-            <p class="error">Invalid First Name</p>
-            {/if}
-            <label style="display:block; font-family: 'Times New Roman', Times, serif; font-size: 1rem; margin-top: 8px;" for="ln">Surname</label>
-            <input style="border: 1px #ccc solid; display:block; width: 240px; margin-top: 8px;" type="text" name="ln" id="ln" on:change={clearLastNameError}>
-            {#if lastNameError}
-            <p class="error">Invalid Last Name</p>
-            {/if}
-            <label style="display:block; font-family: 'Times New Roman', Times, serif; font-size: 1rem; margin-top: 8px;" for="pass">Password</label>
-            <input style="border: 1px #ccc solid; display:block; width: 240px; margin-top: 8px;" type="password" name="pass" id="pass" on:change={clearPasswordError}>
-            {#if passwordError}
-            <p class="error">{passwordErrorMessage}</p>
-            {/if}
-            <label style="display:block; font-family: 'Times New Roman', Times, serif; font-size: 1rem; margin-top: 8px;" for="cpass">Confirm Password</label>
-            <input style="border: 1px #ccc solid; display:block; width: 240px; margin-top: 8px;" type="password" name="cpass" id="cpass" on:change={clearMatchingError}>
-            {#if matchingError}
-            <p class="error">The passwords do not match</p>
-            {/if}
-            {#if !loading}
-            <div style="display: flex; justify-content: center;">
-                <button type="submit" id="login-btn">Sign Up</button>
+        <Card>
+            <div id="title">
+                <h2>Sign Up</h2>
             </div>
-            {:else}
-            <div id="loader-div">
-                <span class="loader"></span>
-            </div>
-            {/if}  
-        </form>
+            <form on:submit={handleDetailsSubmit}>
+                <label style="display:block; font-family: 'Times New Roman', Times, serif; font-size: 1rem; margin-top: 8px;" for="fn">First Name</label>
+                <input style="border: 1px #ccc solid; border-radius: 4px; width:100%; display:block;  margin-top: 8px;" type="text" name="fn" id="fn" on:change={clearFirstNameError}>
+                {#if firstNameError}
+                <p class="error">Invalid First Name</p>
+                {/if}
+                <label style="display:block; font-family: 'Times New Roman', Times, serif; font-size: 1rem; margin-top: 8px;" for="ln">Surname</label>
+                <input style="border: 1px #ccc solid; display:block; border-radius: 4px; width:100%; margin-top: 8px;" type="text" name="ln" id="ln" on:change={clearLastNameError}>
+                {#if lastNameError}
+                <p class="error">Invalid Last Name</p>
+                {/if}
+                <label style="display:block; font-family: 'Times New Roman', Times, serif; font-size: 1rem; margin-top: 8px;" for="pass">Password</label>
+                <input style="border: 1px #ccc solid; display:block; border-radius: 4px; width:100%; margin-top: 8px;" type="password" name="pass" id="pass" on:change={clearPasswordError}>
+                {#if passwordError}
+                <p class="error">{passwordErrorMessage}</p>
+                {/if}
+                <label style="display:block; font-family: 'Times New Roman', Times, serif; font-size: 1rem; margin-top: 8px;" for="cpass">Confirm Password</label>
+                <input style="border: 1px #ccc solid; display:block; border-radius: 4px; width:100%; margin-top: 8px;" type="password" name="cpass" id="cpass" on:change={clearMatchingError}>
+                {#if matchingError}
+                <p class="error">The passwords do not match</p>
+                {/if}
+                {#if !loading}
+                <div style="display: flex; justify-content: center; margin-top: 20px;">
+                    <Button type="submit">Sign Up</Button>
+                </div>
+                {:else}
+                <div id="loader-div">
+                    <span class="loader"></span>
+                </div>
+                {/if}  
+            </form>
+        </Card>
     </div>
 </div>
 {/if}
@@ -383,9 +392,6 @@
         text-decoration: underline;
     }
 
-    .center-text-div {
-        text-align: center;
-    }
 
     .error {
         color: red;
@@ -424,15 +430,12 @@
         font-size: 1.4rem;
         font-family: 'Times New Roman', Times, serif;
     }
-    #verif-code-label-div{
-        display: flex;
-        justify-content: center;
-    }
     #verification-code-div{
         margin-top: 8px;
         display: flex;
-        gap: 8px;
+        gap: 20px;
         justify-content: center;
+        /* justify-content: space-between;  */
     }
     #forgot {
         margin-bottom: 12px;
@@ -449,23 +452,10 @@
         border: 1px solid;
         margin-bottom: 20px;
         height: 40px;
-        width: 20px;
+        width: 40px;
         padding: 4px;
         padding-left: 8px;
         border-radius: 4px;
-    }
-    #login-btn {
-        padding: 12px;
-        border-radius: 4px;
-        background-color: #5c595c;
-        width: 200px;
-        border-radius: 20px;
-        color:#ffffff;
-        margin-top: 16px;
-    }
-    #login-btn:hover {
-        cursor: pointer;
-        background-color: #38aa3b;
     }
     h2 {
         font-family: Georgia, 'Times New Roman', Times, serif;

@@ -2,9 +2,12 @@
     import { notifications } from '../lib/notification.js'
     import Toast from '../components/toast.svelte'
     export let appName;
+    import { Card, Button } from 'flowbite-svelte';
     // stages = mail, enter-verification-code, change-password
-    //let stage = 'mail';
-    let stage = 'mail'
+    let stage = 'mail';
+    // let stage = 'mail';
+    // let stage = 'enter-verification-code';
+    // let stage = 'change-password';
     let emailError = false;
     let loading = false;
     let verificationCode = undefined;
@@ -218,25 +221,27 @@
         <a href="/" id="log-in">Log In</a>
     </div>
     <div class="form">
-        <div id="title">
-            <h2>Forgot Password</h2>
-        </div>
-        <form on:submit={handleEmailSubmit}>
-            <label for="email">Email</label>
-            <input type="email" name="email" id="email" on:change={clearEmailError}>
-            {#if emailError}
-            <p class="error">Invalid Email Address</p>
-            {/if}
-            {#if !loading}
-            <div style="display: flex; justify-content: center; align-items: center;">
-                <button type="submit" id="login-btn">Next</button>
+        <Card>
+            <div id="title">
+                <h2>Forgot Password</h2>
             </div>
-            {:else}
-            <div id="loader-div">
-                <span class="loader"></span>
-            </div>
-            {/if}  
-        </form>
+            <form on:submit={handleEmailSubmit}>
+                <label for="email">Email</label>
+                <input type="email" style="width: 100%; border-radius: 4px;" name="email" id="email" on:change={clearEmailError}>
+                {#if emailError}
+                <p class="error">Invalid Email Address</p>
+                {/if}
+                {#if !loading}
+                <div style="display: flex; justify-content: center; align-items: center;">
+                    <Button type="submit">Next</Button>
+                </div>
+                {:else}
+                <div id="loader-div">
+                    <span class="loader"></span>
+                </div>
+                {/if}  
+            </form>
+        </Card>
     </div>
 </div>
 {:else if stage === 'enter-verification-code'}
@@ -247,39 +252,41 @@
         <a href="/" id="log-in">Log In</a>
     </div>
     <div class="form">
-        <div id="title">
-            <h2>Forgot Password</h2>
-        </div>
-        <form on:submit={handleCodeSubmit} on:change={clearVerificationCodeError}>
-            <div id="verif-code-label-div">
-                <label for="verif-code" style="font-family: 'Times New Roman', Times, serif; font-size: 20px;">Verification Code</label>
+        <Card>
+            <div id="title">
+                <h2>Forgot Password</h2>
             </div>
-            <div id="verification-code-div">
-                <input name="num1" type="text" maxlength="1" class="verif-input" />
-                <input name="num2" type="text" maxlength="1" class="verif-input" />
-                <input name="num3" type="text" maxlength="1" class="verif-input"/>
-                <input name="num4" type="text"maxlength="1" class="verif-input"/>
-            </div>
-            {#if verificationCodeError}
-            <div class="center-text-div">
-                <p class="error">Invalid Verification Code</p>
-             </div>
-            {/if}
-                <div class="center-text-div">
-                    <!-- svelte-ignore a11y-click-events-have-key-events -->
-                    <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                    <p on:click={resendVerificationCode} id="forgot">Re-send Verification Code</p>
+            <form on:submit={handleCodeSubmit} on:change={clearVerificationCodeError}>
+                <div id="verif-code-label-div">
+                    <label for="verif-code" style="font-family: 'Times New Roman', Times, serif; font-size: 1rem;">Verification Code</label>
                 </div>
-            {#if !loading}
-            <div style="display: flex; justify-content: center; align-items: center;">
-                <button type="submit" id="login-btn">Next</button>
-            </div>
-            {:else}
-                <div id="loader-div">
-                    <span class="loader"></span>
+                <div id="verification-code-div">
+                    <input style="border: 1px #ccc solid; height: 32px; width:32px; display:block; margin-top: 8px;" name="num1" type="text" maxlength="1" class="verif-input" />
+                    <input style="border: 1px #ccc solid; height: 32px; width:32px; display:block; margin-top: 8px;" name="num2" type="text" maxlength="1" class="verif-input" />
+                    <input style="border: 1px #ccc solid; height: 32px; width:32px; display:block; margin-top: 8px;" name="num3" type="text" maxlength="1" class="verif-input"/>
+                    <input style="border: 1px #ccc solid; height: 32px; width:32px; display:block; margin-top: 8px;" name="num4" type="text"maxlength="1" class="verif-input"/>
                 </div>
-            {/if}  
-        </form>
+                {#if verificationCodeError}
+                <div class="center-text-div" style="display: flex; justify-content: center;">
+                    <p class="error">Invalid Verification Code</p>
+                 </div>
+                {/if}
+                    <div class="center-text-div" style="display: flex; justify-content: center;">
+                        <!-- svelte-ignore a11y-click-events-have-key-events -->
+                        <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+                        <p style="margin-top: 4px; font-family: 'Times New Roman', Times, serif; text-decoration: underline; margin-bottom: 8px;" on:click={resendVerificationCode} id="forgot">Re-send Verification Code</p>
+                    </div>
+                {#if !loading}
+                <div style="display: flex; justify-content: center; align-items: center;">
+                    <Button type="Submit">Next</Button>
+                </div>
+                {:else}
+                    <div id="loader-div">
+                        <span class="loader"></span>
+                    </div>
+                {/if}  
+            </form>
+        </Card>
     </div>
 </div>
 {:else if stage === 'change-password'}
@@ -290,31 +297,33 @@
         <a href="/" id="log-in">Log In</a>
     </div>
     <div class="form">
-        <div id="title">
-            <h2>Forgot Password</h2>
-        </div>
-        <form on:submit={handleDetailsSubmit}>
-            <label for="pass">New Password</label>
-            <input type="password" name="pass" id="pass" on:change={clearPasswordError}>
-            {#if passwordError}
-            <p class="error">{passwordErrorMessage}</p>
-            {/if}
-            <label for="cpass">Confirm New Password</label>
-            <input type="password" name="cpass" id="cpass" on:change={clearMatchingError}>
-            {#if matchingError}
-            <p class="error">The passwords do not match</p>
-            {/if}
-            {#if !loading}
-            <div style="display: flex; justify-content: center; align-items: center;">
-                <button type="submit" id="login-btn">Sign Up</button>
+        <Card>
+            <div id="title">
+                <h2>Forgot Password</h2>
             </div>
-            
-            {:else}
-            <div id="loader-div">
-                <span class="loader"></span>
-            </div>
-            {/if}  
-        </form>
+            <form on:submit={handleDetailsSubmit}>
+                <label for="pass">New Password</label>
+                <input type="password" style="width: 100%; border-radius: 4px;" name="pass" id="pass" on:change={clearPasswordError}>
+                {#if passwordError}
+                <p class="error">{passwordErrorMessage}</p>
+                {/if}
+                <label for="cpass">Confirm New Password</label>
+                <input type="password" style="width: 100%; border-radius: 4px;" name="cpass" id="cpass" on:change={clearMatchingError}>
+                {#if matchingError}
+                <p class="error">The passwords do not match</p>
+                {/if}
+                {#if !loading}
+                <div style="display: flex; justify-content: center; align-items: center;">
+                    <Button type="submit">Reset Password</Button>
+                </div>
+
+                {:else}
+                <div id="loader-div">
+                    <span class="loader"></span>
+                </div>
+                {/if}  
+            </form>
+        </Card>
     </div>
 </div>
 {/if}
@@ -427,18 +436,6 @@
         padding: 4px;
         padding-left: 8px;
         border-radius: 4px;
-    }
-    #login-btn {
-        padding: 12px;
-        border-radius: 4px;
-        background-color: #5c595c;
-        width: 200px;
-        border-radius: 20px;
-        color:#ffffff;
-    }
-    #login-btn:hover {
-        cursor: pointer;
-        background-color: #38aa3b;
     }
     h2 {
         font-family: Georgia, 'Times New Roman', Times, serif;
