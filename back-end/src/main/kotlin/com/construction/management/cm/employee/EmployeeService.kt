@@ -8,6 +8,7 @@ import com.construction.management.cm.employeewagepayment.EmployeeWagePaymentRep
 import com.construction.management.cm.employeewagepayment.EmployeeWagePaymentService
 import com.construction.management.cm.exceptionhandler.CustomException
 import com.construction.management.cm.formatters.StringFormatter
+import com.construction.management.cm.project.Project
 import com.construction.management.cm.project.ProjectRepository
 import com.construction.management.cm.response.PredictionResponse
 import com.construction.management.cm.task.TaskRepository
@@ -634,6 +635,17 @@ class EmployeeService(private val repository: EmployeeRepository,
         return "ok"
     }
 
+    fun getMemberInfo(userEmail: String): Member {
+        return if (repository.getMemberInProjectsCount(userEmail.lowercase()) <=0) {
+            Member(count = 0, project = "")
+        } else {
+            val project: Project = projectRepository.getOneMemberProject(userEmail.lowercase())
+            Member(
+                count = 1,
+                project = "${project.projectId}"
+            )
+        }
+    }
 
 
 }

@@ -136,6 +136,21 @@ class EmployeeController(private val service: EmployeeService,
         )
     }
 
+    @GetMapping("/member")
+    fun member(
+        @RequestHeader("Authorization") header:String,
+    ): ResponseEntity<Any> {
+        val userEmail = tokenService.extractEmail(header.substringAfter("Bearer "))
+        val info = service.getMemberInfo(userEmail = userEmail!!)
+        return ResponseEntity.status(200).body(
+            MemberResponse(
+                httpStatus = 200,
+                message = "Member information retrieved successfully",
+                info = info
+            )
+        )
+    }
+
 
     @GetMapping("/wage-history")
     fun getWageHistory (

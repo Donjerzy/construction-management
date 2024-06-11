@@ -1,5 +1,6 @@
 package com.construction.management.cm.employee
 
+import com.construction.management.cm.project.Project
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.stereotype.Repository
@@ -40,6 +41,9 @@ interface EmployeeRepository: JpaRepository<Employee, Long> {
 
     @Query("select avg(round(EXTRACT(EPOCH FROM (t.completion_date - t.creation_date)) / 60,2)) as minutes from task t inner join employee_task et on et.task = t.id where lower(t.status) = 'done' and et.employee = :employeeId group by et.employee", nativeQuery = true)
     fun getAverageTasksCompletionTime(employeeId: Long): Double
-
+    @Query("select count(*) from employee where lower(email) = :email", nativeQuery = true)
+    fun getMemberInProjectsCount(email: String):Int
+    @Query("select project.* from employee inner join project on employee.project = project.id where lower(email) = :email limit 1", nativeQuery = true)
+    fun getOneMemberProject(email: String): Project
 
 }

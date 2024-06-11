@@ -70,4 +70,6 @@ interface ProjectRepository: JpaRepository<Project, Long> {
 
     @Query("select * from project where id in (select project from employee where lower(email) = :projectManagerEmail)", nativeQuery = true)
     fun getEnrolledProjects(projectManagerEmail: String): MutableList<Project>
+    @Query("select project.* from employee inner join project on employee.project = project.id where lower(email) = :email limit 1", nativeQuery = true)
+    fun getOneMemberProject(email: String): Project
 }
