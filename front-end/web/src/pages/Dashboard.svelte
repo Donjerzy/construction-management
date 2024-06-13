@@ -131,7 +131,7 @@
 <AdminComponent appName={appName} userFirstName={userFirstName} contentTitle="Dashboard">
 
     <div class="mt-10 flex items-center justify-center">
-        <p class="font-mono text-xl">Hi there, {get(firstName)}</p>
+        <p class="font-mono text-xl">Welcome, {get(firstName)}</p>
     </div>
 
 

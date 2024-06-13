@@ -5,6 +5,7 @@
     import EmployeeComponent from "../components/employee-component.svelte";
     import Toast from "../components/toast.svelte";
     import { notifications } from "../lib/notification.js";
+    import { Button, Tooltip } from 'flowbite-svelte';
     import { Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, Checkbox, TableSearch, Toggle } from 'flowbite-svelte';   
     let contentTitle = 'Tasks';
     let toDoTasks = [];
@@ -162,7 +163,8 @@
         {/if}
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <!-- svelte-ignore a11y-no-static-element-interactions -->
-        <svg on:click={()=> view = !view} class="h-6 w-6 hover:cursor-pointer hover:fill-primary-200" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21,9L17,5V8H10V10H17V13M7,11L3,15L7,19V16H14V14H7V11Z" /></svg>
+        <svg id="switch-tip" on:click={()=> view = !view} class="h-6 w-6 hover:cursor-pointer hover:fill-primary-200" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21,9L17,5V8H10V10H17V13M7,11L3,15L7,19V16H14V14H7V11Z" /></svg>
+        <Tooltip triggeredBy="#switch-tip">Click to switch between tasks presentation</Tooltip>
     </div>   
     {#if !view} 
     <div class="mt-5 min-h-[580px] grid grid-cols-3 w-full">

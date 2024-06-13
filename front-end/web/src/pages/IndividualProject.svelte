@@ -1,6 +1,6 @@
 <script>
     import AdminComponent from "../components/admin-component.svelte";
-    import { Button } from 'flowbite-svelte';
+    import { Button, Tooltip } from 'flowbite-svelte';
     import {firstName, accessToken, loggedIn, projectClient} from '../stores.js'; 
     import { Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, Checkbox, TableSearch, Toggle } from 'flowbite-svelte';    
     import { get } from "svelte/store";
@@ -768,7 +768,8 @@
                                         <p class="font-sans text-lg">Table view</p> 
                                     {/if}
                                     <!-- svelte-ignore a11y-click-events-have-key-events -->
-                                    <svg on:click={()=> view = !view} class="h-6 w-6 hover:cursor-pointer hover:fill-primary-200" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21,9L17,5V8H10V10H17V13M7,11L3,15L7,19V16H14V14H7V11Z" /></svg>
+                                    <svg id="switch-tip" on:click={()=> view = !view} class="h-6 w-6 hover:cursor-pointer hover:fill-primary-200" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21,9L17,5V8H10V10H17V13M7,11L3,15L7,19V16H14V14H7V11Z" /></svg>
+                                    <Tooltip triggeredBy="#switch-tip">Click to switch between tasks presentation</Tooltip>
                                 </div>
                             {/if}    
                         </div>

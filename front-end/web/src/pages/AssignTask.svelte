@@ -301,7 +301,10 @@
 
 
     <Modal title="Suggested employees" bind:open={defaultModal}>
-        <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400 font-serif">Generate a list of suitable task employees based on their active tasks and their average task completion time. The generated list is ordered from most suitable to least suitable.</p>
+        <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400 font-serif">
+            Generate a list of suitable task employees based on their active tasks and their average task completion time. 
+            The generated list is ordered from most suitable to least suitable.
+        </p>
         <label for="et" class="mr-5">Employee Type</label>
         <select id="et" bind:value={chosenType}>
             {#each employeeTypes as type }

@@ -2,7 +2,7 @@
     import AdminComponent from "../components/admin-component.svelte";
     import {firstName, accessToken, loggedIn} from '../stores.js'
     import { get } from "svelte/store";
-   import { Button } from 'flowbite-svelte';
+    import { Button } from 'flowbite-svelte';
     import Loader from "../components/loading-component.svelte";
     import { notifications } from "../lib/notification";
     import Toast from '../components/toast.svelte';

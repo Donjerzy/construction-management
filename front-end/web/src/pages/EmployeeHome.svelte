@@ -119,18 +119,15 @@
 
 
 <EmployeeComponent contentTitle={contentTitle}>
-
     <div class="mt-10 flex items-center justify-center">
-        <p class="font-mono text-xl">Hi there, {get(firstName)}</p>
+        <p class="font-mono text-xl">Welcome, {get(firstName)}</p>
     </div>
-
-
     <div class="mt-5 min-h-[400px] flex items-center w-full justify-center gap-20">
         <Card class="h-72">
             <div class="flex justify-between items-start w-full">
               <div class="flex-col items-center w-full">
                 <div class="flex items-center w-full justify-center mb-1">
-                  <h5 class="text-xl font-bold leading-none text-gray-900 dark:text-white me-1">Projects</h5> 
+                  <h5 class="text-xl font-bold leading-none text-gray-900 dark:text-white me-1">Tasks</h5> 
                 </div>
               </div>
             </div>

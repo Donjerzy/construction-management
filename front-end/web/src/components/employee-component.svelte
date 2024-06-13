@@ -16,7 +16,7 @@
             <a href="/employee/home" class="text-white hover:text-primary-200 font-serif">Home</a>
             <a href="/employee/task" class="text-white hover:text-primary-200 font-serif">Tasks</a>
             <a href="/employee/expense" class="text-white hover:text-primary-200 font-serif">Expenses</a>
-            <a href="/employee/home" class="text-white hover:text-primary-200 font-serif">Reports</a>
+            <!-- <a href="/employee/home" class="text-white hover:text-primary-200 font-serif">Reports</a> -->
         </div>
 
         <div>

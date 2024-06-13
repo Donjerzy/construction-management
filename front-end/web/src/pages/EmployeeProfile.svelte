@@ -62,19 +62,20 @@
 
 
 <EmployeeComponent contentTitle={contentTitle}>
-    <div class="mt-2">
+    <!-- <div class="mt-2">
         <div class="mt-5">
             <p class="text-sm font-serif">Current Module</p>
             <div class="mt-2 border-black  h-16 rounded p-4 flex justify-between items-center bg-primary-100">
                 <p class="font-sans text-base">Employee module</p>
                 <div class="flex items-center gap-4">
                     <p class="font-serif">Switch to Admin Module</p>
-                    <!-- svelte-ignore a11y-click-events-have-key-events -->
-                    <!-- svelte-ignore a11y-no-static-element-interactions -->
+                    
                   <svg on:click={switchToAdminModule}  class="h-6 w-6 hover:cursor-pointer hover:fill-primary-200" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21,9L17,5V8H10V10H17V13M7,11L3,15L7,19V16H14V14H7V11Z" /></svg>
             </div>
         </div>
-    </div>
+    </div> -->
+
+    
     <div class="mt-5">
         {#if loading}
             <Loader />
