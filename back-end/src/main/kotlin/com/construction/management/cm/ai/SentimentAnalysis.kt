@@ -54,7 +54,6 @@ class SentimentAnalysis {
             negativeRatio > 0.4 -> EmployeeMorale.LOW.value
             else -> EmployeeMorale.MEDIUM.value
         }
-
     }
 
     fun generateMorale(comments: List<String>): String {

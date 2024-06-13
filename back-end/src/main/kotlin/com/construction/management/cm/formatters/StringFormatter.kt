@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Date
 
@@ -43,11 +44,13 @@ class StringFormatter {
         val dateFormat = SimpleDateFormat("yyyy-MM-dd")
         return dateFormat.format(date)
     }
-
     fun localDateToString(date: LocalDate): String {
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
         return date.format(formatter)
     }
-
+    fun localDateTimeToString(date: LocalDateTime): String {
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+        return date.format(formatter)
+    }
 
 }

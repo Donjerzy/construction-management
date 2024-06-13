@@ -1,6 +1,7 @@
 package com.construction.management.cm.employeetask
 
 import com.construction.management.cm.dto.*
+import com.construction.management.cm.emailsender.EmailSender
 import com.construction.management.cm.employee.Employee
 import com.construction.management.cm.employee.EmployeeRepository
 import com.construction.management.cm.exceptionhandler.CustomException
@@ -14,6 +15,7 @@ import com.construction.management.cm.taskcomment.TaskCommentRepository
 import com.construction.management.cm.taskhistory.TaskHistory
 import com.construction.management.cm.taskhistory.TaskHistoryRepository
 import org.springframework.stereotype.Service
+import java.time.LocalDateTime
 import java.util.*
 
 @Service
@@ -23,7 +25,8 @@ class EmployeeTaskService(
     private val projectRepository: ProjectRepository,
     private val taskHistoryRepository: TaskHistoryRepository,
     private val formatter: StringFormatter,
-    private val taskCommentRepository: TaskCommentRepository
+    private val taskCommentRepository: TaskCommentRepository,
+    private val emailSender: EmailSender
 ) {
     fun getEmployeeTasks(userId: Long, projectId: String): MutableList<GetEmployeeTasks> {
         when(getEmployeeTasksValidation(
@@ -216,6 +219,33 @@ class EmployeeTaskService(
         comment.authorSurname = user.lastName.lowercase()
         comment.task = taskRepository.findById(addComment.taskId).get()
         taskCommentRepository.save(comment)
+
+        val currentDateTime = formatter.localDateTimeToString(LocalDateTime.now())
+
+        // comment notifications.
+        val assignedEmployees = employeeRepository.getEmployeesInTask(addComment.taskId)
+        if (assignedEmployees.size > 0) {
+            val toAlert = mutableMapOf<String, String>()
+            for (employee in assignedEmployees) {
+                if (employee.email.lowercase() != user.email.lowercase()) {
+                    toAlert[employee.email.lowercase()] = "${employee.firstName.lowercase().capitalize()} ${employee.lastName.lowercase().capitalize()}"
+                }
+
+            }
+            // add project manager to mailing list
+            val projectManager = taskRepository.findById(addComment.taskId).get().project.projectManager
+            toAlert[projectManager.email.lowercase()] = "${projectManager.firstName.lowercase().capitalize()} ${projectManager.surname.lowercase().capitalize()}"
+            val payload = CommentAddedNotification (
+                comment = addComment.comment,
+                toAlert = toAlert,
+                commenter = "${user.firstName.lowercase().capitalize()} ${user.lastName.lowercase().capitalize()}",
+                task = taskRepository.findById(addComment.taskId).get().name,
+                date = currentDateTime,
+                project = taskRepository.findById(addComment.taskId).get().project.name
+            )
+            emailSender.commentAddedNotification(payload = payload)
+        }
+
         return "Comment added successfully"
     }
 
